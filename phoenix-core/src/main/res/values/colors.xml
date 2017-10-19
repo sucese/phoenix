@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="blue">#7D7DFF</color>
+    <color name="orange">#FF571A</color>
+    <color name="green">#15af26</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="phoenix_transparent_black">#4D000000</color>
+    <color name="phoenix_transparent_white">#4DFFFFFF</color>
+    <color name="phoenix_transparent_gray">#BFCCCCCC</color>
+</resources>

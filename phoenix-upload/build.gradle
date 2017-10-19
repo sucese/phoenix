@@ -1,0 +1,65 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'maven'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile 'com.google.code.gson:gson:2.8.1'
+
+//    compile "com.souche.android.sdk:media-core:$rootProject.ext.version"
+    compile project(':phoenix-core')
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: 'https://repo.souche-inc.com/repository/snapshots/') {
+                authentication(userName: "sdev", password: "7J48qUFA6m2E8uJx")
+            }
+            pom.project {
+                name 'SCWidget'
+                groupId 'com.souche.android.sdk'
+                artifactId 'media-upload'
+                version rootProject.ext.version
+                packaging 'aar'
+
+                developers {
+                    developer {
+                        id 'guoxiaoxing'
+                        name 'guoxiaoxing'
+                    }
+                }
+            }
+        }
+    }
+}

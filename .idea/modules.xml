@@ -2,9 +2,18 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/android-app-develop-support.iml" filepath="$PROJECT_DIR$/android-app-develop-support.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/support/support.iml" filepath="$PROJECT_DIR$/support/support.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo/demo-new.iml" filepath="$PROJECT_DIR$/demo/demo-new.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phoenix-core/media-core.iml" filepath="$PROJECT_DIR$/phoenix-core/media-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phoenix-editor/media-editor.iml" filepath="$PROJECT_DIR$/phoenix-editor/media-editor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phoenix-ui/media-ui.iml" filepath="$PROJECT_DIR$/phoenix-ui/media-ui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phoenix.iml" filepath="$PROJECT_DIR$/phoenix.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phoenix-compress-picture/phoenix-compress-picture.iml" filepath="$PROJECT_DIR$/phoenix-compress-picture/phoenix-compress-picture.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phoenix-compress-video/phoenix-compress-video.iml" filepath="$PROJECT_DIR$/phoenix-compress-video/phoenix-compress-video.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phoenix-core/phoenix-core.iml" filepath="$PROJECT_DIR$/phoenix-core/phoenix-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phoenix-editor/phoenix-editor.iml" filepath="$PROJECT_DIR$/phoenix-editor/phoenix-editor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phoenix-picker/phoenix-picker.iml" filepath="$PROJECT_DIR$/phoenix-picker/phoenix-picker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phoenix-picker/phoenix-ui.iml" filepath="$PROJECT_DIR$/phoenix-picker/phoenix-ui.iml" />
     </modules>
   </component>
 </project>

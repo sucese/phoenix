@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="?attr/phoenix_toolbar_background_color">
+
+        <ImageView
+            android:id="@+id/picture_left_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:src="?attr/phoenix_arrow_left" />
+
+        <TextView
+            android:id="@+id/picture_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:ellipsize="end"
+            android:maxEms="11"
+            android:textColor="?attr/phoenix_preview_title_text_color"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/ll_check"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/tv_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/phoenix_checked_style"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <com.guoxiaoxing.phoenix.picker.widget.PreviewViewPager
+        android:id="@+id/preview_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="?attr/phoenix_preview_bottom_background"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_picture_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="50dp"
+            android:layout_toLeftOf="@+id/pick_ll_ok"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:id="@+id/preview_ll_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="@string/text_edit"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pick_ll_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/phoenix_dimen_8"
+            android:background="@drawable/phoenix_shape_complete_background"
+            android:enabled="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/phoenix_dimen_8">
+
+            <TextView
+                android:id="@+id/tv_ok"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/picture_please_select"
+                android:textColor="@color/white"
+                android:textSize="@dimen/phoenix_text_14" />
+
+            <TextView
+                android:id="@+id/tv_picture_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/phoenix_text_14"
+                android:visibility="gone" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

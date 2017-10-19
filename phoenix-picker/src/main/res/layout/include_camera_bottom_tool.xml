@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:id="@+id/camera_rl_bottom_tool"
+    android:background="@color/phoenix_transparent_black"
+    android:paddingBottom="@dimen/phoenix_dimen_8"
+    android:paddingTop="@dimen/phoenix_dimen_8">
+
+    <TextView
+        android:id="@+id/camera_tv_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/phoenix_dimen_16"
+        android:padding="@dimen/phoenix_dimen_8"
+        android:text="@string/text_cancel"
+        android:textColor="@color/white"
+        android:textSize="@dimen/phoenix_text_16" />
+
+    <ImageView
+        android:id="@+id/camera_iv_take_picture"
+        android:layout_width="@dimen/phoenix_dimen_60"
+        android:layout_height="@dimen/phoenix_dimen_60"
+        android:layout_centerInParent="true"
+        android:src="@drawable/phoenix_take_picture" />
+
+    <ImageView
+        android:id="@+id/camera_iv_rotate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/phoenix_dimen_16"
+        android:src="@drawable/phoenix_camera_rotate" />
+
+    <TextView
+        android:id="@+id/camera_tv_model"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/phoenix_dimen_16"
+        android:layout_toLeftOf="@id/camera_iv_rotate"
+        android:padding="@dimen/phoenix_dimen_8"
+        android:text="@string/text_hide_model"
+        android:textColor="@color/white"
+        android:textSize="@dimen/phoenix_text_16"
+        android:visibility="gone" />
+</RelativeLayout>

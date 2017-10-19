@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.guoxiaoxing.phoenix.picker.widget.photoview.PhotoView
+        android:id="@+id/preview_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.guoxiaoxing.phoenix.picker.widget.videoview.PhoenixVideoView
+        android:id="@+id/preview_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+</FrameLayout>

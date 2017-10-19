@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/phoenix_selector_item_background"
+    android:orientation="vertical"
+    android:padding="6dp">
+
+    <RelativeLayout
+        android:id="@+id/rl_first_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:id="@+id/first_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/tv_sign"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="4dp"
+            android:background="?attr/phoenix_picker_folder_checked_icon"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_folder_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/rl_first_image"
+        android:text="相机胶卷"
+        android:textColor="@color/color_black_2"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/image_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/tv_folder_name"
+        android:text="(0)"
+        android:textColor="@color/color_black_2"
+        android:textSize="14sp" />
+</RelativeLayout>

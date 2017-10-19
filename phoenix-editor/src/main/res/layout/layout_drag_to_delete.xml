@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/phoenix_dimen_60"
+    android:layout_gravity="bottom"
+    android:background="@color/phoenix_transparent_black">
+
+    <TextView
+        android:id="@+id/tvDragDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="3dp"
+        android:drawableTop="@drawable/phoenix_delete_white"
+        android:padding="6dp"
+        android:text="@string/editor_drag_to_delete"
+        android:textColor="@color/white_f"
+        android:textSize="12sp" />
+</RelativeLayout>

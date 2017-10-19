@@ -1,1 +1,1 @@
-include ':demo', ':support'
+include ':phoenix-editor', ':phoenix-picker', ':phoenix-core', ':demo', ':phoenix-compress-picture', ':phoenix-compress-video'

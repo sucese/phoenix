@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.guoxiaoxing.phoenix.picture.edit.widget.hierarchy.ActionFrameLayout
+        android:id="@+id/layerActionView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_black">
+
+        <com.guoxiaoxing.phoenix.picture.edit.widget.photoview.PhotoView
+            android:id="@+id/photoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@+id/layerEditorParent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.guoxiaoxing.phoenix.picture.edit.widget.hierarchy.HierarchyComposite
+                android:id="@+id/layerComposite"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.guoxiaoxing.phoenix.picture.edit.widget.blur.BlurView
+                    android:id="@+id/blurView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <com.guoxiaoxing.phoenix.picture.edit.widget.paint.PaintView
+                    android:id="@+id/paintView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <com.guoxiaoxing.phoenix.picture.edit.widget.stick.StickView
+                    android:id="@+id/stickView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <com.guoxiaoxing.phoenix.picture.edit.widget.text.TextPastingView
+                    android:id="@+id/textPastingView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </com.guoxiaoxing.phoenix.picture.edit.widget.hierarchy.HierarchyComposite>
+
+            <com.guoxiaoxing.phoenix.picture.edit.widget.crop.CropView
+                android:id="@+id/layerCropView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+    </com.guoxiaoxing.phoenix.picture.edit.widget.hierarchy.ActionFrameLayout>
+    <!--actionBar-->
+
+    <include
+        android:id="@+id/layoutCropDetails"
+        layout="@layout/crop_func_details"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/layoutDragDelete"
+        layout="@layout/layout_drag_to_delete"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rlFunc"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llOperation"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:background="?colorPrimary"
+            android:orientation="horizontal" />
+
+        <FrameLayout
+            android:id="@+id/flOperationDetail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/llOperation"
+            android:background="?colorPrimary"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/editorBar"
+        layout="@layout/action_bar_editor" />
+</FrameLayout>
+
+

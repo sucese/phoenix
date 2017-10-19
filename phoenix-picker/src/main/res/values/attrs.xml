@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="phoenix_toolbar_background_color" format="reference|color" />
+    <attr name="phoenix_status_font_color" format="boolean" />
+    <attr name="phoenix_arrow_left" format="reference" />
+    <attr name="phoenix_arrow_down" format="reference" />
+    <attr name="phoenix_arrow_up" format="reference" />
+    <attr name="phoenix_title_text_color" format="reference|color" />
+    <attr name="phoenix_right_text_color" format="reference|color" />
+
+    <attr name="phoenix_checked_style" format="reference" />
+    <attr name="phoenix_style_number_complete" format="boolean" />
+    <attr name="phoenix_style_check_number_mode" format="boolean" />
+    <attr name="phoenix_picker_bottom_background" format="reference|color" />
+    <attr name="phoenix_picker_preview_text_color" format="reference|color" />
+    <attr name="phoenix_picker_complete_text_color" format="reference|color" />
+    <attr name="phoenix_picker_complete_number_style" format="reference" />
+    <attr name="phoenix_picker_folder_checked_icon" format="reference" />
+
+    <attr name="phoenix_preview_title_text_color" format="reference|color" />
+    <attr name="phoenix_preview_complete_text_color" format="reference|color" />
+    <attr name="phoenix_preview_bottom_background" format="reference|color" />
+    <attr name="phoenix_preview_status_color" format="reference|color" />
+    <attr name="phoenix_preview_status_font_color" format="boolean" />
+</resources>

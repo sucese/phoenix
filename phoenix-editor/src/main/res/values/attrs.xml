@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ColorSeekBar">
+        <attr name="colorSeeds" format="reference"/>
+        <attr name="barHeight" format="dimension"/>
+        <attr name="thumbHeight" format="dimension"/>
+        <attr name="showAlphaBar" format="boolean"/>
+        <attr name="alphaBarPosition" format="integer"/>
+        <attr name="colorBarPosition" format="integer"/>
+        <attr name="bgColor" format="color"/>
+        <attr name="barMargin" format="dimension"/>
+        <attr name="maxPosition" format="integer"/>
+        <attr name="isVertical" format="boolean"/>
+    </declare-styleable>
+</resources>

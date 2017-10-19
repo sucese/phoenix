@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.guoxiaoxing.phoenix.picker.widget.videoview.InternalVideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/phoenix_center_play" />
+
+        <LinearLayout
+            android:id="@+id/ll_controller"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/phoenix_transparent_black"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/phoenix_dimen_8"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/btn_controller"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/phoenix_video_play" />
+
+            <TextView
+                android:id="@+id/tv_currentProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                tools:text="00:00" />
+
+            <SeekBar
+                android:id="@+id/seekbar_progress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:indeterminate="false"
+                android:progressDrawable="@drawable/phoenix_seekbar"
+                android:thumb="@drawable/phoenix_seekbar_thumb" />
+
+            <TextView
+                android:id="@+id/tv_totalProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                tools:text="00:00" />
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

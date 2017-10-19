@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:background="@drawable/phoenix_shape_toast_background"
+    android:gravity="center_horizontal"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="23dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/phoenix_camera_tips" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="建议横屏拍摄"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/phoenix_text_14"
+        android:layout_marginBottom="20dp"
+        android:layout_height="wrap_content" />
+</LinearLayout>

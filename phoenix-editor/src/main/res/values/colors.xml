@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="editor_line_space">#444444</color>
+    <color name="bg_33">#333333</color>
+    <color name="bg_black">#000</color>
+    <color name="white_f">#fff</color>
+    <color name="green">#1ad42f</color>
+    <color name="transparent_6f">#6f000000</color>
+    <array name="color_seeds">
+        <item>#ffffff</item>
+        <item>#ff0000</item>
+        <item>#FFFFE100</item>
+        <item>#edf10c</item>
+        <item>#b3ff00</item>
+        <item>#00ff04</item>
+        <item>#02f7ff</item>
+        <item>#006fff</item>
+        <item>#1500ff</item>
+        <item>#bc02ff</item>
+        <item>#ee00ff</item>
+        <item>#ff00e1</item>
+    </array>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+
+    <style name="PictureEditTheme" parent="@style/PhoenixTheme">
+        <item name="android:windowBackground">@color/transparent_6f</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+</resources>
