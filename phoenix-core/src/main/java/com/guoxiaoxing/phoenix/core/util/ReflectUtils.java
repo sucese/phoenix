@@ -30,7 +30,7 @@ public class ReflectUtils {
     /**
      * 图片/视频选择
      */
-    public static final String SCPicker = "com.guoxiaoxing.phoenix.picker.SCPicker";
+    public static final String SCPicker = "com.guoxiaoxing.phoenix.picker.Phoenix";
 
     public static Processor loadProcessor(String className) {
         try {

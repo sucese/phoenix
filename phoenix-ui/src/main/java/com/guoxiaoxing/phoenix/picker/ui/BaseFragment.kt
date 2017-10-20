@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment
 import android.widget.Toast
 
 import com.guoxiaoxing.phoenix.R
-import com.guoxiaoxing.phoenix.picker.SCPicker
+import com.guoxiaoxing.phoenix.picker.Phoenix
 import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.listener.OnPickerListener
@@ -91,7 +91,7 @@ open class BaseFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mContext = context
-        option = SCPicker.with()
+        option = Phoenix.with()
         setupConfig()
         onPickerListener = option.onPickerListener
     }

@@ -11,7 +11,7 @@ import android.support.multidex.MultiDexApplication;
  * @author guoxiaoxing
  * @since 2017/8/1 下午2:08
  */
-public class NativeApp extends MultiDexApplication {
+public class App extends MultiDexApplication {
 
     @Override
     public void onCreate() {

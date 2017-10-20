@@ -83,7 +83,7 @@ class CameraActivity : BaseActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         if (onPickerListener != null) {
-            onPickerListener.onPickSuccess(cameraList)
+            onPickerListener?.onPickSuccess(cameraList)
         }
     }
 

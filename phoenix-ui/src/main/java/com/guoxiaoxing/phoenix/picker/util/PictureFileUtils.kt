@@ -41,7 +41,7 @@ object PictureFileUtils {
     val POSTFIX = ".JPEG"
     val POST_VIDEO = ".mp4"
     val POST_AUDIO = ".mp3"
-    val APP_NAME = "SCPicker"
+    val APP_NAME = "Phoenix"
     val CAMERA_PATH = "/$APP_NAME/CameraImage/"
     val CAMERA_AUDIO_PATH = "/$APP_NAME/CameraAudio/"
     val CROP_PATH = "/$APP_NAME/CropImage/"
@@ -469,7 +469,7 @@ object PictureFileUtils {
             // 自定义保存目录
             path = File(rootDir.absolutePath + directory_path)
         } else {
-            path = File(rootDir.absolutePath + "/SCPicker")
+            path = File(rootDir.absolutePath + "/Phoenix")
         }
         if (!path.exists())
         // 若不存在，创建目录，可以在应用启动的时候创建
@@ -534,7 +534,7 @@ object PictureFileUtils {
         }
 
     /**
-     * set empty SCPicker Cache
+     * set empty Phoenix Cache
 
      * @param mContext
      */

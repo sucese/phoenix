@@ -20,7 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.guoxiaoxing.phoenix.R
-import com.guoxiaoxing.phoenix.picker.anim.OptAnimationLoader
+import com.guoxiaoxing.phoenix.picker.util.AnimationLoader
 import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
@@ -40,8 +40,8 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     private var enableCamera = false
     private var onPicktChangedListener: OnPickChangedListener? = null
     private val maxSelectNum: Int
-    private var images: MutableList<MediaEntity> = ArrayList()
-    private var selectImages: MutableList<MediaEntity> = ArrayList()
+    private val allMediaList: MutableList<MediaEntity> = ArrayList()
+    private val pickMediaList: MutableList<MediaEntity> = ArrayList()
     private val enablePreview: Boolean
     private var selectMode = PhoenixConstant.MULTIPLE
     private var enablePreviewVideo = false
@@ -51,7 +51,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     private val overrideWidth: Int
     private val overrideHeight: Int
     private val sizeMultiplier: Float
-    private val animation: Animation by lazy { OptAnimationLoader.loadAnimation(context, R.anim.phoenix_window_in) }
+    private val animation: Animation by lazy { AnimationLoader.loadAnimation(context, R.anim.phoenix_window_in) }
     private val mimeType: Int
     private val zoomAnim: Boolean
     var isExceedMax: Boolean = false
@@ -72,36 +72,27 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         this.zoomAnim = config.isZoomAnim
     }
 
-    fun bindAllList(images: MutableList<MediaEntity>) {
-        this.images = images
+    fun setAllMediaList(medias: MutableList<MediaEntity>) {
+        allMediaList.clear()
+        allMediaList.addAll(medias)
         notifyDataSetChanged()
     }
 
-    fun bindPickList(images: MutableList<MediaEntity>) {
-        val selection = ArrayList<MediaEntity>()
-        for (mediaEntity in images) {
-            selection.add(mediaEntity)
-        }
-        this.selectImages = selection
+    fun getAllMediaList(): MutableList<MediaEntity>{
+        return allMediaList
+    }
+
+    fun setPickMediaList(medias: MutableList<MediaEntity>) {
+        pickMediaList.clear()
+        pickMediaList.addAll(medias)
         subSelectPosition()
         if (onPicktChangedListener != null) {
-            onPicktChangedListener!!.onChange(selectImages)
+            onPicktChangedListener!!.onChange(pickMediaList)
         }
     }
 
-    val selectedImages: MutableList<MediaEntity>
-        get() {
-            if (selectImages == null) {
-                selectImages = ArrayList<MediaEntity>()
-            }
-            return selectImages
-        }
-
-    fun getImages(): MutableList<MediaEntity> {
-        if (images == null) {
-            images = ArrayList<MediaEntity>()
-        }
-        return images
+    fun getPickMediaList(): MutableList<MediaEntity>{
+        return pickMediaList
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -132,7 +123,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             }
         } else {
             val contentHolder = holder as ContentViewHolder
-            val image = images!![if (enableCamera) position - 1 else position]
+            val image = allMediaList!![if (enableCamera) position - 1 else position]
             image.position = contentHolder.adapterPosition
             val path = image.finalPath
             val pictureType = image.mimeType
@@ -207,7 +198,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
 
 
     override fun getItemCount(): Int {
-        return if (enableCamera) images!!.size + 1 else images!!.size
+        return if (enableCamera) allMediaList!!.size + 1 else allMediaList!!.size
     }
 
     inner class HeaderViewHolder(headerView: View) : RecyclerView.ViewHolder(headerView)
@@ -215,7 +206,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     inner class ContentViewHolder(contentView: View) : RecyclerView.ViewHolder(contentView)
 
     fun isSelected(image: MediaEntity): Boolean {
-        for (mediaEntity in selectImages!!) {
+        for (mediaEntity in pickMediaList!!) {
             if (TextUtils.isEmpty(mediaEntity.localPath) || TextUtils.isEmpty(image.localPath)) {
                 return false
             }
@@ -231,7 +222,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
      */
     private fun notifyCheckChanged(contentViewHolder: ContentViewHolder, imageBean: MediaEntity) {
         contentViewHolder.itemView.tv_check.text = ""
-        for (mediaEntity in selectImages!!) {
+        for (mediaEntity in pickMediaList!!) {
             if (mediaEntity.localPath == imageBean.localPath) {
                 imageBean.number = mediaEntity.number
                 mediaEntity.setPosition(imageBean.getPosition())
@@ -250,10 +241,10 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     private fun changeCheckboxState(contentHolderContent: ContentViewHolder, image: MediaEntity) {
         val isChecked = contentHolderContent.itemView.tv_check.isSelected
         if (isChecked) {
-            for (mediaEntity in selectImages) {
+            for (mediaEntity in pickMediaList) {
                 if (mediaEntity.localPath == image.localPath) {
-                    selectImages.remove(mediaEntity)
-                    DebugUtil.i("selectImages remove::", config.mediaList.size.toString() + "")
+                    pickMediaList.remove(mediaEntity)
+                    DebugUtil.i("pickMediaList remove::", config.mediaList.size.toString() + "")
                     subSelectPosition()
                     disZoom(contentHolderContent.itemView.iv_picture)
                     break
@@ -267,23 +258,23 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
                 return
             }
 
-            selectImages.add(image)
-            DebugUtil.i("selectImages add::", config.mediaList.size.toString() + "")
-            image.number = selectImages!!.size
+            pickMediaList.add(image)
+            DebugUtil.i("pickMediaList add::", config.mediaList.size.toString() + "")
+            image.number = pickMediaList!!.size
             VoiceUtils.playVoice(context, enableVoice)
             zoom(contentHolderContent.itemView.iv_picture)
         }
 
         //通知点击项发生了改变
-        isExceedMax = selectImages.size >= maxSelectNum && maxSelectNum != 0
-        if (isExceedMax || selectImages.size == maxSelectNum - 1) {
+        isExceedMax = pickMediaList.size >= maxSelectNum && maxSelectNum != 0
+        if (isExceedMax || pickMediaList.size == maxSelectNum - 1) {
             notifyDataSetChanged()
         } else {
             notifyItemChanged(contentHolderContent.adapterPosition)
             selectImage(contentHolderContent, !isChecked, false)
         }
         if (onPicktChangedListener != null) {
-            onPicktChangedListener!!.onChange(selectImages)
+            onPicktChangedListener!!.onChange(pickMediaList)
         }
     }
 
@@ -292,11 +283,11 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
      */
     private fun subSelectPosition() {
         if (is_checked_num) {
-            val size = selectImages.size
+            val size = pickMediaList.size
             var index = 0
             val length = size
             while (index < length) {
-                val mediaEntity = selectImages[index]
+                val mediaEntity = pickMediaList[index]
                 mediaEntity.number = index + 1
                 notifyItemChanged(mediaEntity.position)
                 index++

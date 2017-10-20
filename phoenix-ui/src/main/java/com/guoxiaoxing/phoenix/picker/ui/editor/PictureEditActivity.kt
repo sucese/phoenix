@@ -2,10 +2,10 @@ package com.guoxiaoxing.phoenix.picker.ui.editor
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
+import com.guoxiaoxing.phoenix.picker.ui.BaseActivity
 
 /**
  * The picture edit activity
@@ -15,7 +15,7 @@ import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
  *
  * @author guoxiaoxing
  */
-class PictureEditActivity : AppCompatActivity() {
+class PictureEditActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

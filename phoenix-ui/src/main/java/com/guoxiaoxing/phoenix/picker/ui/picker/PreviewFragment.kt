@@ -26,6 +26,7 @@ import com.guoxiaoxing.phoenix.picker.rx.bus.Subscribe
 import com.guoxiaoxing.phoenix.picker.rx.bus.ThreadMode
 import com.guoxiaoxing.phoenix.picker.ui.BaseFragment
 import com.guoxiaoxing.phoenix.picker.ui.camera.OnPictureEditListener
+import com.guoxiaoxing.phoenix.picker.ui.editor.PictureEditFragment
 import com.guoxiaoxing.phoenix.picker.util.*
 import com.guoxiaoxing.phoenix.picker.widget.photoview.OnPhotoTapListener
 import com.guoxiaoxing.phoenix.picker.widget.photoview.PhotoView
@@ -456,15 +457,15 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
             }
             onResult(images)
         } else if (id == R.id.preview_ll_edit) {
-//            val rotateFragment = PictureEditFragment.newInstance()
-//            val bundle = Bundle()
-//            val path = pickMediaList[preview_pager.currentItem].localPath
-//            if (path != null) {
-//                bundle.putString(PhoenixConstant.KEY_FILE_PATH, path);
-//                rotateFragment.setArguments(bundle);
-//                getActivity().getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.preview_fragment_container, rotateFragment).addToBackStack(null).commitAllowingStateLoss();
-//            }
+            val rotateFragment = PictureEditFragment.newInstance()
+            val bundle = Bundle()
+            val path = allMediaList[preview_pager.currentItem].localPath
+            if (path != null) {
+                bundle.putString(PhoenixConstant.KEY_FILE_PATH, path);
+                rotateFragment.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.preview_fragment_container, rotateFragment).addToBackStack(null).commitAllowingStateLoss();
+            }
         }
     }
 

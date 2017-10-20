@@ -26,23 +26,21 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridImageAdapter extends RecyclerView.Adapter<GridImageAdapter.ViewHolder> {
+public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     public static final int TYPE_CAMERA = 1;
     public static final int TYPE_PICTURE = 2;
     private LayoutInflater mInflater;
     private List<MediaEntity> list = new ArrayList<>();
     private int selectMax = 9;
     private Context context;
-    /**
-     * 点击添加图片跳转
-     */
+
     private onAddPicClickListener mOnAddPicClickListener;
 
     public interface onAddPicClickListener {
         void onAddPicClick();
     }
 
-    public GridImageAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
+    public MediaAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
         this.mOnAddPicClickListener = mOnAddPicClickListener;

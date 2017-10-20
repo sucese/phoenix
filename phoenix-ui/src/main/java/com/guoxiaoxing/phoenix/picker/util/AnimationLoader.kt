@@ -1,4 +1,4 @@
-package com.guoxiaoxing.phoenix.picker.anim
+package com.guoxiaoxing.phoenix.picker.util
 
 import android.content.Context
 import android.content.res.Resources
@@ -17,7 +17,7 @@ import org.xmlpull.v1.XmlPullParserException
 
 import java.io.IOException
 
-object OptAnimationLoader {
+object AnimationLoader {
 
     @Throws(Resources.NotFoundException::class)
     fun loadAnimation(context: Context, id: Int): Animation {

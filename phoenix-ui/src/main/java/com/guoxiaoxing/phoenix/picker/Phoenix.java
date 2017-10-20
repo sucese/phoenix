@@ -12,18 +12,18 @@ import com.guoxiaoxing.phoenix.picker.ui.picker.PickerActivity;
 import com.guoxiaoxing.phoenix.picker.ui.picker.PreviewActivity;
 import com.guoxiaoxing.phoenix.picker.util.DoubleUtils;
 
-public final class SCPicker implements Starter {
+public final class Phoenix implements Starter {
 
     private static volatile PhoenixOption option;
 
-    public SCPicker() {
+    public Phoenix() {
 
     }
 
     public static PhoenixOption with() {
 
         if (option == null) {
-            synchronized (SCPicker.class) {
+            synchronized (Phoenix.class) {
                 if (option == null) {
                     option = new PhoenixOption();
                 }

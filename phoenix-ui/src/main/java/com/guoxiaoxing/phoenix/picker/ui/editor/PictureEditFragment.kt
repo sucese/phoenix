@@ -21,6 +21,7 @@ import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.picker.listener.LayerViewProvider
 import com.guoxiaoxing.phoenix.picker.model.*
+import com.guoxiaoxing.phoenix.picker.ui.BaseFragment
 import com.guoxiaoxing.phoenix.picker.util.*
 import com.guoxiaoxing.phoenix.picker.widget.editor.ColorSeekBar
 import com.guoxiaoxing.phoenix.picker.widget.editor.DragToDeleteView
@@ -52,7 +53,7 @@ import java.util.*
  *
  * @author guoxiaoxing
  */
-class PictureEditFragment : Fragment(), LayerViewProvider, com.guoxiaoxing.phoenix.picture.edit.operation.OperationProcessor, OperationListener,
+class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.phoenix.picture.edit.operation.OperationProcessor, OperationListener,
         com.guoxiaoxing.phoenix.picture.edit.operation.OperationDetailListener, com.guoxiaoxing.phoenix.picture.edit.operation.OnRevokeListener {
 
     //data

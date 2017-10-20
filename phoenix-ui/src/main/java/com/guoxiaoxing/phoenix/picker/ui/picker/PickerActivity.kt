@@ -69,7 +69,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                 isAnimation = selectImages.size > 0
                 val position = obj.position
                 DebugUtil.i(TAG, "刷新下标::" + position)
-                adapter.bindPickList(selectImages)
+                adapter.setPickMediaList(selectImages)
                 //通知点击项发生了改变
                 val isExceedMax = selectImages.size >= maxSelectNum && maxSelectNum != 0
                 adapter.isExceedMax = isExceedMax
@@ -163,7 +163,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         adapter = PickerAdapter(mContext, option)
         picture_recycler.adapter = adapter
         adapter.setOnPickChangedListener(this)
-        adapter.bindPickList(mediaList)
+        adapter.setPickMediaList(mediaList)
         changeImageNumber(mediaList)
 
         mediaLoader = MediaLoader(this, fileType, isGif, videoSecond.toLong())
@@ -227,7 +227,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                     if (allMediaList == null) {
                         allMediaList = ArrayList<MediaEntity>()
                     }
-                    adapter.bindAllList(allMediaList)
+                    adapter.setAllMediaList(allMediaList)
                     tv_empty.visibility = if (allMediaList.size > 0) View.INVISIBLE else View.VISIBLE
                 }
                 dismissLoadingDialog()
@@ -251,14 +251,14 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
             } else {
                 if (allMediaList.size > 0) {
                     folderWindow.showAsDropDown(rl_picture_title)
-                    val selectedImages = adapter.selectedImages
+                    val selectedImages = adapter.getPickMediaList()
                     folderWindow.notifyDataCheckedStatus(selectedImages)
                 }
             }
         }
 
         if (id == R.id.picture_id_preview) {
-            val selectedImages = adapter.selectedImages
+            val selectedImages = adapter.getPickMediaList()
 
             val mediaEntities = ArrayList<MediaEntity>()
             for (mediaEntity in selectedImages) {
@@ -273,7 +273,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         }
 
         if (id == R.id.pick_ll_ok) {
-            val images = adapter.selectedImages
+            val images = adapter.getPickMediaList()
             val pictureType = if (images.size > 0) images[0].mimeType else ""
             val size = images.size
             val eqImg = !TextUtils.isEmpty(pictureType) && pictureType.startsWith(PhoenixConstant.IMAGE)
@@ -301,7 +301,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
 
     override fun onItemClick(folderName: String, images: MutableList<MediaEntity>) {
         picture_title.text = folderName
-        adapter.bindAllList(images)
+        adapter.setAllMediaList(images)
         folderWindow.dismiss()
     }
 
@@ -338,7 +338,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     }
 
     override fun onPictureClick(mediaEntity: MediaEntity, position: Int) {
-        val images = adapter.getImages()
+        val images = adapter.getPickMediaList()
         startPreview(images, position)
     }
 
@@ -371,7 +371,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                 handlerResult(result)
             }
         } else {
-            val selectedImages = adapter.selectedImages
+            val selectedImages = adapter.getPickMediaList()
             ImagesObservable.instance.saveLocalMedia(previewImages)
             bundle.putSerializable(PhoenixConstant.KEY_SELECT_LIST, selectedImages as Serializable)
             bundle.putInt(PhoenixConstant.KEY_POSITION, position)

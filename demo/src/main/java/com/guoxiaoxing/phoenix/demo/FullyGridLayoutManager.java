@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class FullyGridLayoutManager extends GridLayoutManager {
+
     public FullyGridLayoutManager(Context context, int spanCount) {
         super(context, spanCount);
     }

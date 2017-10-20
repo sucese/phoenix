@@ -11,7 +11,7 @@ import android.support.v4.app.FragmentActivity
 import android.widget.Toast
 
 import com.guoxiaoxing.phoenix.R
-import com.guoxiaoxing.phoenix.picker.SCPicker
+import com.guoxiaoxing.phoenix.picker.Phoenix
 import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.listener.OnPickerListener
@@ -87,10 +87,10 @@ open class BaseActivity : FragmentActivity() {
     protected var enableDelete: Boolean = false
     protected var currentIndex: Int = 0
     protected lateinit var mediaList: MutableList<MediaEntity>
-    protected lateinit var onPickerListener: OnPickerListener
+    protected var onPickerListener: OnPickerListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        option = SCPicker.with()
+        option = Phoenix.with()
         when (option.theme) {
             PhoenixOption.THEME_DEFAULT -> setTheme(R.style.phoenix_style_default)
             PhoenixOption.THEME_RED -> setTheme(R.style.phoenix_style_red)
@@ -350,7 +350,7 @@ open class BaseActivity : FragmentActivity() {
                 && mediaList != null) {
             images.addAll(mediaList)
         }
-        onPickerListener.onPickSuccess(images)
+        onPickerListener?.onPickSuccess(images)
         closeActivity()
     }
 

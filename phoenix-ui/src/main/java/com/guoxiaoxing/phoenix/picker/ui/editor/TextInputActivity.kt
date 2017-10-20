@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.picker.model.InputTextModel
+import com.guoxiaoxing.phoenix.picker.ui.BaseActivity
 import com.guoxiaoxing.phoenix.picker.util.ScreenUtils
 import com.guoxiaoxing.phoenix.picker.widget.editor.ColorSeekBar
 import kotlinx.android.synthetic.main.activity_editor_text_input.*
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_editor_text_input.*
  *
  * @author guoxiaoxing
  */
-class TextInputActivity : AppCompatActivity() {
+class TextInputActivity : BaseActivity() {
     private val mResultCode = 301
     private var mTextColor = 0
     private var mTextInputId: String? = null

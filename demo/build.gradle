@@ -32,7 +32,7 @@ dependencies {
 //    compile "com.souche.android.sdk:media-compress-video:$rootProject.ext.version"
 
     //图片/视频库
-    compile project(':phoenix-picker')
+    compile project(':phoenix-ui')
     compile project(':phoenix-compress-video')
     compile project(':phoenix-compress-picture')
 }
