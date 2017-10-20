@@ -156,7 +156,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     private fun setupData(){
         picture_recycler.setHasFixedSize(true)
         picture_recycler.addItemDecoration(GridSpacingItemDecoration(spanCount,
-                ScreenUtils.dip2px(this, 2f), false))
+                ScreenUtil.dip2px(this, 2f), false))
         picture_recycler.layoutManager = GridLayoutManager(this, spanCount)
         (picture_recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 

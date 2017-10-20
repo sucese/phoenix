@@ -26,11 +26,7 @@ import com.guoxiaoxing.phoenix.picker.rx.bus.Subscribe
 import com.guoxiaoxing.phoenix.picker.rx.bus.ThreadMode
 import com.guoxiaoxing.phoenix.picker.ui.BaseFragment
 import com.guoxiaoxing.phoenix.picker.ui.camera.OnPictureEditListener
-import com.guoxiaoxing.phoenix.picker.util.AttrsUtils
-import com.guoxiaoxing.phoenix.picker.util.LightStatusBarUtils
-import com.guoxiaoxing.phoenix.picker.util.ScreenUtils
-import com.guoxiaoxing.phoenix.picker.util.ToolbarUtil
-import com.guoxiaoxing.phoenix.picker.util.VoiceUtils
+import com.guoxiaoxing.phoenix.picker.util.*
 import com.guoxiaoxing.phoenix.picker.widget.photoview.OnPhotoTapListener
 import com.guoxiaoxing.phoenix.picker.widget.photoview.PhotoView
 import com.guoxiaoxing.phoenix.picker.widget.videoview.PhoenixVideoView
@@ -103,7 +99,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         if (!RxBus.default.isRegistered(this)) {
             RxBus.default.register(this)
         }
-        screenWidth = ScreenUtils.getScreenWidth(activity)
+        screenWidth = ScreenUtil.getScreenWidth(activity)
 
         val status_color = AttrsUtils.getTypeValueColor(activity, R.attr.phoenix_preview_status_color)
         ToolbarUtil.setColorNoTranslucent(activity, status_color)

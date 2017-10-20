@@ -12,7 +12,7 @@ import com.guoxiaoxing.phoenix.core.common.PhoenixConstant;
 import com.guoxiaoxing.phoenix.core.listener.OnPickerListener;
 import com.guoxiaoxing.phoenix.core.model.MediaEntity;
 import com.guoxiaoxing.phoenix.core.model.MimeType;
-import com.guoxiaoxing.phoenix.picture.edit.ui.PictureEditActivity;
+import com.guoxiaoxing.phoenix.picker.ui.editor.PictureEditActivity;
 
 import java.util.ArrayList;
 import java.util.List;

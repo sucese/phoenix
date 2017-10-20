@@ -11,7 +11,6 @@
       <module fileurl="file://$PROJECT_DIR$/phoenix-compress-picture/phoenix-compress-picture.iml" filepath="$PROJECT_DIR$/phoenix-compress-picture/phoenix-compress-picture.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-compress-video/phoenix-compress-video.iml" filepath="$PROJECT_DIR$/phoenix-compress-video/phoenix-compress-video.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-core/phoenix-core.iml" filepath="$PROJECT_DIR$/phoenix-core/phoenix-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/phoenix-editor/phoenix-editor.iml" filepath="$PROJECT_DIR$/phoenix-editor/phoenix-editor.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-picker/phoenix-picker.iml" filepath="$PROJECT_DIR$/phoenix-picker/phoenix-picker.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-picker/phoenix-ui.iml" filepath="$PROJECT_DIR$/phoenix-picker/phoenix-ui.iml" />
     </modules>

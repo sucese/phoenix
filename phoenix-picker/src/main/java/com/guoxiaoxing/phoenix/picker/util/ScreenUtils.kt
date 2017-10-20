@@ -1,15 +1,52 @@
 package com.guoxiaoxing.phoenix.picker.util
 
+import android.R
+
 import android.app.Activity
 import android.content.Context
+import android.graphics.Rect
 import android.util.DisplayMetrics
-
+import android.view.View
+import android.widget.FrameLayout
 import java.lang.reflect.Field
 
-object ScreenUtils {
-    /**
-     * dp2px
-     */
+class ScreenUtils private constructor(activity: Activity) {
+
+    private val mChildOfContent: View
+    private var usableHeightPrevious: Int = 0
+    private val frameLayoutParams: FrameLayout.LayoutParams
+
+    init {
+        val content = activity.findViewById(R.id.content) as FrameLayout
+        mChildOfContent = content.getChildAt(0)
+        mChildOfContent.viewTreeObserver.addOnGlobalLayoutListener { possiblyResizeChildOfContent() }
+        frameLayoutParams = mChildOfContent.layoutParams as FrameLayout.LayoutParams
+    }
+
+    private fun possiblyResizeChildOfContent() {
+        val usableHeightNow = computeUsableHeight()
+        if (usableHeightNow != usableHeightPrevious) {
+            val usableHeightSansKeyboard = mChildOfContent.rootView.height
+            val heightDifference = usableHeightSansKeyboard - usableHeightNow
+            if (heightDifference > usableHeightSansKeyboard / 4) {
+                // keyboard probably just became visible
+                frameLayoutParams.height = usableHeightSansKeyboard - heightDifference
+            } else {
+                // keyboard probably just became hidden
+                frameLayoutParams.height = usableHeightSansKeyboard
+            }
+            mChildOfContent.requestLayout()
+            usableHeightPrevious = usableHeightNow
+        }
+    }
+
+    private fun computeUsableHeight(): Int {
+        val r = Rect()
+        mChildOfContent.getWindowVisibleDisplayFrame(r)
+        return r.bottom - r.top
+    }
+
+
     fun dip2px(context: Context, dpValue: Float): Int {
         val scale = context.resources.displayMetrics.density
         return (dpValue * scale + 0.5f).toInt()
@@ -42,7 +79,13 @@ object ScreenUtils {
         } catch (e1: Exception) {
             e1.printStackTrace()
         }
-
         return statusBarHeight
     }
+
+    companion object {
+        fun assistActivity(activity: Activity) {
+            ScreenUtils(activity)
+        }
+    }
+
 }

@@ -21,6 +21,7 @@ import java.util.Collections
 import java.util.Comparator
 
 class MediaLoader(private val activity: FragmentActivity, type: Int, private val isGif: Boolean, videoS: Long) {
+
     private var type = PhoenixConstant.TYPE_IMAGE
     private var videoS: Long = 0
 

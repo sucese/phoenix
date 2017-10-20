@@ -293,4 +293,11 @@
         <item name="android:paddingLeft">16dip</item>
         <item name="android:paddingRight">16dip</item>
     </style>
+
+    <style name="PictureEditTheme" parent="@style/PhoenixTheme">
+        <item name="colorPrimary">@color/default_color_primary</item>
+        <item name="android:windowBackground">@color/transparent_6f</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>

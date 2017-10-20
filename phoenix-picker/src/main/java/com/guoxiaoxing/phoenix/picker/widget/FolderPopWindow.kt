@@ -22,10 +22,7 @@ import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.picker.adapter.PickerAlbumAdapter
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.picker.model.MediaFolder
-import com.guoxiaoxing.phoenix.picker.util.AttrsUtils
-import com.guoxiaoxing.phoenix.picker.util.DebugUtil
-import com.guoxiaoxing.phoenix.picker.util.ScreenUtils
-import com.guoxiaoxing.phoenix.picker.util.StringUtils
+import com.guoxiaoxing.phoenix.picker.util.*
 
 class FolderPopWindow(private val context: Context, private val mimeType: Int) : PopupWindow(), View.OnClickListener {
     private val window: View
@@ -42,8 +39,8 @@ class FolderPopWindow(private val context: Context, private val mimeType: Int) :
     init {
         window = LayoutInflater.from(context).inflate(R.layout.picture_window_folder, null)
         this.contentView = window
-        this.width = ScreenUtils.getScreenWidth(context)
-        this.height = ScreenUtils.getScreenHeight(context)
+        this.width = ScreenUtil.getScreenWidth(context)
+        this.height = ScreenUtil.getScreenHeight(context)
         this.animationStyle = R.style.style_window
         this.isFocusable = true
         this.isOutsideTouchable = true
@@ -60,9 +57,9 @@ class FolderPopWindow(private val context: Context, private val mimeType: Int) :
         id_ll_root = window.findViewById(R.id.id_ll_root) as LinearLayout
         adapter = PickerAlbumAdapter(context)
         recyclerView = window.findViewById(R.id.folder_list) as RecyclerView
-        recyclerView!!.layoutParams.height = (ScreenUtils.getScreenHeight(context) * 0.6).toInt()
+        recyclerView!!.layoutParams.height = (ScreenUtil.getScreenHeight(context) * 0.6).toInt()
         recyclerView!!.addItemDecoration(RecycleViewDivider(
-                context, LinearLayoutManager.HORIZONTAL, ScreenUtils.dip2px(context, 0f), ContextCompat.getColor(context, R.color.transparent)))
+                context, LinearLayoutManager.HORIZONTAL, ScreenUtil.dip2px(context, 0f), ContextCompat.getColor(context, R.color.transparent)))
         recyclerView!!.layoutManager = LinearLayoutManager(context)
         recyclerView!!.adapter = adapter
         id_ll_root!!.setOnClickListener(this)

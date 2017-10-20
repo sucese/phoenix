@@ -1,39 +1,32 @@
 package com.guoxiaoxing.phoenix.picker.util
 
-import android.graphics.Bitmap
 import android.support.v4.util.LruCache
+import com.guoxiaoxing.phoenix.picker.model.HierarchyCache
 
 /**
+ * Layer data cache for save layer data and restore
+ * <p>
  * For more information, you can visit https://github.com/guoxiaoxing or contact me by
  * guoxiaoxingse@163.com.
-
+ *
  * @author guoxiaoxing
- * *
- * @since 2017/10/16 上午10:08
  */
 object CacheUtils {
 
-    private val lruCache: LruCache<String, Bitmap>
+    private val mHierarchyCache = LruCache<String, MutableMap<String, HierarchyCache>>(5)
 
-    init {
-        val maxMemory = (Runtime.getRuntime().totalMemory() / 1024).toInt()
-        val cacheSize = maxMemory / 8
-        lruCache = object : LruCache<String, Bitmap>(cacheSize) {
-            override fun sizeOf(key: String?, bitmap: Bitmap?): Int {
-                return bitmap!!.rowBytes * bitmap.height / 1024
-            }
+    fun getCache(editorId: String): MutableMap<String, HierarchyCache> {
+        var cache = mHierarchyCache[editorId]
+        if (cache == null) {
+            cache = mutableMapOf()
+            mHierarchyCache.put(editorId, cache)
         }
+        return cache
     }
 
-    operator fun get(key: String): Bitmap {
-        return lruCache.get(key)
-    }
-
-    fun put(key: String, bitmap: Bitmap) {
-        lruCache.put(key, bitmap)
-    }
-
-    fun remove(key: String) {
-        lruCache.remove(key)
+    fun setCache(editorId: String, data: MutableMap<String, HierarchyCache>?) {
+        data?.let {
+            mHierarchyCache.put(editorId, it)
+        }
     }
 }

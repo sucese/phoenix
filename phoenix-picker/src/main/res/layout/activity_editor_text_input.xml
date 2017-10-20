@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvCancelInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/editor_cancel"
+            android:textColor="@color/white_f"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvConfirmInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="10dp"
+            android:text="@string/editor_complete"
+            android:textColor="@color/green"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/etInput"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:gravity="top"
+        android:inputType="none"
+        android:maxLength="30"
+        android:textColor="@color/white_f"
+        android:textCursorDrawable="@null"
+        android:textSize="25sp"
+        tools:text="测试文本" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="?attr/colorPrimary"
+        android:gravity="center_vertical">
+
+        <com.guoxiaoxing.phoenix.picker.widget.editor.ColorSeekBar
+            android:id="@+id/colorBarInput"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            app:barHeight="6dp"
+            app:colorBarPosition="8"
+            app:colorSeeds="@array/color_seeds" />
+    </RelativeLayout>
+
+</LinearLayout>

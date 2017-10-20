@@ -53,6 +53,14 @@
             android:name="com.guoxiaoxing.phoenix.picker.ui.picker.PreviewActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode"
             android:screenOrientation="sensor" />
+        <activity
+            android:name="com.guoxiaoxing.phoenix.picker.ui.editor.PictureEditActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.guoxiaoxing.phoenix.picker.ui.editor.TextInputActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>
