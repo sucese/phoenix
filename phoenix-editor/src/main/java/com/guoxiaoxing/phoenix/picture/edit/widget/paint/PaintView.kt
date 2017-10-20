@@ -56,6 +56,4 @@ class PaintView : BasePaintHierarchyView<PaintSaveState> {
     fun setPaintColor(color: Int) {
         mDrawPaint.color = color
     }
-
-
 }

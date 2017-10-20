@@ -60,7 +60,7 @@ open class BaseFragment : Fragment() {
     protected var enableCrop: Boolean = false
     protected var enableCompress: Boolean = false
     protected var enPreviewVideo: Boolean = false
-    protected var checkNumMode: Boolean = false
+    protected var checkNumberMode: Boolean = false
     protected var openClickSound: Boolean = false
     protected var numComplete: Boolean = false
     protected var freeStyleCropEnabled: Boolean = false
@@ -215,7 +215,7 @@ open class BaseFragment : Fragment() {
         minSelectNum = option.minSelectNum
         enablePreview = option.isEnablePreview
         enPreviewVideo = option.isEnPreviewVideo
-        checkNumMode = option.isCheckNumMode
+        checkNumberMode = option.isCheckNumMode
         openClickSound = option.isOpenClickSound
         videoSecond = option.videoSecond
         enableCrop = option.isEnableCrop

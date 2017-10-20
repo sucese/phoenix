@@ -7,20 +7,16 @@ import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.text.TextUtils
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.guoxiaoxing.phoenix.R
-import com.guoxiaoxing.phoenix.picker.anim.OptAnimationLoader
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
@@ -36,7 +32,9 @@ import com.guoxiaoxing.phoenix.picker.util.ScreenUtils
 import com.guoxiaoxing.phoenix.picker.util.ToolbarUtil
 import com.guoxiaoxing.phoenix.picker.util.VoiceUtils
 import com.guoxiaoxing.phoenix.picker.widget.photoview.OnPhotoTapListener
-import kotlinx.android.synthetic.main.adapter_preview.*
+import com.guoxiaoxing.phoenix.picker.widget.photoview.PhotoView
+import com.guoxiaoxing.phoenix.picker.widget.videoview.PhoenixVideoView
+
 import kotlinx.android.synthetic.main.fragment_preview.*
 
 import java.util.ArrayList
@@ -44,10 +42,9 @@ import java.util.ArrayList
 class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.AnimationListener, OnPictureEditListener {
 
     private var position: Int = 0
-    private var images: List<MediaEntity> = ArrayList()
-    private var selectImages: MutableList<MediaEntity> = ArrayList()
+    private var allMediaList: List<MediaEntity> = ArrayList()
+    private var pickMediaList: MutableList<MediaEntity> = ArrayList()
     private lateinit var adapter: SimpleFragmentAdapter
-    private lateinit var animation: Animation
     private var refresh: Boolean = false
     private var index: Int = 0
     private var screenWidth: Int = 0
@@ -69,111 +66,17 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         super.onCreate(savedInstanceState)
     }
 
-
     @SuppressLint("StringFormatMatches")
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_preview, container, false)
-        if (!RxBus.default.isRegistered(this)) {
-            RxBus.default.register(this)
-        }
-        screenWidth = ScreenUtils.getScreenWidth(activity)
-        val status_color = AttrsUtils.getTypeValueColor(activity, R.attr.phoenix_preview_status_color)
-        ToolbarUtil.setColorNoTranslucent(activity, status_color)
-        LightStatusBarUtils.setLightStatusBar(activity, previewStatusFont)
-        animation = OptAnimationLoader.loadAnimation(activity, R.anim.phoenix_window_in)
-        animation.setAnimationListener(this)
-        picture_left_back.setOnClickListener(this)
-        pick_ll_ok.setOnClickListener(this)
+        val view = inflater?.inflate(R.layout.fragment_preview, container, false)
 
-        position = arguments.getInt(PhoenixConstant.KEY_POSITION, 0)
-        tv_ok.text = if (numComplete)
-            getString(R.string.picture_done_front_num, 0, maxSelectNum)
-        else
-            getString(R.string.picture_please_select)
-        tv_picture_num.isSelected = checkNumMode
-        preview_ll_edit.setOnClickListener(this)
-
-        selectImages = arguments.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_SELECT_LIST)
-        images = arguments.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_LIST)
-
-        initViewPageAdapterData()
-        ll_check.setOnClickListener(View.OnClickListener {
-            if (images != null && images.size > 0) {
-                val image = images[preview_pager.currentItem]
-                val pictureType = if (selectImages.size > 0)
-                    selectImages[0].mimeType
-                else
-                    ""
-                if (!TextUtils.isEmpty(pictureType)) {
-                    val toEqual = MimeType.mimeToEqual(pictureType, image.mimeType)
-                    if (!toEqual) {
-                        showToast(getString(R.string.picture_rule))
-                        return@OnClickListener
-                    }
-                }
-                // 刷新图片列表中图片状态
-                val isChecked: Boolean
-                if (!tv_check.isSelected) {
-                    isChecked = true
-                    tv_check.isSelected = true
-                    tv_check.startAnimation(animation)
-                } else {
-                    isChecked = false
-                    tv_check.isSelected = false
-                }
-                if (selectImages.size >= maxSelectNum && isChecked) {
-                    showToast(getString(R.string.phoenix_message_max_number, maxSelectNum))
-                    tv_check.isSelected = false
-                    return@OnClickListener
-                }
-                if (isChecked) {
-                    VoiceUtils.playVoice(mContext, openClickSound)
-                    selectImages.add(image)
-                    image.number = selectImages.size
-                    if (checkNumMode) {
-                        tv_check.text = image.number.toString() + ""
-                    }
-                } else {
-                    for (mediaEntity in selectImages) {
-                        if (mediaEntity.localPath == image.localPath) {
-                            selectImages.remove(mediaEntity)
-                            subSelectPosition()
-                            notifyCheckChanged(mediaEntity)
-                            break
-                        }
-                    }
-                }
-                onSelectNumChange(true)
-            }
-        })
-
-        preview_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                isPreviewEggs(previewEggs, position, positionOffsetPixels)
-            }
-
-            override fun onPageSelected(i: Int) {
-                position = i
-                picture_title.text = (position + 1).toString() + "/" + images.size
-                val mediaEntity = images[position]
-                index = mediaEntity.getPosition()
-                if (!previewEggs) {
-                    if (checkNumMode) {
-                        tv_check.text = mediaEntity.number.toString() + ""
-                        notifyCheckChanged(mediaEntity)
-                    }
-                    onImageChecked(position)
-                }
-                if (mediaEntity.fileType == MimeType.ofImage()) {
-                    ll_picture_edit.visibility = View.VISIBLE
-                } else {
-                    ll_picture_edit.visibility = View.GONE
-                }
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {}
-        })
         return view
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupView()
+        setupData()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -193,34 +96,104 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         if (RxBus.default.isRegistered(this)) {
             RxBus.default.unregister(this)
         }
-        animation.cancel()
+    }
+
+    @SuppressLint("StringFormatMatches")
+    private fun setupView() {
+        if (!RxBus.default.isRegistered(this)) {
+            RxBus.default.register(this)
+        }
+        screenWidth = ScreenUtils.getScreenWidth(activity)
+
+        val status_color = AttrsUtils.getTypeValueColor(activity, R.attr.phoenix_preview_status_color)
+        ToolbarUtil.setColorNoTranslucent(activity, status_color)
+        LightStatusBarUtils.setLightStatusBar(activity, previewStatusFont)
+
+        preview_tv_ok_text.text = if (numComplete)
+            getString(R.string.picture_done_front_num, 0, maxSelectNum)
+        else
+            getString(R.string.picture_please_select)
+        preview_tv_ok_number.isSelected = checkNumberMode
+
+        picture_left_back.setOnClickListener(this)
+        preview_ll_ok.setOnClickListener(this)
+        preview_ll_edit.setOnClickListener(this)
+    }
+
+    private fun setupData() {
+        position = arguments.getInt(PhoenixConstant.KEY_POSITION, 0)
+        pickMediaList = arguments.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_SELECT_LIST)
+        allMediaList = arguments.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_LIST)
+
+        picture_title.text = (position + 1).toString() + "/" + allMediaList.size
+
+        onPickNumberChange(false)
+        onImageChecked(position)
+        if (allMediaList.isNotEmpty()) {
+            val mediaEntity = allMediaList[position]
+            index = mediaEntity.getPosition()
+            if (checkNumberMode) {
+                preview_tv_ok_number.isSelected = true
+                tv_check.text = mediaEntity.number.toString() + ""
+                notifyCheckChanged(mediaEntity)
+            }
+        }
+
+        adapter = SimpleFragmentAdapter()
+        preview_pager.adapter = adapter
+        preview_pager.currentItem = position
+        preview_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                isPreviewEggs(previewEggs, position, positionOffsetPixels)
+            }
+
+            override fun onPageSelected(i: Int) {
+                position = i
+                picture_title.text = (position + 1).toString() + "/" + allMediaList.size
+                val mediaEntity = allMediaList[position]
+                index = mediaEntity.getPosition()
+                if (!previewEggs) {
+                    if (checkNumberMode) {
+                        tv_check.text = mediaEntity.number.toString() + ""
+                        notifyCheckChanged(mediaEntity)
+                    }
+                    onImageChecked(position)
+                }
+                if (mediaEntity.fileType == MimeType.ofImage()) {
+                    ll_picture_edit.visibility = View.VISIBLE
+                } else {
+                    ll_picture_edit.visibility = View.GONE
+                }
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {}
+        })
     }
 
     /**
      * 这里没实际意义，好处是预览图片时 滑动到屏幕一半以上可看到下一张图片是否选中了
-
      * @param previewEggs          是否显示预览友好体验
      * *
      * @param positionOffsetPixels 滑动偏移量
      */
     private fun isPreviewEggs(previewEggs: Boolean, position: Int, positionOffsetPixels: Int) {
         if (previewEggs) {
-            if (images.size > 0 && images != null) {
+            if (allMediaList.size > 0 && allMediaList != null) {
                 val mediaEntity: MediaEntity
                 val num: Int
                 if (positionOffsetPixels < screenWidth / 2) {
-                    mediaEntity = images[position]
+                    mediaEntity = allMediaList[position]
                     tv_check.isSelected = isSelected(mediaEntity)
-                    if (checkNumMode) {
+                    if (checkNumberMode) {
                         num = mediaEntity.number
                         tv_check.text = num.toString() + ""
                         notifyCheckChanged(mediaEntity)
                         onImageChecked(position)
                     }
                 } else {
-                    mediaEntity = images[position + 1]
+                    mediaEntity = allMediaList[position + 1]
                     tv_check.isSelected = isSelected(mediaEntity)
-                    if (checkNumMode) {
+                    if (checkNumberMode) {
                         num = mediaEntity.number
                         tv_check.text = num.toString() + ""
                         notifyCheckChanged(mediaEntity)
@@ -231,31 +204,13 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         }
     }
 
-    private fun initViewPageAdapterData() {
-        picture_title.text = (position + 1).toString() + "/" + images.size
-        adapter = SimpleFragmentAdapter()
-        preview_pager.adapter = adapter
-        preview_pager.currentItem = position
-        onSelectNumChange(false)
-        onImageChecked(position)
-        if (images.size > 0) {
-            val mediaEntity = images[position]
-            index = mediaEntity.getPosition()
-            if (checkNumMode) {
-                tv_picture_num.isSelected = true
-                tv_check.text = mediaEntity.number.toString() + ""
-                notifyCheckChanged(mediaEntity)
-            }
-        }
-    }
-
     /**
      * 选择按钮更新
      */
     private fun notifyCheckChanged(imageBean: MediaEntity) {
-        if (checkNumMode) {
+        if (checkNumberMode) {
             tv_check.text = ""
-            for (mediaEntity in selectImages) {
+            for (mediaEntity in pickMediaList) {
                 if (mediaEntity.localPath == imageBean.localPath) {
                     imageBean.number = mediaEntity.number
                     tv_check.text = imageBean.number.toString()
@@ -270,9 +225,9 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     private fun subSelectPosition() {
         run {
             var index = 0
-            val len = selectImages.size
+            val len = pickMediaList.size
             while (index < len) {
-                val mediaEntity = selectImages[index]
+                val mediaEntity = pickMediaList[index]
                 mediaEntity.number = index + 1
                 index++
             }
@@ -281,12 +236,11 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
     /**
      * 判断当前图片是否选中
-
      * @param position
      */
     fun onImageChecked(position: Int) {
-        if (images != null && images.size > 0) {
-            val mediaEntity = images[position]
+        if (allMediaList != null && allMediaList.size > 0) {
+            val mediaEntity = allMediaList[position]
             tv_check.isSelected = isSelected(mediaEntity)
         } else {
             tv_check.isSelected = false
@@ -295,13 +249,12 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
     /**
      * 当前图片是否选中
-
      * @param image
      * *
      * @return
      */
     fun isSelected(image: MediaEntity): Boolean {
-        for (mediaEntity in selectImages) {
+        for (mediaEntity in pickMediaList) {
             if (mediaEntity.localPath == image.localPath) {
                 return true
             }
@@ -312,30 +265,27 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     /**
      * 更新图片选择数量
      */
-    @SuppressLint("StringFormatMatches")
-    fun onSelectNumChange(isRefresh: Boolean) {
+    @SuppressLint("StringFormatMatches", "SetTextI18n")
+    fun onPickNumberChange(isRefresh: Boolean) {
         this.refresh = isRefresh
-        val enable = selectImages.size != 0
+        val enable = pickMediaList.size != 0
         if (enable) {
-            pick_ll_ok.isEnabled = true
+            preview_ll_ok.isEnabled = true
             if (numComplete) {
-                tv_ok.text = getString(R.string.picture_done_front_num, selectImages.size, maxSelectNum)
+                preview_tv_ok_text.text = getString(R.string.picture_done_front_num, pickMediaList.size, maxSelectNum)
             } else {
-                if (refresh) {
-                    tv_picture_num.startAnimation(animation)
-                }
-                tv_picture_num.visibility = View.VISIBLE
-                tv_picture_num.text = selectImages.size.toString() + ""
-                tv_ok.text = getString(R.string.picture_completed)
+                preview_tv_ok_number.visibility = View.VISIBLE
+                preview_tv_ok_number.text = pickMediaList.size.toString() + ""
+                preview_tv_ok_text.text = getString(R.string.picture_completed)
             }
         } else {
-            pick_ll_ok.isEnabled = false
+            preview_ll_ok.isEnabled = false
             //            tv_ok.setTextColor(ContextCompat.getColor(getActivity(), R.color.tab_color_false));
             if (numComplete) {
-                tv_ok.text = getString(R.string.picture_done_front_num, 0, maxSelectNum)
+                preview_tv_ok_text.text = getString(R.string.picture_done_front_num, 0, maxSelectNum)
             } else {
-                tv_picture_num.visibility = View.INVISIBLE
-                tv_ok.text = getString(R.string.picture_please_select)
+                preview_tv_ok_number.visibility = View.INVISIBLE
+                preview_tv_ok_text.text = getString(R.string.picture_please_select)
             }
         }
         updatePickerActivity(refresh)
@@ -343,12 +293,11 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
     /**
      * 更新图片列表选中效果
-
      * @param isRefresh isRefresh
      */
     private fun updatePickerActivity(isRefresh: Boolean) {
         if (isRefresh) {
-            val obj = EventEntity(PhoenixConstant.FLAG_PREVIEW_UPDATE_SELECT, selectImages, index)
+            val obj = EventEntity(PhoenixConstant.FLAG_PREVIEW_UPDATE_SELECT, pickMediaList, index)
             RxBus.default.post(obj)
         }
     }
@@ -364,9 +313,9 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     }
 
     override fun onEditSucess(editPath: String) {
-        val mediaEntity = images[preview_pager.currentItem]
+        val mediaEntity = allMediaList[preview_pager.currentItem]
         mediaEntity.editPath = editPath
-        for (pickMediaEntity in selectImages) {
+        for (pickMediaEntity in pickMediaList) {
             if (TextUtils.equals(mediaEntity.localPath, pickMediaEntity.localPath)) {
                 pickMediaEntity.editPath = editPath
             }
@@ -378,7 +327,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     private inner class SimpleFragmentAdapter : PagerAdapter() {
 
         override fun getCount(): Int {
-            return images.size
+            return allMediaList.size
         }
 
         override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
@@ -391,7 +340,11 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val contentView = LayoutInflater.from(container.context).inflate(R.layout.adapter_preview, container, false)
-            val mediaEntity = images[position]
+
+            val preview_image = contentView.findViewById(R.id.preview_image) as PhotoView
+            val preview_video = contentView.findViewById(R.id.preview_video) as PhoenixVideoView
+
+            val mediaEntity = allMediaList[position]
             val mimeType = mediaEntity.mimeType
             val eqVideo: Boolean
             if (TextUtils.isEmpty(mimeType)) {
@@ -449,14 +402,61 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         }
     }
 
-
+    @SuppressLint("StringFormatMatches")
     override fun onClick(view: View) {
         val id = view.id
         if (id == R.id.picture_left_back) {
             activity.finish()
             activity.overridePendingTransition(0, R.anim.phoenix_activity_out)
+        } else if (id == R.id.ll_check) {
+            if (allMediaList.isNotEmpty()) {
+                val image = allMediaList[preview_pager.currentItem]
+                val pictureType = if (pickMediaList.size > 0)
+                    pickMediaList[0].mimeType
+                else
+                    ""
+                if (!TextUtils.isEmpty(pictureType)) {
+                    val toEqual = MimeType.mimeToEqual(pictureType, image.mimeType)
+                    if (!toEqual) {
+                        showToast(getString(R.string.picture_rule))
+                        return
+                    }
+                }
+                // 刷新图片列表中图片状态
+                val isChecked: Boolean
+                if (!tv_check.isSelected) {
+                    isChecked = true
+                    tv_check.isSelected = true
+                } else {
+                    isChecked = false
+                    tv_check.isSelected = false
+                }
+                if (pickMediaList.size >= maxSelectNum && isChecked) {
+                    showToast(getString(R.string.phoenix_message_max_number, maxSelectNum))
+                    tv_check.isSelected = false
+                    return
+                }
+                if (isChecked) {
+                    VoiceUtils.playVoice(mContext, openClickSound)
+                    pickMediaList.add(image)
+                    image.number = pickMediaList.size
+                    if (checkNumberMode) {
+                        tv_check.text = image.number.toString() + ""
+                    }
+                } else {
+                    for (mediaEntity in pickMediaList) {
+                        if (mediaEntity.localPath == image.localPath) {
+                            pickMediaList.remove(mediaEntity)
+                            subSelectPosition()
+                            notifyCheckChanged(mediaEntity)
+                            break
+                        }
+                    }
+                }
+                onPickNumberChange(true)
+            }
         } else if (id == R.id.pick_ll_ok) {
-            val images = selectImages
+            val images = pickMediaList
             val pictureType = if (images.size > 0) images[0].mimeType else ""
             val size = images.size
             val eqImg = !TextUtils.isEmpty(pictureType) && pictureType.startsWith(PhoenixConstant.IMAGE)
@@ -494,10 +494,9 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     }
 
     private val currentPath: String
-        get() = images[preview_pager.currentItem].finalPath
+        get() = allMediaList[preview_pager.currentItem].finalPath
 
     companion object {
-
         fun newInstance(): PreviewFragment {
             return PreviewFragment()
         }

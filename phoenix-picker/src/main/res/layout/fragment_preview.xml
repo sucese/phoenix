@@ -93,7 +93,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/pick_ll_ok"
+            android:id="@+id/preview_ll_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -106,7 +106,7 @@
             android:padding="@dimen/phoenix_dimen_8">
 
             <TextView
-                android:id="@+id/tv_ok"
+                android:id="@+id/preview_tv_ok_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -115,7 +115,7 @@
                 android:textSize="@dimen/phoenix_text_14" />
 
             <TextView
-                android:id="@+id/tv_picture_num"
+                android:id="@+id/preview_tv_ok_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"

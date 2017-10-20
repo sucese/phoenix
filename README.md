@@ -129,7 +129,7 @@ public static final String THEME_BLUE = "THEME_BLUE";
         <!--图片列表勾选样式-->
         <item name="picture.checked.style">@drawable/checkbox_selector</item>
         <!--开启图片列表勾选数字模式-->
-        <item name="picture.style.checkNumMode">false</item>
+        <item name="picture.style.checkNumberMode">false</item>
         <!--选择图片样式0/9-->
         <item name="picture.style.numComplete">false</item>
         <!--图片列表底部背景色-->
@@ -192,7 +192,7 @@ private boolean enableGif;//是否显示gif图片
 private boolean enablePreview = true;//是否开启点击预览
 private boolean enPreviewVideo = true;//是否开启视频点击预览
 private boolean enablePreviewAudio = true;//是否开启音频预览
-private boolean checkNumMode;//是否开启数字显示模式
+private boolean checkNumberMode;//是否开启数字显示模式
 private boolean openClickSound = true;//是否开启点击声音
 private boolean previewEggs = true;//预览图片时，是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
 

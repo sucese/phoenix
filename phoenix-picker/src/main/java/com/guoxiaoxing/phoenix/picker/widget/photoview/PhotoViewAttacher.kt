@@ -86,8 +86,8 @@ class PhotoViewAttacher(private val mImageView: ImageView) : View.OnTouchListene
          * Here we decide whether to let the ImageView's parent to start taking
          * over the touch event.
          *
-         * First we check whether this function is enabled. We never want the
-         * parent to take over if we're scaling. We then check the edge we're
+         * First we tv_check whether this function is enabled. We never want the
+         * parent to take over if we're scaling. We then tv_check the edge we're
          * on, and the direction of the scroll (i.e. if we're pulling against
          * the edge, aka 'overscrolling', let the parent take over).
          */

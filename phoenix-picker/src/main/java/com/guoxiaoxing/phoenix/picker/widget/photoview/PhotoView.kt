@@ -24,7 +24,7 @@ class PhotoView : ImageView {
      * @return the attacher.
      */
     private lateinit var attacher: PhotoViewAttacher
-    private lateinit var pendingScaleType: ImageView.ScaleType
+    private var pendingScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_CENTER
 
     @JvmOverloads constructor(context: Context, attr: AttributeSet, defStyle: Int = 0) : super(context, attr, defStyle) {
         init()

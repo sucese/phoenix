@@ -44,21 +44,21 @@ import java.util.ArrayList
  * @since 2017/10/19 下午6:30
  */
 class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.OnItemClickListener,
-        PickerAdapter.OnPhotoSelectChangedListener {
+        PickerAdapter.OnPickChangedListener {
 
     private val TAG = PickerActivity::class.java.simpleName
 
     private lateinit var adapter: PickerAdapter
-    private var images: MutableList<MediaEntity> = ArrayList()
-    private var foldersList: MutableList<MediaFolder> = ArrayList()
+    private var allMediaList: MutableList<MediaEntity> = ArrayList()
+    private var allFolderList: MutableList<MediaFolder> = ArrayList()
+
+    private var isAnimation = false
+    private var previewTextColor: Int = 0
     private lateinit var folderWindow: FolderPopWindow
     private lateinit var animation: Animation
 
-    private var anim = false
-    private var preview_textColor: Int = 0
     private lateinit var rxPermissions: RxPermissions
     private lateinit var mediaLoader: MediaLoader
-    private var audioH: Int = 0
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun eventBus(obj: EventEntity) {
@@ -66,10 +66,10 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         //receive the select result from PreviewActivity
             PhoenixConstant.FLAG_PREVIEW_UPDATE_SELECT -> {
                 val selectImages = obj.mediaEntities
-                anim = selectImages.size > 0
+                isAnimation = selectImages.size > 0
                 val position = obj.position
                 DebugUtil.i(TAG, "刷新下标::" + position)
-                adapter.bindSelectImages(selectImages)
+                adapter.bindPickList(selectImages)
                 //通知点击项发生了改变
                 val isExceedMax = selectImages.size >= maxSelectNum && maxSelectNum != 0
                 adapter.isExceedMax = isExceedMax
@@ -88,11 +88,11 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LightStatusBarUtils.setLightStatusBar(this, statusFont)
         if (!RxBus.default.isRegistered(this)) {
             RxBus.default.register(this)
         }
         rxPermissions = RxPermissions(this)
-        LightStatusBarUtils.setLightStatusBar(this, statusFont)
 
         rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(object : Observer<Boolean> {
@@ -102,6 +102,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                         if (aBoolean!!) {
                             setContentView(R.layout.activity_picker)
                             setupView()
+                            setupData()
                         } else {
                             showToast(getString(R.string.picture_jurisdiction))
                             closeActivity()
@@ -121,34 +122,50 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      * init views
      */
     private fun setupView() {
+        previewTextColor = AttrsUtils.getTypeValueColor(this, R.attr.phoenix_picker_preview_text_color)
 
         isNumberComplete(numComplete)
+
         rl_bottom.visibility = if (selectionMode == PhoenixConstant.SINGLE) View.GONE else View.VISIBLE
-        picture_id_preview.setOnClickListener(this)
         if (fileType == MimeType.ofAudio()) {
             picture_id_preview.visibility = View.GONE
-            audioH = ScreenUtils.getScreenHeight(mContext) + ScreenUtils.getStatusBarHeight(mContext)
         } else {
             picture_id_preview.visibility = if (fileType == PhoenixConstant.TYPE_VIDEO) View.GONE else View.VISIBLE
         }
+
+        picture_title.text = if (fileType == MimeType.ofAudio()) getString(R.string.picture_all_audio) else getString(R.string.picture_camera_roll)
+        tv_empty.text = if (fileType == MimeType.ofAudio()) getString(R.string.picture_audio_empty) else getString(R.string.picture_empty)
+        StringUtils.tempTextFont(tv_empty, fileType)
+
+        val titleText = picture_title.getText().toString().trim { it <= ' ' }
+        if (enableCamera) {
+            enableCamera = StringUtils.isCamera(titleText)
+        }
+
+        folderWindow = FolderPopWindow(this, fileType)
+        folderWindow.setPictureTitleView(picture_title)
+        folderWindow.setOnItemClickListener(this)
+
+        picture_id_preview.setOnClickListener(this)
         picture_left_back.setOnClickListener(this)
         picture_right.setOnClickListener(this)
         pick_ll_ok.setOnClickListener(this)
         picture_title.setOnClickListener(this)
-        val title = if (fileType == MimeType.ofAudio())
-            getString(R.string.picture_all_audio)
-        else
-            getString(R.string.picture_camera_roll)
-        picture_title.setText(title)
-        folderWindow = FolderPopWindow(this, fileType)
-        folderWindow.setPictureTitleView(picture_title)
-        folderWindow.setOnItemClickListener(this)
+    }
+
+    private fun setupData(){
         picture_recycler.setHasFixedSize(true)
         picture_recycler.addItemDecoration(GridSpacingItemDecoration(spanCount,
                 ScreenUtils.dip2px(this, 2f), false))
-        picture_recycler.setLayoutManager(GridLayoutManager(this, spanCount))
-        // 解决调用 notifyItemChanged 闪烁问题,取消默认动画
-        (picture_recycler.getItemAnimator() as SimpleItemAnimator).supportsChangeAnimations = false
+        picture_recycler.layoutManager = GridLayoutManager(this, spanCount)
+        (picture_recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+
+        adapter = PickerAdapter(mContext, option)
+        picture_recycler.adapter = adapter
+        adapter.setOnPickChangedListener(this)
+        adapter.bindPickList(mediaList)
+        changeImageNumber(mediaList)
+
         mediaLoader = MediaLoader(this, fileType, isGif, videoSecond.toLong())
         rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(object : Observer<Boolean> {
@@ -168,25 +185,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
 
                     override fun onComplete() {}
                 })
-
-        tv_empty.text = if (fileType == MimeType.ofAudio())
-            getString(R.string.picture_audio_empty)
-        else
-            getString(R.string.picture_empty)
-
-        StringUtils.tempTextFont(tv_empty, fileType)
-        preview_textColor = AttrsUtils.getTypeValueColor(this, R.attr.phoenix_picker_preview_text_color)
-        adapter = PickerAdapter(mContext, option)
-        adapter.bindSelectImages(mediaList)
-        changeImageNumber(mediaList)
-        picture_recycler.setAdapter(adapter)
-        adapter.setOnPhotoSelectChangedListener(this@PickerActivity)
-        val titleText = picture_title.getText().toString().trim { it <= ' ' }
-        if (enableCamera) {
-            enableCamera = StringUtils.isCamera(titleText)
-        }
     }
-
 
     /**
      * none number style
@@ -212,24 +211,24 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
             override fun loadComplete(folders: MutableList<MediaFolder>) {
                 DebugUtil.i("loadComplete:" + folders.size)
                 if (folders.size > 0) {
-                    foldersList = folders
+                    allFolderList = folders
                     val folder = folders[0]
                     folder.isChecked = true
                     val localImg = folder.images
                     // 这里解决有些机型会出现拍照完，相册列表不及时刷新问题
                     // 因为onActivityResult里手动添加拍照后的照片，
                     // 如果查询出来的图片大于或等于当前adapter集合的图片则取更新后的，否则就取本地的
-                    if (localImg.size >= images.size) {
-                        images = localImg
+                    if (localImg.size >= allMediaList.size) {
+                        allMediaList = localImg
                         folderWindow.bindFolder(folders)
                     }
                 }
                 if (adapter != null) {
-                    if (images == null) {
-                        images = ArrayList<MediaEntity>()
+                    if (allMediaList == null) {
+                        allMediaList = ArrayList<MediaEntity>()
                     }
-                    adapter.bindImagesData(images)
-                    tv_empty.visibility = if (images.size > 0) View.INVISIBLE else View.VISIBLE
+                    adapter.bindAllList(allMediaList)
+                    tv_empty.visibility = if (allMediaList.size > 0) View.INVISIBLE else View.VISIBLE
                 }
                 dismissLoadingDialog()
             }
@@ -250,7 +249,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
             if (folderWindow.isShowing()) {
                 folderWindow.dismiss()
             } else {
-                if (images.size > 0) {
+                if (allMediaList.size > 0) {
                     folderWindow.showAsDropDown(rl_picture_title)
                     val selectedImages = adapter.selectedImages
                     folderWindow.notifyDataCheckedStatus(selectedImages)
@@ -296,13 +295,13 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        processMedia(images)
+        processMedia(allMediaList)
 
     }
 
     override fun onItemClick(folderName: String, images: MutableList<MediaEntity>) {
         picture_title.text = folderName
-        adapter.bindImagesData(images)
+        adapter.bindAllList(images)
         folderWindow.dismiss()
     }
 
@@ -403,17 +402,17 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         if (enable) {
             pick_ll_ok.setEnabled(true)
             picture_id_preview.setEnabled(true)
-            picture_id_preview.setTextColor(preview_textColor)
+            picture_id_preview.setTextColor(previewTextColor)
             if (numComplete) {
                 picture_tv_ok.setText(getString(R.string.picture_done_front_num, selectImages.size, maxSelectNum))
             } else {
-                if (!anim) {
+                if (!isAnimation) {
                     pick_tv_picture_number.startAnimation(animation)
                 }
-                pick_tv_picture_number.setVisibility(View.VISIBLE)
-                pick_tv_picture_number.setText(selectImages.size.toString() + "")
-                picture_tv_ok.setText(getString(R.string.picture_completed))
-                anim = false
+                pick_tv_picture_number.visibility = View.VISIBLE
+                pick_tv_picture_number.text = selectImages.size.toString() + ""
+                picture_tv_ok.text = getString(R.string.picture_completed)
+                isAnimation = false
             }
         } else {
             pick_ll_ok.setEnabled(false)
@@ -435,20 +434,20 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      */
     private fun manualSaveFolder(mediaEntity: MediaEntity) {
         try {
-            createNewFolder(foldersList)
-            val folder = getImageFolder(mediaEntity.localPath, foldersList)
-            val cameraFolder = if (foldersList.size > 0) foldersList[0] else null
+            createNewFolder(allFolderList)
+            val folder = getImageFolder(mediaEntity.localPath, allFolderList)
+            val cameraFolder = if (allFolderList.size > 0) allFolderList[0] else null
             if (cameraFolder != null && folder != null) {
                 // 相机胶卷
                 cameraFolder.firstImagePath = mediaEntity.localPath
-                cameraFolder.images = images
+                cameraFolder.images = allMediaList
                 cameraFolder.imageNumber = cameraFolder.imageNumber + 1
                 // 拍照相册
                 val num = folder.imageNumber + 1
                 folder.imageNumber = num
                 folder.images.add(0, mediaEntity)
                 folder.firstImagePath = cameraPath
-                folderWindow.bindFolder(foldersList)
+                folderWindow.bindFolder(allFolderList)
             }
         } catch (e: Exception) {
             e.printStackTrace()

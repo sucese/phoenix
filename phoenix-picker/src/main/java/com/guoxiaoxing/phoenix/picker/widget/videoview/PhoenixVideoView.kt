@@ -14,37 +14,56 @@ import android.os.Message
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
 
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.picker.widget.dialog.PhoenixLoadingDialog
-import kotlinx.android.synthetic.main.view_phoenix_video.view.*
 
 class PhoenixVideoView : RelativeLayout {
 
-    private lateinit var mContext: Context
-    private lateinit var mActivity: Activity
+    private var videoView: InternalVideoView? = null
+    private var seekbarProgress: SeekBar? = null
+    private var btnController: ImageView? = null
+    private lateinit var tvCurrentProgress: TextView
+    private lateinit var tvTotalProgress: TextView
+    private var ivPlay: ImageView? = null
 
+    private var llController: LinearLayout? = null
+    private var flContainer: FrameLayout? = null
+    private var mAudioManager: AudioManager? = null
     private var screenWidth: Int = 0
     private var screenHeight: Int = 0
+    private lateinit var mContext: Context
+    private var videoLayout: View? = null
+    private var mActivity: Activity? = null
     private var videoPos: Int = 0
     private var state = 0
     private var mVideoPath: String? = null
     private val isVerticalScreen = true
+    private var loadingDialog: PhoenixLoadingDialog? = null
 
-    private lateinit var mAudioManager: AudioManager
-    private lateinit var loadingDialog: PhoenixLoadingDialog
+    private val volumeReceiver by lazy { VolumeReceiver() }
 
-    constructor(context: Context) : super(context, null) {}
+    constructor(context: Context) : super(context, null)
 
     @JvmOverloads constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
         this.mContext = context
+        setupView()
         setupData()
         setupListener()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        mContext.unregisterReceiver(volumeReceiver)
     }
 
     fun register(activity: Activity) {
@@ -54,29 +73,41 @@ class PhoenixVideoView : RelativeLayout {
     fun setVideoPath(path: String) {
         this.mVideoPath = path
         if (path.startsWith("http") || path.startsWith("https")) {
-            video_view.setVideoURI(Uri.parse(path))
+            videoView!!.setVideoURI(Uri.parse(path))
         } else {
-            video_view.setVideoPath(mVideoPath)
+            videoView!!.setVideoPath(mVideoPath)
         }
     }
 
     fun onPause() {
-        videoPos = video_view.currentPosition
-        video_view.stopPlayback()
+        videoPos = videoView!!.currentPosition
+        videoView!!.stopPlayback()
         mHandler.removeMessages(UPDATE_PROGRESS)
     }
 
     fun onResume() {
-        video_view.seekTo(videoPos)
-        video_view.resume()
+        videoView!!.seekTo(videoPos)
+        videoView!!.resume()
     }
 
     fun onDestory() {
-
+        mContext.unregisterReceiver(volumeReceiver)
     }
 
     fun seekTo(position: Int) {
-        video_view.seekTo(position)
+        videoView!!.seekTo(position)
+    }
+
+    private fun setupView() {
+        videoLayout = LayoutInflater.from(mContext).inflate(R.layout.view_phoenix_video, this, true)
+        videoView = videoLayout!!.findViewById(R.id.video_view) as InternalVideoView
+        seekbarProgress = videoLayout!!.findViewById(R.id.seekbar_progress) as SeekBar
+        btnController = videoLayout!!.findViewById(R.id.btn_controller) as ImageView
+        tvCurrentProgress = videoLayout!!.findViewById(R.id.tv_currentProgress) as TextView
+        tvTotalProgress = videoLayout!!.findViewById(R.id.tv_totalProgress) as TextView
+        llController = videoLayout!!.findViewById(R.id.ll_controller) as LinearLayout
+        flContainer = videoLayout!!.findViewById(R.id.rl_container) as FrameLayout
+        ivPlay = findViewById(R.id.iv_play) as ImageView
     }
 
     private fun setupData() {
@@ -84,8 +115,8 @@ class PhoenixVideoView : RelativeLayout {
         screenHeight = getScreenHeight(mContext)
         mAudioManager = mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val filter = IntentFilter("android.media.VOLUME_CHANGED_ACTION")
-        mContext.registerReceiver(MyVolumeReceiver(), filter)
-        val currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+        mContext.registerReceiver(volumeReceiver, filter)
+        val currentVolume = mAudioManager!!.getStreamVolume(AudioManager.STREAM_MUSIC)
     }
 
     private fun setupListener() {
@@ -101,47 +132,47 @@ class PhoenixVideoView : RelativeLayout {
         //            }
         //        });
 
-        iv_play.setOnClickListener {
-            video_view.start()
+        ivPlay!!.setOnClickListener {
+            videoView!!.start()
             mHandler.sendEmptyMessage(UPDATE_PROGRESS)
-            iv_play.visibility = View.GONE
-            ll_controller.visibility = View.VISIBLE
-            btn_controller.setImageResource(R.drawable.phoenix_video_pause)
+            ivPlay!!.visibility = View.GONE
+            llController!!.visibility = View.VISIBLE
+            btnController!!.setImageResource(R.drawable.phoenix_video_pause)
         }
 
-        btn_controller.setOnClickListener {
-            if (video_view.isPlaying) {
-                btn_controller.setImageResource(R.drawable.phoenix_video_play)
-                video_view.pause()
+        btnController!!.setOnClickListener {
+            if (videoView!!.isPlaying) {
+                btnController!!.setImageResource(R.drawable.phoenix_video_play)
+                videoView!!.pause()
                 mHandler.removeMessages(UPDATE_PROGRESS)
-                iv_play.visibility = View.VISIBLE
+                ivPlay!!.visibility = View.VISIBLE
             } else {
-                btn_controller.setImageResource(R.drawable.phoenix_video_pause)
-                video_view.start()
+                btnController!!.setImageResource(R.drawable.phoenix_video_pause)
+                videoView!!.start()
                 mHandler.sendEmptyMessage(UPDATE_PROGRESS)
                 if (state == 0) state = 1
-                iv_play.visibility = View.GONE
+                ivPlay!!.visibility = View.GONE
             }
         }
 
-        video_view.setOnCompletionListener {
-            btn_controller.setImageResource(R.drawable.phoenix_video_play)
-            iv_play.visibility = View.VISIBLE
-            ll_controller.visibility = View.GONE
+        videoView!!.setOnCompletionListener {
+            btnController!!.setImageResource(R.drawable.phoenix_video_play)
+            ivPlay!!.visibility = View.VISIBLE
+            llController!!.visibility = View.GONE
         }
 
-        video_view.setStateListener(object : InternalVideoView.StateListener {
+        videoView!!.setStateListener(object : InternalVideoView.StateListener {
 
             override fun changeVolumn(detlaY: Float) {
-                val maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-                val currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+                val maxVolume = mAudioManager!!.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                val currentVolume = mAudioManager!!.getStreamVolume(AudioManager.STREAM_MUSIC)
                 val index = (detlaY / screenHeight * maxVolume.toFloat() * 3f).toInt()
                 val volume = Math.max(0, currentVolume - index)
-                mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0)
+                mAudioManager!!.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0)
             }
 
             override fun changeBrightness(detlaX: Float) {
-                val wml = mActivity.window.attributes
+                val wml = mActivity!!.window.attributes
                 var screenBrightness = wml.screenBrightness
                 val index = detlaX / screenWidth.toFloat() / 3f
                 screenBrightness += index
@@ -151,7 +182,7 @@ class PhoenixVideoView : RelativeLayout {
                     screenBrightness = 0.01f
                 }
                 wml.screenBrightness = screenBrightness
-                mActivity.window.attributes = wml
+                mActivity!!.window.attributes = wml
             }
 
             override fun hideHint() {
@@ -159,10 +190,10 @@ class PhoenixVideoView : RelativeLayout {
             }
         })
 
-        seekbar_progress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        seekbarProgress!!.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                updateTextViewFormat(tv_currentProgress, progress)
+                updateTextViewFormat(tvCurrentProgress, progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -174,7 +205,7 @@ class PhoenixVideoView : RelativeLayout {
                 if (state != 0) {
                     mHandler.sendEmptyMessage(UPDATE_PROGRESS)
                 }
-                video_view.seekTo(seekBar.progress)
+                videoView!!.seekTo(seekBar.progress)
             }
         })
     }
@@ -215,21 +246,21 @@ class PhoenixVideoView : RelativeLayout {
             if (msg.what == UPDATE_PROGRESS) {
 
                 // 获取当前时间
-                val currentTime = video_view.currentPosition
+                val currentTime = videoView!!.currentPosition
                 // 获取总时间
-                val totalTime = video_view.duration - 100
+                val totalTime = videoView!!.duration - 100
                 if (currentTime >= totalTime) {
-                    video_view.pause()
-                    video_view.seekTo(0)
-                    seekbar_progress.progress = 0
-                    btn_controller.setImageResource(R.drawable.phoenix_video_play)
-                    updateTextViewFormat(tv_currentProgress, 0)
+                    videoView!!.pause()
+                    videoView!!.seekTo(0)
+                    seekbarProgress!!.progress = 0
+                    btnController!!.setImageResource(R.drawable.phoenix_video_play)
+                    updateTextViewFormat(tvCurrentProgress, 0)
                     this.removeMessages(UPDATE_PROGRESS)
                 } else {
-                    seekbar_progress.max = totalTime
-                    seekbar_progress.progress = currentTime
-                    updateTextViewFormat(tv_currentProgress, currentTime)
-                    updateTextViewFormat(tv_totalProgress, totalTime)
+                    seekbarProgress!!.max = totalTime
+                    seekbarProgress!!.progress = currentTime
+                    updateTextViewFormat(tvCurrentProgress, currentTime)
+                    updateTextViewFormat(tvTotalProgress, totalTime)
                     this.sendEmptyMessageDelayed(UPDATE_PROGRESS, 100)
                 }
             }
@@ -242,7 +273,7 @@ class PhoenixVideoView : RelativeLayout {
      * @param drawable drawable
      */
     fun setProgressBg(drawable: Drawable) {
-        seekbar_progress.progressDrawable = drawable
+        seekbarProgress!!.progressDrawable = drawable
     }
 
     fun getScreenWidth(context: Context): Int {
@@ -271,7 +302,7 @@ class PhoenixVideoView : RelativeLayout {
     protected fun showLoadingDialog() {
         dismissLoadingDialog()
         loadingDialog = PhoenixLoadingDialog(context)
-        loadingDialog.show()
+        loadingDialog!!.show()
     }
 
     /**
@@ -279,8 +310,8 @@ class PhoenixVideoView : RelativeLayout {
      */
     protected fun dismissLoadingDialog() {
         try {
-            if (loadingDialog != null && loadingDialog.isShowing) {
-                loadingDialog.dismiss()
+            if (loadingDialog != null && loadingDialog!!.isShowing) {
+                loadingDialog!!.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -288,19 +319,18 @@ class PhoenixVideoView : RelativeLayout {
 
     }
 
-    internal inner class MyVolumeReceiver : BroadcastReceiver() {
+    internal inner class VolumeReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
             //如果音量发生变化则更改seekbar的位置
             if (intent.action == "android.media.VOLUME_CHANGED_ACTION") {
                 // 当前的媒体音量
-                val currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+                val currentVolume = mAudioManager!!.getStreamVolume(AudioManager.STREAM_MUSIC)
             }
         }
     }
 
     companion object {
-
         private val UPDATE_PROGRESS = 1
     }
 }

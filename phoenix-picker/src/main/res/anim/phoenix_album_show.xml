@@ -6,5 +6,4 @@
         android:fromYDelta="-100.0%"
         android:interpolator="@android:anim/accelerate_interpolator"
         android:toYDelta="0.0%" />
-
 </set>

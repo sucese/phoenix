@@ -13,8 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 
 import com.bumptech.glide.Glide
@@ -32,12 +30,15 @@ import com.guoxiaoxing.phoenix.picker.util.DebugUtil
 import com.guoxiaoxing.phoenix.picker.util.StringUtils
 import com.guoxiaoxing.phoenix.picker.util.VoiceUtils
 
+import kotlinx.android.synthetic.main.picture_item_camera.view.*
+import kotlinx.android.synthetic.main.picture_image_grid_item.view.*
+
 import java.util.ArrayList
 
 class PickerAdapter(private val context: Context, private val config: PhoenixOption) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var enableCamera = false
-    private var imageSelectChangedListener: OnPhotoSelectChangedListener? = null
+    private var onPicktChangedListener: OnPickChangedListener? = null
     private val maxSelectNum: Int
     private var images: MutableList<MediaEntity> = ArrayList()
     private var selectImages: MutableList<MediaEntity> = ArrayList()
@@ -50,7 +51,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     private val overrideWidth: Int
     private val overrideHeight: Int
     private val sizeMultiplier: Float
-    private val animation: Animation?
+    private val animation: Animation by lazy { OptAnimationLoader.loadAnimation(context, R.anim.phoenix_window_in) }
     private val mimeType: Int
     private val zoomAnim: Boolean
     var isExceedMax: Boolean = false
@@ -69,24 +70,22 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         this.sizeMultiplier = config.sizeMultiplier
         this.mimeType = config.fileType
         this.zoomAnim = config.isZoomAnim
-        animation = OptAnimationLoader.loadAnimation(context, R.anim.phoenix_window_in)
     }
 
-    fun bindImagesData(images: MutableList<MediaEntity>) {
+    fun bindAllList(images: MutableList<MediaEntity>) {
         this.images = images
         notifyDataSetChanged()
     }
 
-    fun bindSelectImages(images: MutableList<MediaEntity>) {
-        // 这里重新构构造一个新集合，不然会产生已选集合一变，结果集合也会添加的问题
+    fun bindPickList(images: MutableList<MediaEntity>) {
         val selection = ArrayList<MediaEntity>()
         for (mediaEntity in images) {
             selection.add(mediaEntity)
         }
         this.selectImages = selection
         subSelectPosition()
-        if (imageSelectChangedListener != null) {
-            imageSelectChangedListener!!.onChange(selectImages)
+        if (onPicktChangedListener != null) {
+            onPicktChangedListener!!.onChange(selectImages)
         }
     }
 
@@ -119,25 +118,25 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             return HeaderViewHolder(view)
         } else {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.picture_image_grid_item, parent, false)
-            return ViewHolder(view)
+            return ContentViewHolder(view)
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (getItemViewType(position) == PhoenixConstant.TYPE_CAMERA) {
             val headerHolder = holder as HeaderViewHolder
-            headerHolder.headerView.setOnClickListener {
-                if (imageSelectChangedListener != null) {
-                    imageSelectChangedListener!!.onTakePhoto()
+            headerHolder.itemView.camera.setOnClickListener {
+                if (onPicktChangedListener != null) {
+                    onPicktChangedListener!!.onTakePhoto()
                 }
             }
         } else {
-            val contentHolder = holder as ViewHolder
+            val contentHolder = holder as ContentViewHolder
             val image = images!![if (enableCamera) position - 1 else position]
             image.position = contentHolder.adapterPosition
             val path = image.finalPath
             val pictureType = image.mimeType
-            contentHolder.ll_check.visibility = if (selectMode == PhoenixConstant.SINGLE)
+            contentHolder.itemView.ll_check.visibility = if (selectMode == PhoenixConstant.SINGLE)
                 View.GONE
             else
                 View.VISIBLE
@@ -148,15 +147,15 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
 
             val picture = MimeType.getFileType(pictureType)
             val gif = MimeType.isGif(pictureType)
-            contentHolder.tv_isGif.visibility = if (gif) View.VISIBLE else View.GONE
+            contentHolder.itemView.tv_isGif.visibility = if (gif) View.VISIBLE else View.GONE
             if (mimeType == MimeType.ofAudio()) {
-                contentHolder.tv_duration.visibility = View.VISIBLE
+                contentHolder.itemView.tv_duration.visibility = View.VISIBLE
                 val drawable = ContextCompat.getDrawable(context, R.drawable.phoenix_audio)
-                StringUtils.modifyTextViewDrawable(contentHolder.tv_duration, drawable, 0)
+                StringUtils.modifyTextViewDrawable(contentHolder.itemView.tv_duration, drawable, 0)
             } else {
                 val drawable = ContextCompat.getDrawable(context, R.drawable.phoenix_video_icon)
-                StringUtils.modifyTextViewDrawable(contentHolder.tv_duration, drawable, 0)
-                contentHolder.tv_duration.visibility = if (picture == PhoenixConstant.TYPE_VIDEO)
+                StringUtils.modifyTextViewDrawable(contentHolder.itemView.tv_duration, drawable, 0)
+                contentHolder.itemView.tv_duration.visibility = if (picture == PhoenixConstant.TYPE_VIDEO)
                     View.VISIBLE
                 else
                     View.GONE
@@ -164,11 +163,11 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             val width = image.width
             val height = image.height
             val h = width * 5
-            contentHolder.tv_long_chart.visibility = if (height > h) View.VISIBLE else View.GONE
+            contentHolder.itemView.tv_long_chart.visibility = if (height > h) View.VISIBLE else View.GONE
             val duration = image.duration
-            contentHolder.tv_duration.text = DateUtils.timeParse(duration)
+            contentHolder.itemView.tv_duration.text = DateUtils.timeParse(duration)
             if (mimeType == MimeType.ofAudio()) {
-                contentHolder.iv_picture.setImageResource(R.drawable.phoenix_audio_placeholder)
+                contentHolder.itemView.iv_picture.setImageResource(R.drawable.phoenix_audio_placeholder)
             } else {
                 val options = RequestOptions()
                 if (overrideWidth <= 0 && overrideHeight <= 0) {
@@ -183,22 +182,22 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
                         .load(path)
                         .apply(options)
                         .transition(BitmapTransitionOptions().crossFade(500))
-                        .into(contentHolder.iv_picture)
+                        .into(contentHolder.itemView.iv_picture)
             }
             if (enablePreview || enablePreviewVideo || enablePreviewAudio) {
-                contentHolder.ll_check.setOnClickListener { changeCheckboxState(contentHolder, image) }
+                contentHolder.itemView.ll_check.setOnClickListener { changeCheckboxState(contentHolder, image) }
 
             }
-            contentHolder.contentView.setOnClickListener {
+            contentHolder.itemView.setOnClickListener {
                 if (picture == PhoenixConstant.TYPE_IMAGE && (enablePreview || selectMode == PhoenixConstant.SINGLE)) {
                     val index = if (enableCamera) position - 1 else position
-                    imageSelectChangedListener!!.onPictureClick(image, index)
+                    onPicktChangedListener!!.onPictureClick(image, index)
                 } else if (picture == PhoenixConstant.TYPE_VIDEO && (enablePreviewVideo || selectMode == PhoenixConstant.SINGLE)) {
                     val index = if (enableCamera) position - 1 else position
-                    imageSelectChangedListener!!.onPictureClick(image, index)
+                    onPicktChangedListener!!.onPictureClick(image, index)
                 } else if (picture == PhoenixConstant.TYPE_AUDIO && (enablePreviewAudio || selectMode == PhoenixConstant.SINGLE)) {
                     val index = if (enableCamera) position - 1 else position
-                    imageSelectChangedListener!!.onPictureClick(image, index)
+                    onPicktChangedListener!!.onPictureClick(image, index)
                 } else {
                     changeCheckboxState(contentHolder, image)
                 }
@@ -211,36 +210,9 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         return if (enableCamera) images!!.size + 1 else images!!.size
     }
 
-    inner class HeaderViewHolder(internal var headerView: View) : RecyclerView.ViewHolder(headerView) {
-        internal var tv_title_camera: TextView
+    inner class HeaderViewHolder( headerView: View) : RecyclerView.ViewHolder(headerView)
 
-        init {
-            tv_title_camera = headerView.findViewById(R.id.tv_title_camera) as TextView
-            val title = if (mimeType == MimeType.ofAudio())
-                context.getString(R.string.picture_tape)
-            else
-                context.getString(R.string.picture_take_picture)
-            tv_title_camera.text = title
-        }
-    }
-
-    inner class ViewHolder(internal var contentView: View) : RecyclerView.ViewHolder(contentView) {
-        internal var iv_picture: ImageView
-        internal var check: TextView
-        internal var tv_duration: TextView
-        internal var tv_isGif: TextView
-        internal var tv_long_chart: TextView
-        internal var ll_check: LinearLayout
-
-        init {
-            iv_picture = contentView.findViewById(R.id.iv_picture) as ImageView
-            check = contentView.findViewById(R.id.tv_check) as TextView
-            ll_check = contentView.findViewById(R.id.ll_check) as LinearLayout
-            tv_duration = contentView.findViewById(R.id.tv_duration) as TextView
-            tv_isGif = contentView.findViewById(R.id.tv_isGif) as TextView
-            tv_long_chart = contentView.findViewById(R.id.tv_long_chart) as TextView
-        }
-    }
+    inner class ContentViewHolder(contentView: View) : RecyclerView.ViewHolder(contentView)
 
     fun isSelected(image: MediaEntity): Boolean {
         for (mediaEntity in selectImages!!) {
@@ -257,34 +229,33 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     /**
      * 选择按钮更新
      */
-    private fun notifyCheckChanged(viewHolder: ViewHolder, imageBean: MediaEntity) {
-        viewHolder.check.text = ""
+    private fun notifyCheckChanged(contentViewHolder: ContentViewHolder, imageBean: MediaEntity) {
+        contentViewHolder.itemView.tv_check.text = ""
         for (mediaEntity in selectImages!!) {
             if (mediaEntity.localPath == imageBean.localPath) {
                 imageBean.number = mediaEntity.number
                 mediaEntity.setPosition(imageBean.getPosition())
-                viewHolder.check.text = imageBean.number.toString()
+                contentViewHolder.itemView.tv_check.text = imageBean.number.toString()
             }
         }
     }
 
     /**
      * 改变图片选中状态
-
-     * @param contentHolder contentHolder
+     * @param contentHolderContent contentHolderContent
      * *
      * @param image         image
      */
     @SuppressLint("StringFormatMatches")
-    private fun changeCheckboxState(contentHolder: ViewHolder, image: MediaEntity) {
-        val isChecked = contentHolder.check.isSelected
+    private fun changeCheckboxState(contentHolderContent: ContentViewHolder, image: MediaEntity) {
+        val isChecked = contentHolderContent.itemView.isSelected
         if (isChecked) {
             for (mediaEntity in selectImages) {
                 if (mediaEntity.localPath == image.localPath) {
                     selectImages.remove(mediaEntity)
                     DebugUtil.i("selectImages remove::", config.mediaList.size.toString() + "")
                     subSelectPosition()
-                    disZoom(contentHolder.iv_picture)
+                    disZoom(contentHolderContent.itemView.iv_picture)
                     break
                 }
             }
@@ -300,7 +271,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             DebugUtil.i("selectImages add::", config.mediaList.size.toString() + "")
             image.number = selectImages!!.size
             VoiceUtils.playVoice(context, enableVoice)
-            zoom(contentHolder.iv_picture)
+            zoom(contentHolderContent.itemView.iv_picture)
         }
 
         //通知点击项发生了改变
@@ -308,11 +279,11 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         if (isExceedMax || selectImages.size == maxSelectNum - 1) {
             notifyDataSetChanged()
         } else {
-            notifyItemChanged(contentHolder.adapterPosition)
-            selectImage(contentHolder, !isChecked, true)
+            notifyItemChanged(contentHolderContent.adapterPosition)
+            selectImage(contentHolderContent, !isChecked, true)
         }
-        if (imageSelectChangedListener != null) {
-            imageSelectChangedListener!!.onChange(selectImages)
+        if (onPicktChangedListener != null) {
+            onPicktChangedListener!!.onChange(selectImages)
         }
     }
 
@@ -333,25 +304,25 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         }
     }
 
-    fun selectImage(holder: ViewHolder, isChecked: Boolean, isAnim: Boolean) {
-        holder.check.isSelected = isChecked
+    fun selectImage(contentViewHolder: ContentViewHolder, isChecked: Boolean, isAnim: Boolean) {
+        contentViewHolder.itemView.tv_check.isSelected = isChecked
         if (isChecked) {
             if (isAnim) {
                 if (animation != null) {
-                    holder.check.startAnimation(animation)
+                    contentViewHolder.itemView.tv_check.startAnimation(animation)
                 }
             }
-            holder.iv_picture.setColorFilter(ContextCompat.getColor(context, R.color.color_black_4), PorterDuff.Mode.SRC_ATOP)
+            contentViewHolder.itemView.iv_picture.setColorFilter(ContextCompat.getColor(context, R.color.color_black_4), PorterDuff.Mode.SRC_ATOP)
         } else {
             if (isExceedMax) {
-                holder.iv_picture.setColorFilter(ContextCompat.getColor(context, R.color.phoenix_transparent_white), PorterDuff.Mode.SRC_ATOP)
+                contentViewHolder.itemView.iv_picture.setColorFilter(ContextCompat.getColor(context, R.color.phoenix_transparent_white), PorterDuff.Mode.SRC_ATOP)
             } else {
-                holder.iv_picture.setColorFilter(ContextCompat.getColor(context, R.color.color_black_5), PorterDuff.Mode.SRC_ATOP)
+                contentViewHolder.itemView.iv_picture.setColorFilter(ContextCompat.getColor(context, R.color.color_black_5), PorterDuff.Mode.SRC_ATOP)
             }
         }
     }
 
-    interface OnPhotoSelectChangedListener {
+    interface OnPickChangedListener {
         fun onTakePhoto()
 
         fun onChange(selectImages: List<MediaEntity>)
@@ -359,8 +330,8 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         fun onPictureClick(mediaEntity: MediaEntity, position: Int)
     }
 
-    fun setOnPhotoSelectChangedListener(imageSelectChangedListener: OnPhotoSelectChangedListener) {
-        this.imageSelectChangedListener = imageSelectChangedListener
+    fun setOnPickChangedListener(onPickChangedListener: OnPickChangedListener) {
+        this.onPicktChangedListener = onPickChangedListener
     }
 
     private fun zoom(iv_img: ImageView) {
@@ -388,7 +359,6 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     }
 
     companion object {
-
         private val DURATION = 450
     }
 }
