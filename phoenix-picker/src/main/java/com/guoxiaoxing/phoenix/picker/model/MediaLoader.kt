@@ -188,7 +188,7 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
     }
 
     interface LocalMediaLoadListener {
-        fun loadComplete(folders: List<MediaFolder>)
+        fun loadComplete(folders: MutableList<MediaFolder>)
     }
 
     companion object {

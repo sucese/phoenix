@@ -31,17 +31,8 @@
         </provider>
 
         <activity
-            android:name="com.guoxiaoxing.phoenix.picker.ui.picker.PickerActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/theme_activity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name="com.guoxiaoxing.phoenix.picker.ui.BaseActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="com.guoxiaoxing.phoenix.picker.ui.picker.PreviewActivity"
-            android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode"
-            android:screenOrientation="sensor" />
         <activity
             android:name="com.guoxiaoxing.phoenix.crop.ui.CropActivity"
             android:screenOrientation="portrait"
@@ -55,9 +46,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name="com.guoxiaoxing.phoenix.picker.ui.camera.paint.BlurActivity"
+            android:name="com.guoxiaoxing.phoenix.picker.ui.picker.PickerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name="com.guoxiaoxing.phoenix.picker.ui.picker.PreviewActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode"
+            android:screenOrientation="sensor" />
     </application>
 
 </manifest>

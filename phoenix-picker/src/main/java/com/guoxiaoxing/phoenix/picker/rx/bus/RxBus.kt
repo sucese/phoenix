@@ -296,8 +296,9 @@ class RxBus private constructor() {
         }
     }
 
+
+
     companion object {
-        val LOG_BUS = "RXBUS_LOG"
         @Volatile private lateinit var defaultInstance: RxBus
 
         val default: RxBus

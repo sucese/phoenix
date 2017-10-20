@@ -77,7 +77,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         notifyDataSetChanged()
     }
 
-    fun bindSelectImages(images: List<MediaEntity>) {
+    fun bindSelectImages(images: MutableList<MediaEntity>) {
         // 这里重新构构造一个新集合，不然会产生已选集合一变，结果集合也会添加的问题
         val selection = ArrayList<MediaEntity>()
         for (mediaEntity in images) {
@@ -90,7 +90,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         }
     }
 
-    val selectedImages: List<MediaEntity>
+    val selectedImages: MutableList<MediaEntity>
         get() {
             if (selectImages == null) {
                 selectImages = ArrayList<MediaEntity>()
@@ -98,7 +98,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             return selectImages
         }
 
-    fun getImages(): List<MediaEntity> {
+    fun getImages(): MutableList<MediaEntity> {
         if (images == null) {
             images = ArrayList<MediaEntity>()
         }

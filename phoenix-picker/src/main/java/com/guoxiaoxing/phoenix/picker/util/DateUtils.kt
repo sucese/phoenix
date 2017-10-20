@@ -3,6 +3,7 @@ package com.guoxiaoxing.phoenix.picker.util
 import java.text.SimpleDateFormat
 
 object DateUtils {
+
     private val msFormat = SimpleDateFormat("mm:ss")
 
     /**

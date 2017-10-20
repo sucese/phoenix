@@ -18,11 +18,6 @@ public class ReflectUtils {
     public static final String PictureCompressProcessor = "com.guoxiaoxing.phoenix.compress.picture.PictureCompressProcessor";
 
     /**
-     * 图片裁剪
-     */
-    public static final String PictureCropProcessor = "com.guoxiaoxing.phoenix.crop.PictureCropProcessor";
-
-    /**
      * 图片编辑
      */
     public static final String PictureEditProcessor = "com.guoxiaoxing.phoenix.picture.edit.PictureEditProcessor";
@@ -35,7 +30,7 @@ public class ReflectUtils {
     /**
      * 图片/视频选择
      */
-    public static final String SCPicker = "com.guoxiaoxing.phoenix.pick.SCPicker";
+    public static final String SCPicker = "com.guoxiaoxing.phoenix.picker.SCPicker";
 
     public static Processor loadProcessor(String className) {
         try {

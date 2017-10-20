@@ -117,6 +117,6 @@ class PickerAlbumAdapter(private val mContext: Context) : RecyclerView.Adapter<P
     }
 
     interface OnItemClickListener {
-        fun onItemClick(folderName: String, images: List<MediaEntity>)
+        fun onItemClick(folderName: String, images: MutableList<MediaEntity>)
     }
 }

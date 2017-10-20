@@ -78,7 +78,7 @@ open class BaseActivity : FragmentActivity() {
     protected var previewStatusFont: Boolean = false
     protected var enableUpload: Boolean = false
 
-    protected var cameraPath: String? = null
+    protected var cameraPath: String = ""
     protected lateinit var outputCameraPath: String
 
     protected var originalPath: String? = null
@@ -86,7 +86,7 @@ open class BaseActivity : FragmentActivity() {
 
     protected var enableDelete: Boolean = false
     protected var currentIndex: Int = 0
-    protected var mediaList: List<MediaEntity>? = null
+    protected lateinit var mediaList: MutableList<MediaEntity>
     protected lateinit var onPickerListener: OnPickerListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
