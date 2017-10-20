@@ -27,5 +27,4 @@ dependencies {
 
 //        compile "com.souche.android.sdk:media-core:$rootProject.ext.version"
     compile project(':phoenix-core')
-    compile project(':phoenix-picker')
 }

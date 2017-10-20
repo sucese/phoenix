@@ -210,7 +210,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         return if (enableCamera) images!!.size + 1 else images!!.size
     }
 
-    inner class HeaderViewHolder( headerView: View) : RecyclerView.ViewHolder(headerView)
+    inner class HeaderViewHolder(headerView: View) : RecyclerView.ViewHolder(headerView)
 
     inner class ContentViewHolder(contentView: View) : RecyclerView.ViewHolder(contentView)
 
@@ -248,7 +248,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
      */
     @SuppressLint("StringFormatMatches")
     private fun changeCheckboxState(contentHolderContent: ContentViewHolder, image: MediaEntity) {
-        val isChecked = contentHolderContent.itemView.isSelected
+        val isChecked = contentHolderContent.itemView.tv_check.isSelected
         if (isChecked) {
             for (mediaEntity in selectImages) {
                 if (mediaEntity.localPath == image.localPath) {
@@ -280,7 +280,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             notifyDataSetChanged()
         } else {
             notifyItemChanged(contentHolderContent.adapterPosition)
-            selectImage(contentHolderContent, !isChecked, true)
+            selectImage(contentHolderContent, !isChecked, false)
         }
         if (onPicktChangedListener != null) {
             onPicktChangedListener!!.onChange(selectImages)
@@ -292,11 +292,11 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
      */
     private fun subSelectPosition() {
         if (is_checked_num) {
-            val size = selectImages!!.size
+            val size = selectImages.size
             var index = 0
             val length = size
             while (index < length) {
-                val mediaEntity = selectImages!![index]
+                val mediaEntity = selectImages[index]
                 mediaEntity.number = index + 1
                 notifyItemChanged(mediaEntity.position)
                 index++
@@ -308,9 +308,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         contentViewHolder.itemView.tv_check.isSelected = isChecked
         if (isChecked) {
             if (isAnim) {
-                if (animation != null) {
-                    contentViewHolder.itemView.tv_check.startAnimation(animation)
-                }
+                contentViewHolder.itemView.tv_check.startAnimation(animation)
             }
             contentViewHolder.itemView.iv_picture.setColorFilter(ContextCompat.getColor(context, R.color.color_black_4), PorterDuff.Mode.SRC_ATOP)
         } else {

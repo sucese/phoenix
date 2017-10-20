@@ -115,6 +115,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
             getString(R.string.picture_please_select)
         preview_tv_ok_number.isSelected = checkNumberMode
 
+        ll_check.setOnClickListener(this)
         picture_left_back.setOnClickListener(this)
         preview_ll_ok.setOnClickListener(this)
         preview_ll_edit.setOnClickListener(this)
@@ -239,7 +240,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
      * @param position
      */
     fun onImageChecked(position: Int) {
-        if (allMediaList != null && allMediaList.size > 0) {
+        if (allMediaList.isNotEmpty()) {
             val mediaEntity = allMediaList[position]
             tv_check.isSelected = isSelected(mediaEntity)
         } else {
@@ -411,32 +412,16 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         } else if (id == R.id.ll_check) {
             if (allMediaList.isNotEmpty()) {
                 val image = allMediaList[preview_pager.currentItem]
-                val pictureType = if (pickMediaList.size > 0)
-                    pickMediaList[0].mimeType
-                else
-                    ""
-                if (!TextUtils.isEmpty(pictureType)) {
-                    val toEqual = MimeType.mimeToEqual(pictureType, image.mimeType)
-                    if (!toEqual) {
-                        showToast(getString(R.string.picture_rule))
-                        return
-                    }
-                }
+
                 // 刷新图片列表中图片状态
-                val isChecked: Boolean
-                if (!tv_check.isSelected) {
-                    isChecked = true
-                    tv_check.isSelected = true
-                } else {
-                    isChecked = false
-                    tv_check.isSelected = false
-                }
-                if (pickMediaList.size >= maxSelectNum && isChecked) {
+                val isChecked = tv_check.isSelected
+                if (pickMediaList.size >= maxSelectNum && !isChecked) {
                     showToast(getString(R.string.phoenix_message_max_number, maxSelectNum))
-                    tv_check.isSelected = false
                     return
                 }
+
                 if (isChecked) {
+                    tv_check.isSelected = false
                     VoiceUtils.playVoice(mContext, openClickSound)
                     pickMediaList.add(image)
                     image.number = pickMediaList.size
@@ -444,6 +429,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                         tv_check.text = image.number.toString() + ""
                     }
                 } else {
+                    tv_check.isSelected = true
                     for (mediaEntity in pickMediaList) {
                         if (mediaEntity.localPath == image.localPath) {
                             pickMediaList.remove(mediaEntity)
@@ -474,16 +460,15 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
             }
             onResult(images)
         } else if (id == R.id.preview_ll_edit) {
-            //            RotateFragment rotateFragment = RotateFragment.newInstance();
-            //            rotateFragment.setOnPictureEditListener(this);
-            //            Bundle bundle = new Bundle();
-            //            String path = getCurrentPath();
-            //            if (path != null) {
-            //                bundle.putString(PhoenixConstant.KEY_FILE_PATH, path);
-            //                rotateFragment.setArguments(bundle);
-            //                getActivity().getSupportFragmentManager().beginTransaction()
-            //                        .replace(R.id.preview_fragment_container, rotateFragment).addToBackStack(null).commitAllowingStateLoss();
-            //            }
+//            val rotateFragment = PictureEditFragment.newInstance()
+//            val bundle = Bundle()
+//            val path = pickMediaList[preview_pager.currentItem].localPath
+//            if (path != null) {
+//                bundle.putString(PhoenixConstant.KEY_FILE_PATH, path);
+//                rotateFragment.setArguments(bundle);
+//                getActivity().getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.preview_fragment_container, rotateFragment).addToBackStack(null).commitAllowingStateLoss();
+//            }
         }
     }
 
