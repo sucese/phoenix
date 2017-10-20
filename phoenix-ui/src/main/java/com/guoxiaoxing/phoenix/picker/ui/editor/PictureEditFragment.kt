@@ -1,7 +1,6 @@
 package com.guoxiaoxing.phoenix.picker.ui.editor
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -13,7 +12,6 @@ import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.support.v4.app.Fragment
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -23,9 +21,11 @@ import com.guoxiaoxing.phoenix.picker.listener.LayerViewProvider
 import com.guoxiaoxing.phoenix.picker.model.*
 import com.guoxiaoxing.phoenix.picker.ui.BaseFragment
 import com.guoxiaoxing.phoenix.picker.util.*
+import com.guoxiaoxing.phoenix.picker.widget.dialog.PhoenixLoadingDialog
 import com.guoxiaoxing.phoenix.picker.widget.editor.ColorSeekBar
 import com.guoxiaoxing.phoenix.picker.widget.editor.DragToDeleteView
 import com.guoxiaoxing.phoenix.picker.widget.editor.EditDelegate
+import com.guoxiaoxing.phoenix.picture.edit.operation.Operation
 import com.guoxiaoxing.phoenix.picture.edit.widget.blur.BlurDetailView
 import com.guoxiaoxing.phoenix.picture.edit.widget.blur.BlurMode
 import com.guoxiaoxing.phoenix.picture.edit.widget.blur.BlurView
@@ -210,11 +210,11 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
 
     override fun findLayerByEditorMode(operation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation): View? {
         when (operation) {
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation -> return paintView
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.StickOperation -> return stickView
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.TextOperation -> return textPastingView
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation -> return blurView
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.CropOperation -> return layerCropView
+            Operation.PaintOperation -> return paintView
+            Operation.StickOperation -> return stickView
+            Operation.TextOperation -> return textPastingView
+            Operation.BlurOperation -> return blurView
+            Operation.CropOperation -> return layerCropView
             else -> return null
         }
     }
@@ -272,12 +272,10 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
      * image compose result success or fail
      */
     private fun finish(editStatus: Boolean) {
-//        supportRecycle()
-//        val intent = Intent()
-//        val resultData = EditorResult(mEditorPath, mEditorSetup.mEditorSavePath, mEditorSetup.editor2SavedPath, editStatus)
-//        intent.putExtra(RESULT_OK_CODE.toString(), resultData)
-//        setResult(RESULT_OK_CODE, intent)
-//        finish()
+        supportRecycle()
+        val intent = Intent()
+        intent.putExtra(PhoenixConstant.KEY_FILE_PATH, mEditorSavePath)
+        activity.setResult(PhoenixConstant.REQUEST_CODE_PICTURE_EDIT, intent)
     }
 
     private fun supportRecycle() {
@@ -551,17 +549,11 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
      * AsyncTask for image Compose
      */
     inner class ImageComposeTask(private val mProvider: LayerViewProvider) : AsyncTask<String, Void, Boolean>() {
-        private var mDialog = ProgressDialog(mProvider.getActivityContext())
+
+        private var mLoadingDialog = PhoenixLoadingDialog(mProvider.getActivityContext())
         private var mPath: String? = null
         private val layerComposite = mProvider.getLayerCompositeView()
         private val mEditorId = mProvider.getResultEditorId()
-
-        init {
-            mDialog.isIndeterminate = true
-            mDialog.setCancelable(false)
-            mDialog.setCanceledOnTouchOutside(false)
-            mDialog.setMessage(MatrixUtils.getResourceString(mProvider.getActivityContext(), R.string.editor_handle))
-        }
 
         override fun doInBackground(vararg params: String): Boolean {
             mPath = params[0]
@@ -597,22 +589,20 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
 
         override fun onPreExecute() {
             super.onPreExecute()
-//            MatrixUtils.callChildren(BaseHierarchyView::class.java, layerComposite) {
-//                it.onStartCompose()
-//            }
-            mDialog.show()
+            MatrixUtils.callChildren(BaseHierarchyView::class.java, layerComposite) {
+                it.onStartCompose()
+            }
+            mLoadingDialog.show()
         }
 
         override fun onCancelled() {
             super.onCancelled()
-            mDialog.dismiss()
+            mLoadingDialog.dismiss()
         }
 
         override fun onPostExecute(result: Boolean) {
             super.onPostExecute(result)
-            logD1("ImageComposeTask:result=$mPath")
-            //this@PictureEditActivity.toastShort( "合成图片完成")
-            mDialog.dismiss()
+            mLoadingDialog.dismiss()
             finish(result)
         }
     }

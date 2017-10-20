@@ -11,6 +11,9 @@ import java.lang.annotation.Target;
 
 public final class PhoenixConstant {
 
+    public static final int REQUEST_CODE_PICTURE_EDIT = 0x000001;
+
+
     /**
      * 拍摄照片的最大数量
      */

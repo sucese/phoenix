@@ -338,7 +338,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     }
 
     override fun onPictureClick(mediaEntity: MediaEntity, position: Int) {
-        val images = adapter.getPickMediaList()
+        val images = adapter.getAllMediaList()
         startPreview(images, position)
     }
 
@@ -388,7 +388,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     @SuppressLint("StringFormatMatches")
     fun changeImageNumber(selectImages: List<MediaEntity>) {
         // 如果选择的视频没有预览功能
-        val pictureType = if (selectImages.size > 0)
+        val pictureType = if (selectImages.isNotEmpty())
             selectImages[0].mimeType
         else
             ""
@@ -398,7 +398,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
             val isVideo = MimeType.isVideo(pictureType)
             picture_id_preview.setVisibility(if (isVideo) View.GONE else View.VISIBLE)
         }
-        val enable = selectImages.size != 0
+        val enable = selectImages.isNotEmpty()
         if (enable) {
             pick_ll_ok.setEnabled(true)
             picture_id_preview.setEnabled(true)

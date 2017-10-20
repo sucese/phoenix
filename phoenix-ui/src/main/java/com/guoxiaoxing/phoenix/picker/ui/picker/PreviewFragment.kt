@@ -1,6 +1,7 @@
 package com.guoxiaoxing.phoenix.picker.ui.picker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.view.PagerAdapter
@@ -467,6 +468,13 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                         .replace(R.id.preview_fragment_container, rotateFragment).addToBackStack(null).commitAllowingStateLoss();
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val editPath = data?.getStringExtra(PhoenixConstant.KEY_FILE_PATH)
+        allMediaList.get(preview_pager.currentItem).editPath = editPath
+        adapter.notifyDataSetChanged()
     }
 
     fun onResult(images: List<MediaEntity>) {
