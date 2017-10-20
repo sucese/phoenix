@@ -81,8 +81,8 @@ open class BaseActivity : FragmentActivity() {
     protected var cameraPath: String = ""
     protected lateinit var outputCameraPath: String
 
-    protected var originalPath: String? = null
-    protected var dialog: PhoenixLoadingDialog? = null
+    protected var originalPath: String = ""
+    protected val dialog: PhoenixLoadingDialog by lazy { PhoenixLoadingDialog(mContext) }
 
     protected var enableDelete: Boolean = false
     protected var currentIndex: Int = 0
@@ -190,8 +190,7 @@ open class BaseActivity : FragmentActivity() {
     protected fun showLoadingDialog() {
         if (!isFinishing) {
             dismissLoadingDialog()
-            dialog = PhoenixLoadingDialog(this)
-            dialog!!.show()
+            dialog.show()
         }
     }
 
@@ -200,8 +199,8 @@ open class BaseActivity : FragmentActivity() {
      */
     protected fun dismissLoadingDialog() {
         try {
-            if (dialog != null && dialog!!.isShowing) {
-                dialog!!.dismiss()
+            if (dialog.isShowing) {
+                dialog.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -264,7 +263,6 @@ open class BaseActivity : FragmentActivity() {
 
     /**
      * 判断拍照 图片是否旋转
-
      * @param degree degree
      * *
      * @param file   file
@@ -288,7 +286,6 @@ open class BaseActivity : FragmentActivity() {
 
     /**
      * compressPicture or callback
-
      * @param result
      */
     protected fun handlerResult(result: MutableList<MediaEntity>) {
@@ -298,7 +295,6 @@ open class BaseActivity : FragmentActivity() {
 
     /**
      * 如果没有任何相册，先创建一个最近相册出来
-
      * @param folders
      */
     protected fun createNewFolder(folders: MutableList<MediaFolder>) {
@@ -319,7 +315,6 @@ open class BaseActivity : FragmentActivity() {
 
     /**
      * 将图片插入到相机文件夹中
-
      * @param path         path
      * *
      * @param imageFolders imageFolders
@@ -346,7 +341,6 @@ open class BaseActivity : FragmentActivity() {
 
     /**
      * return image result
-
      * @param images images
      */
     protected fun onResult(images: MutableList<MediaEntity>) {
@@ -354,7 +348,7 @@ open class BaseActivity : FragmentActivity() {
         if (enableCamera
                 && selectionMode == PhoenixConstant.MULTIPLE
                 && mediaList != null) {
-            images.addAll(mediaList!!)
+            images.addAll(mediaList)
         }
         onPickerListener.onPickSuccess(images)
         closeActivity()
@@ -377,7 +371,6 @@ open class BaseActivity : FragmentActivity() {
 
     /**
      * 获取DCIM文件下最新一条拍照记录
-
      * @return
      */
     protected fun getLastImageId(eqVideo: Boolean): Int {
@@ -396,7 +389,7 @@ open class BaseActivity : FragmentActivity() {
             else
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null,
                     selection, selectionArgs, ORDER_BY)
-            if (imageCursor!!.moveToFirst()) {
+            if (imageCursor.moveToFirst()) {
                 val id = imageCursor.getInt(if (eqVideo)
                     imageCursor.getColumnIndex(MediaStore.Video.Media._ID)
                 else
@@ -421,7 +414,6 @@ open class BaseActivity : FragmentActivity() {
 
     /**
      * 删除部分手机 拍照在DCIM也生成一张的问题
-
      * @param id
      * *
      * @param eqVideo
@@ -448,7 +440,6 @@ open class BaseActivity : FragmentActivity() {
 
     /**
      * 录音
-
      * @param data
      */
     protected fun isAudio(data: Intent?) {
@@ -461,7 +452,7 @@ open class BaseActivity : FragmentActivity() {
                 } else {
                     audioPath = getAudioFilePathFromUri(uri)
                 }
-                PictureFileUtils.copyAudioFile(audioPath, cameraPath!!)
+                PictureFileUtils.copyAudioFile(audioPath, cameraPath)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -471,7 +462,6 @@ open class BaseActivity : FragmentActivity() {
 
     /**
      * 获取刚录取的音频文件
-
      * @param uri uri
      * *
      * @return return
@@ -481,7 +471,7 @@ open class BaseActivity : FragmentActivity() {
         try {
             val cursor = contentResolver
                     .query(uri, null, null, null, null)
-            cursor!!.moveToFirst()
+            cursor.moveToFirst()
             val index = cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA)
             path = cursor.getString(index)
         } catch (e: Exception) {

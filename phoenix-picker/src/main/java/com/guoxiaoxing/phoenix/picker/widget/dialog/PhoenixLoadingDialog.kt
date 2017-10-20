@@ -14,7 +14,7 @@ class PhoenixLoadingDialog(context: Context) : Dialog(context, R.style.style_dia
         window.setWindowAnimations(R.style.style_window)
     }
 
-    override fun onCreate(savedInstanceState: Bundle) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_loading)
     }

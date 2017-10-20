@@ -32,7 +32,7 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
     fun loadAllMedia(imageLoadListener: LocalMediaLoadListener) {
         activity.supportLoaderManager.initLoader(type, null,
                 object : LoaderManager.LoaderCallbacks<Cursor> {
-                    override fun onCreateLoader(id: Int, args: Bundle): Loader<Cursor> {
+                    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
 
                         var cursorLoader: CursorLoader = CursorLoader(
                                 activity, QUERY_URI,

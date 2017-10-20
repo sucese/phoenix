@@ -9,7 +9,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.SimpleItemAnimator
 import android.text.TextUtils
 import android.view.View
-import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.guoxiaoxing.phoenix.R
@@ -47,7 +46,6 @@ import java.util.ArrayList
 class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.OnItemClickListener,
         PickerAdapter.OnPhotoSelectChangedListener {
 
-
     private val TAG = PickerActivity::class.java.simpleName
 
     private lateinit var adapter: PickerAdapter
@@ -55,6 +53,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     private var foldersList: MutableList<MediaFolder> = ArrayList()
     private lateinit var folderWindow: FolderPopWindow
     private lateinit var animation: Animation
+
     private var anim = false
     private var preview_textColor: Int = 0
     private lateinit var rxPermissions: RxPermissions
@@ -67,7 +66,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         //receive the select result from PreviewActivity
             PhoenixConstant.FLAG_PREVIEW_UPDATE_SELECT -> {
                 val selectImages = obj.mediaEntities
-                anim = if (selectImages.size > 0) true else false
+                anim = selectImages.size > 0
                 val position = obj.position
                 DebugUtil.i(TAG, "刷新下标::" + position)
                 adapter.bindSelectImages(selectImages)
@@ -94,33 +93,28 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         }
         rxPermissions = RxPermissions(this)
         LightStatusBarUtils.setLightStatusBar(this, statusFont)
-        //TODO
-        if (false) {
-            if (savedInstanceState == null) {
-                rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
-                        .subscribe(object : Observer<Boolean> {
-                            override fun onSubscribe(d: Disposable) {}
 
-                            override fun onNext(aBoolean: Boolean?) {
-                                if (aBoolean!!) {
-                                    onTakePhoto()
-                                } else {
-                                    showToast(getString(R.string.picture_camera))
-                                    closeActivity()
-                                }
-                            }
+        rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .subscribe(object : Observer<Boolean> {
+                    override fun onSubscribe(d: Disposable) {}
 
-                            override fun onError(e: Throwable) {}
+                    override fun onNext(aBoolean: Boolean?) {
+                        if (aBoolean!!) {
+                            setContentView(R.layout.activity_picker)
+                            setupView()
+                        } else {
+                            showToast(getString(R.string.picture_jurisdiction))
+                            closeActivity()
+                        }
+                    }
 
-                            override fun onComplete() {}
-                        })
-            }
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            setContentView(R.layout.activity_empty)
-        } else {
-            setContentView(R.layout.activity_picker)
-            setupView()
-        }
+                    override fun onError(e: Throwable) {
+                        showToast(getString(R.string.picture_jurisdiction))
+                        closeActivity()
+                    }
+
+                    override fun onComplete() {}
+                })
     }
 
     /**
@@ -128,14 +122,14 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      */
     private fun setupView() {
 
-        rl_bottom.setVisibility(if (selectionMode == PhoenixConstant.SINGLE) View.GONE else View.VISIBLE)
-        isNumComplete(numComplete)
+        isNumberComplete(numComplete)
+        rl_bottom.visibility = if (selectionMode == PhoenixConstant.SINGLE) View.GONE else View.VISIBLE
         picture_id_preview.setOnClickListener(this)
         if (fileType == MimeType.ofAudio()) {
-            picture_id_preview.setVisibility(View.GONE)
+            picture_id_preview.visibility = View.GONE
             audioH = ScreenUtils.getScreenHeight(mContext) + ScreenUtils.getStatusBarHeight(mContext)
         } else {
-            picture_id_preview.setVisibility(if (fileType == PhoenixConstant.TYPE_VIDEO) View.GONE else View.VISIBLE)
+            picture_id_preview.visibility = if (fileType == PhoenixConstant.TYPE_VIDEO) View.GONE else View.VISIBLE
         }
         picture_left_back.setOnClickListener(this)
         picture_right.setOnClickListener(this)
@@ -198,7 +192,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      * none number style
      */
     @SuppressLint("StringFormatMatches")
-    private fun isNumComplete(numComplete: Boolean) {
+    private fun isNumberComplete(numComplete: Boolean) {
         picture_tv_ok.text = if (numComplete)
             getString(R.string.picture_done_front_num, 0, maxSelectNum)
         else

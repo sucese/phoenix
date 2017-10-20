@@ -7,6 +7,7 @@ import com.guoxiaoxing.phoenix.picker.util.DebugUtil
 import java.util.ArrayList
 
 class ImagesObservable private constructor() : SubjectListener {
+
     //观察者接口集合
     private val observers = ArrayList<ObserverListener>()
 
@@ -98,18 +99,6 @@ class ImagesObservable private constructor() : SubjectListener {
     }
 
     companion object {
-        private lateinit var sObserver: ImagesObservable
-
-        val instance: ImagesObservable
-            get() {
-                if (sObserver == null) {
-                    synchronized(ImagesObservable::class.java) {
-                        if (sObserver == null) {
-                            sObserver = ImagesObservable()
-                        }
-                    }
-                }
-                return sObserver
-            }
+        val instance: ImagesObservable by lazy { ImagesObservable() }
     }
 }

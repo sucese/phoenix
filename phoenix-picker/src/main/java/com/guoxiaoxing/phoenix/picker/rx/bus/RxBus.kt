@@ -28,7 +28,6 @@ class RxBus private constructor() {
 
     /**
      * 根据传递的 eventType 类型返回特定类型(eventType)的 被观察者
-
      * @param eventType 事件类型
      * *
      * @return return
@@ -39,7 +38,6 @@ class RxBus private constructor() {
 
     /**
      * 根据传递的code和 eventType 类型返回特定类型(eventType)的 被观察者
-
      * @param code      事件code
      * *
      * @param eventType 事件类型
@@ -112,7 +110,6 @@ class RxBus private constructor() {
 
     /**
      * 将注解方法信息以event类型为key保存到map中
-
      * @param eventType        event类型
      * *
      * @param subscriberMethod 注解方法信息
@@ -131,7 +128,6 @@ class RxBus private constructor() {
 
     /**
      * 将订阅事件以event类型为key保存到map,用于取消订阅时用
-
      * @param eventType  event类型
      * *
      * @param disposable 订阅事件
@@ -150,7 +146,6 @@ class RxBus private constructor() {
 
     /**
      * 用RxJava添加订阅者
-
      * @param subscriberMethod d
      */
     private fun addSubscriber(subscriberMethod: SubscriberMethod) {
@@ -233,7 +228,6 @@ class RxBus private constructor() {
 
     /**
      * subscriptions unsubscribe
-
      * @param eventType eventType
      */
     private fun unSubscribeByEventType(eventType: Class<*>) {
@@ -252,7 +246,6 @@ class RxBus private constructor() {
 
     /**
      * 移除subscriber对应的subscriberMethods
-
      * @param subscriber subscriber
      * *
      * @param eventType  eventType
@@ -296,24 +289,7 @@ class RxBus private constructor() {
         }
     }
 
-
-
     companion object {
-        @Volatile private lateinit var defaultInstance: RxBus
-
-        val default: RxBus
-            get() {
-                var rxBus: RxBus = defaultInstance
-                if (defaultInstance == null) {
-                    synchronized(RxBus::class.java) {
-                        rxBus = defaultInstance
-                        if (defaultInstance == null) {
-                            rxBus = RxBus()
-                            defaultInstance = rxBus
-                        }
-                    }
-                }
-                return rxBus
-            }
+        val default: RxBus by lazy { RxBus() }
     }
 }

@@ -21,7 +21,13 @@ class PreviewActivity : BaseActivity() {
 
     fun setupFragment() {
         val position = intent.getIntExtra(PhoenixConstant.KEY_POSITION, 0)
-        val selectImages = intent.getSerializableExtra(PhoenixConstant.KEY_SELECT_LIST) as List<MediaEntity>
+
+        val selectImages = if (intent.getSerializableExtra(PhoenixConstant.KEY_SELECT_LIST) != null) {
+            intent.getSerializableExtra(PhoenixConstant.KEY_SELECT_LIST) as List<MediaEntity>
+        }else{
+            ArrayList()
+        }
+
         val is_bottom_preview = intent.getBooleanExtra(PhoenixConstant.EXTRA_BOTTOM_PREVIEW, false)
         val images: List<MediaEntity>
         if (is_bottom_preview) {
