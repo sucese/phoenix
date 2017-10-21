@@ -29,6 +29,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'org.aspectj:aspectjrt:1.7.3'
 
-    compile "com.github.guoxiaoxing.phoenix:phoenix-core:$rootProject.ext.version"
+    compile 'com.github.guoxiaoxing.phoenix:phoenix-core:0.0.2'
 //    compile project(':phoenix-core')
 }
