@@ -25,7 +25,9 @@ import com.guoxiaoxing.phoenix.picker.widget.dialog.PhoenixLoadingDialog
 import com.guoxiaoxing.phoenix.picker.widget.editor.ColorSeekBar
 import com.guoxiaoxing.phoenix.picker.widget.editor.DragToDeleteView
 import com.guoxiaoxing.phoenix.picker.widget.editor.EditDelegate
+import com.guoxiaoxing.phoenix.picture.edit.operation.OnRevokeListener
 import com.guoxiaoxing.phoenix.picture.edit.operation.Operation
+import com.guoxiaoxing.phoenix.picture.edit.operation.OperationDetailListener
 import com.guoxiaoxing.phoenix.picture.edit.widget.blur.BlurDetailView
 import com.guoxiaoxing.phoenix.picture.edit.widget.blur.BlurMode
 import com.guoxiaoxing.phoenix.picture.edit.widget.blur.BlurView
@@ -75,10 +77,10 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
     private var mStickerDetailsShowing = false
 
     //operation
-    private var mSelectedOperation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation? = null
+    private var mSelectedOperation: Operation? = null
     private val mOperationListeners = ArrayList<OperationListener>()
-    private val mOperationDetailListeners = ArrayList<com.guoxiaoxing.phoenix.picture.edit.operation.OperationDetailListener>()
-    private val mOnRevokeListeners = ArrayList<com.guoxiaoxing.phoenix.picture.edit.operation.OnRevokeListener>()
+    private val mOperationDetailListeners = ArrayList<OperationDetailListener>()
+    private val mOnRevokeListeners = ArrayList<OnRevokeListener>()
 
     companion object {
         fun newInstance(): PictureEditFragment {
@@ -124,8 +126,8 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
         this.mActionBarAnimUtils = ActionBarAnimUtils(layerActionView, editorBar, rlFunc, activity)
         mCropHelper = CropHelper(layerCropView, CropDetailView(layoutCropDetails), this)
 
-        val operationList = listOf(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation, com.guoxiaoxing.phoenix.picture.edit.operation.Operation.StickOperation, com.guoxiaoxing.phoenix.picture.edit.operation.Operation.TextOperation,
-                com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation, com.guoxiaoxing.phoenix.picture.edit.operation.Operation.CropOperation)
+        val operationList = listOf(Operation.PaintOperation, Operation.StickOperation, Operation.TextOperation,
+                Operation.BlurOperation, Operation.CropOperation)
 
         for (index in operationList.indices) {
             val mode = operationList[index]
@@ -144,14 +146,14 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
 
         mDragToDeleteView = DragToDeleteView(layoutDragDelete)
 
-        getView<TextPastingView>(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.TextOperation)?.let {
+        getView<TextPastingView>(Operation.TextOperation)?.let {
             setUpPastingView(it)
             it.onLayerViewDoubleClick = {
                 _, sharableData ->
                 go2InputView(sharableData as InputTextModel)
             }
         }
-        getView<StickView>(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.StickOperation)?.let {
+        getView<StickView>(Operation.StickOperation)?.let {
             setUpPastingView(it)
         }
 
@@ -159,7 +161,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
         mOperationDetailListeners.add(this)
         mOnRevokeListeners.add(this)
 
-        ivBack.setOnClickListener {
+        tvCancel.setOnClickListener {
             cancel()
         }
 
@@ -169,8 +171,8 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
 
         mDragToDeleteView.onLayoutRectChange = {
             _, rect ->
-            getView<TextPastingView>(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.TextOperation)?.dragViewRect = rect
-            getView<StickView>(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.StickOperation)?.dragViewRect = rect
+            getView<TextPastingView>(Operation.TextOperation)?.dragViewRect = rect
+            getView<StickView>(Operation.StickOperation)?.dragViewRect = rect
         }
     }
 
@@ -208,7 +210,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
         }
     }
 
-    override fun findLayerByEditorMode(operation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation): View? {
+    override fun findLayerByEditorMode(operation: Operation): View? {
         when (operation) {
             Operation.PaintOperation -> return paintView
             Operation.StickOperation -> return stickView
@@ -222,12 +224,6 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
     override fun getActivityContext(): Context {
         return activity
     }
-
-//    override fun onBackPressed() {
-//        if (!mOperationHelper.onBackPress()) {
-//            super.onBackPressed()
-//        }
-//    }
 
     override fun getEditorSizeInfo(): Pair<Int, Int> {
         return Pair(mEditorWidth, mEditorHeight)
@@ -283,7 +279,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
         mCropHelper.getSavedCropState()?.reset()
     }
 
-    private fun onOperationClick(operation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation, position: Int, clickView: View) {
+    private fun onOperationClick(operation: Operation, position: Int, clickView: View) {
         if (mSelectedOperation == operation) {
             operation.onOperation(false, this)
             MatrixUtils.changeSelectedStatus(llOperation, -1)
@@ -313,18 +309,18 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
             paintlDetail.onColorChangeListener = object : ColorSeekBar.OnColorChangeListener {
                 override fun onColorChangeListener(colorBarPosition: Int, alphaBarPosition: Int, color: Int) {
                     callback2Listeners(mOperationDetailListeners) {
-                        it.onReceiveDetails(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation, PaintDetail(color))
+                        it.onReceiveDetails(Operation.PaintOperation, PaintDetail(color))
                     }
                 }
             }
-            paintlDetail.onRevokeListener = object : com.guoxiaoxing.phoenix.picture.edit.operation.OnRevokeListener {
-                override fun revoke(operation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation) {
+            paintlDetail.onRevokeListener = object : OnRevokeListener {
+                override fun revoke(operation: Operation) {
                     callback2Listeners(mOnRevokeListeners) {
-                        it.revoke(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation)
+                        it.revoke(Operation.PaintOperation)
                     }
                 }
             }
-            showOrHideDetailsView(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation, paintlDetail)
+            showOrHideDetailsView(Operation.PaintOperation, paintlDetail)
         }
         showOrHideDetails(selected)
     }
@@ -351,19 +347,19 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
             val listener = object : BlurDetailView.OnMosaicChangeListener {
                 override fun onChange(blurMode: BlurMode) {
                     callback2Listeners(mOperationDetailListeners) {
-                        it.onReceiveDetails(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation, BlurDetal(blurMode))
+                        it.onReceiveDetails(Operation.BlurOperation, BlurDetal(blurMode))
                     }
                 }
             }
             val blurDetail = BlurDetailView(activity, listener)
-            blurDetail.onRevokeListener = object : com.guoxiaoxing.phoenix.picture.edit.operation.OnRevokeListener {
-                override fun revoke(operation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation) {
+            blurDetail.onRevokeListener = object : OnRevokeListener {
+                override fun revoke(operation: Operation) {
                     callback2Listeners(mOnRevokeListeners) {
-                        it.revoke(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation)
+                        it.revoke(Operation.BlurOperation)
                     }
                 }
             }
-            showOrHideDetailsView(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation, blurDetail)
+            showOrHideDetailsView(Operation.BlurOperation, blurDetail)
         }
         showOrHideDetails(selected)
     }
@@ -385,7 +381,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
         flOperationDetail.visibility = if (show) View.VISIBLE else View.INVISIBLE
     }
 
-    private fun showOrHideDetailsView(operation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation, view: View) {
+    private fun showOrHideDetailsView(operation: Operation, view: View) {
         val count = flOperationDetail.childCount
         var toRemoveView: View? = null
         var handled = false
@@ -406,7 +402,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
         }
     }
 
-    private inline fun <reified T : View> getView(operation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation) = findLayerByEditorMode(operation) as? T
+    private inline fun <reified T : View> getView(operation: Operation) = findLayerByEditorMode(operation) as? T
 
     fun getEditorSavePath() = "${Environment.getExternalStorageDirectory()}/EditorCache/image-editor-${System.currentTimeMillis()}.png"
 
@@ -421,11 +417,11 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
 
 
     private fun setScrawlDetails(details: PaintDetail) {
-        getView<PaintView>(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation)?.setPaintColor(details.color)
+        getView<PaintView>(Operation.PaintOperation)?.setPaintColor(details.color)
     }
 
     private fun setMosaicDetails(details: BlurDetal) {
-        getView<BlurView>(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation)?.setMosaicMode(details.blurMode, null)
+        getView<BlurView>(Operation.BlurOperation)?.setMosaicMode(details.blurMode, null)
     }
 
 
@@ -445,12 +441,12 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
         val result = data?.getSerializableExtra(resultCode.toString()) as? InputTextModel
         logD1("resultFromInputView is $result")
         result?.let {
-            getView<TextPastingView>(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.TextOperation)?.onTextPastingChanged(it)
+            getView<TextPastingView>(Operation.TextOperation)?.onTextPastingChanged(it)
         }
         this.mActionBarAnimUtils.showOrHideFuncAndBarView(true)
     }
 
-    private fun enableOrDisableEditorMode(operation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation, enable: Boolean) {
+    private fun enableOrDisableEditorMode(operation: Operation, enable: Boolean) {
         val view = findLayerByEditorMode(operation)
         if (view is BaseHierarchyView<*>) {
             view.isLayerInEditMode = enable
@@ -463,7 +459,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
             mStickDetailsView = StickDetailsView(activity)
             mStickDetailsView!!.onStickerClickListener = object : StickDetailsView.OnStickerClickResult {
                 override fun onResult(stickModel: InputStickModel) {
-                    getView<StickView>(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.StickOperation)?.onStickerPastingChanged(stickModel)
+                    getView<StickView>(Operation.StickOperation)?.onStickerPastingChanged(stickModel)
                     closeStickerPanel()
                 }
             }
@@ -492,39 +488,39 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
         }
     }
 
-    override fun onOperationSelected(operation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation) {
+    override fun onOperationSelected(operation: Operation) {
         when (operation) {
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.CropOperation -> mCropHelper.showCropDetails()
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation -> {
-                enableOrDisableEditorMode(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation, true)
-                enableOrDisableEditorMode(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation, false)
+            Operation.CropOperation -> mCropHelper.showCropDetails()
+            Operation.PaintOperation -> {
+                enableOrDisableEditorMode(Operation.PaintOperation, true)
+                enableOrDisableEditorMode(Operation.BlurOperation, false)
             }
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.TextOperation -> go2InputView(null)
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation -> {
-                enableOrDisableEditorMode(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation, false)
-                enableOrDisableEditorMode(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation, true)
+            Operation.TextOperation -> go2InputView(null)
+            Operation.BlurOperation -> {
+                enableOrDisableEditorMode(Operation.PaintOperation, false)
+                enableOrDisableEditorMode(Operation.BlurOperation, true)
             }
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.StickOperation -> go2StickerPanel()
+            Operation.StickOperation -> go2StickerPanel()
         }
     }
 
-    override fun onFuncModeUnselected(operation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation) {
+    override fun onFuncModeUnselected(operation: Operation) {
         when (operation) {
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation -> enableOrDisableEditorMode(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation, false)
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation -> enableOrDisableEditorMode(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation, false)
+            Operation.PaintOperation -> enableOrDisableEditorMode(Operation.PaintOperation, false)
+            Operation.BlurOperation -> enableOrDisableEditorMode(Operation.BlurOperation, false)
             else -> logD1("operation=$operation,Unselected !")
         }
     }
 
-    override fun onReceiveDetails(operation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation, funcDetailsMarker: FuncDetailsMarker) {
+    override fun onReceiveDetails(operation: Operation, funcDetailsMarker: FuncDetailsMarker) {
         when (operation) {
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation -> setScrawlDetails(funcDetailsMarker as PaintDetail)
-            com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation -> setMosaicDetails(funcDetailsMarker as BlurDetal)
+            Operation.PaintOperation -> setScrawlDetails(funcDetailsMarker as PaintDetail)
+            Operation.BlurOperation -> setMosaicDetails(funcDetailsMarker as BlurDetal)
             else -> logD1("operation=$operation,onReceiveDetails !")
         }
     }
 
-    override fun revoke(operation: com.guoxiaoxing.phoenix.picture.edit.operation.Operation) {
+    override fun revoke(operation: Operation) {
         val view = findLayerByEditorMode(operation)
         if (view is BaseHierarchyView<*>) {
             view.revoke()

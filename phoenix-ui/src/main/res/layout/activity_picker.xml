@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/id_titleBar"
-        layout="@layout/picture_title_bar"
+        layout="@layout/include_title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

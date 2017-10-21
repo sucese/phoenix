@@ -16,7 +16,7 @@ class StickDetailsView(ctx: Context) : FrameLayout(ctx) {
     var onStickerClickListener: OnStickerClickResult? = null
 
     init {
-        LayoutInflater.from(ctx).inflate(R.layout.sticker_details, this, true)
+        LayoutInflater.from(ctx).inflate(R.layout.item_edit_sticker_details, this, true)
         stickerView = findViewById(R.id.rvSticker) as RecyclerView
         val layoutManager = GridLayoutManager(ctx, 8)
         stickerView.adapter = SimpleStickerAdapter(Sticker.Emoji)
@@ -34,7 +34,7 @@ class StickDetailsView(ctx: Context) : FrameLayout(ctx) {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleStickerHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_sticker_details, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_edit_sticker, parent, false)
             return SimpleStickerHolder(view)
         }
 

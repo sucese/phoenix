@@ -32,7 +32,7 @@ import com.guoxiaoxing.phoenix.picker.widget.GridSpacingItemDecoration
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_picker.*
-import kotlinx.android.synthetic.main.picture_title_bar.*
+import kotlinx.android.synthetic.main.include_title_bar.*
 import java.io.Serializable
 import java.util.ArrayList
 

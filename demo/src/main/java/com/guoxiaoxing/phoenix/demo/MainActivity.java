@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .onPickerListener(new OnPickerListener() {
                         @Override
                         public void onPickSuccess(List<MediaEntity> pickList) {
-                            pickList.addAll(pickList);
                             adapter.setList(pickList);
                             adapter.notifyDataSetChanged();
 

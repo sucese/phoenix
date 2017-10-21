@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -52,18 +51,17 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="?attr/colorPrimary"
+        android:background="@color/black"
         android:gravity="center_vertical">
 
         <com.guoxiaoxing.phoenix.picker.widget.editor.ColorSeekBar
             android:id="@+id/colorBarInput"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginLeft="@dimen/phoenix_dimen_16"
+            android:layout_marginRight="@dimen/phoenix_dimen_16"
             app:barHeight="6dp"
             app:colorBarPosition="8"
             app:colorSeeds="@array/color_seeds" />
     </RelativeLayout>
-
 </LinearLayout>

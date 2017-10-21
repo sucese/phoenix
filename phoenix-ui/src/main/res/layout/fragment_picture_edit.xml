@@ -52,16 +52,15 @@
                 android:layout_height="match_parent" />
         </FrameLayout>
     </com.guoxiaoxing.phoenix.picture.edit.widget.hierarchy.ActionFrameLayout>
-    <!--actionBar-->
 
     <include
         android:id="@+id/layoutCropDetails"
-        layout="@layout/crop_func_details"
+        layout="@layout/item_edit_crop"
         android:visibility="gone" />
 
     <include
         android:id="@+id/layoutDragDelete"
-        layout="@layout/layout_drag_to_delete"
+        layout="@layout/include_drag_to_delete"
         android:visibility="gone" />
 
     <RelativeLayout
@@ -76,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_alignParentBottom="true"
-            android:background="?colorPrimary"
+            android:background="@color/black"
             android:orientation="horizontal" />
 
         <FrameLayout
@@ -84,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/llOperation"
-            android:background="?colorPrimary"
+            android:background="@color/black"
             android:visibility="gone" />
     </RelativeLayout>
 

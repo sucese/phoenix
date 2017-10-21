@@ -37,7 +37,7 @@ class FolderPopWindow(private val context: Context, private val mimeType: Int) :
     private val drawableDown: Drawable
 
     init {
-        window = LayoutInflater.from(context).inflate(R.layout.picture_window_folder, null)
+        window = LayoutInflater.from(context).inflate(R.layout.window_folder, null)
         this.contentView = window
         this.width = ScreenUtil.getScreenWidth(context)
         this.height = ScreenUtil.getScreenHeight(context)

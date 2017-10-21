@@ -18,7 +18,7 @@ class BlurDetailView(ctx: Context, onMosaicChangeListener: OnMosaicChangeListene
 
     init {
         this.onMosaicChangeListener = onMosaicChangeListener
-        LayoutInflater.from(ctx).inflate(R.layout.mosaic_func_details, this, true)
+        LayoutInflater.from(ctx).inflate(R.layout.item_edit_blur, this, true)
         val rootFunc = findViewById(R.id.llMosaicDetails) as LinearLayout
         val values = BlurMode.values()
         for (index in 0 until values.size) {
@@ -26,7 +26,7 @@ class BlurDetailView(ctx: Context, onMosaicChangeListener: OnMosaicChangeListene
             if (mode.getModeBgResource() <= 0) {
                 continue
             }
-            val item = LayoutInflater.from(context).inflate(R.layout.mosaic_item_func_details, rootFunc, false)
+            val item = LayoutInflater.from(context).inflate(R.layout.item_edit_blur_detail, rootFunc, false)
             val ivFuncDesc = item.findViewById(R.id.ivMosaicDesc) as ImageView
             ivFuncDesc.setImageResource(mode.getModeBgResource())
             item.tag = mode

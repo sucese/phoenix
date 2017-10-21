@@ -57,10 +57,12 @@
             android:name="com.guoxiaoxing.phoenix.picker.ui.editor.PictureEditActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity
             android:name="com.guoxiaoxing.phoenix.picker.ui.editor.TextInputActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/theme_activity_text_input"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
     </application>
 
 </manifest>

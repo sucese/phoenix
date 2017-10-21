@@ -193,6 +193,12 @@
         <item name="android:windowBackground">@android:color/white</item>
     </style>
 
+    <style name="theme_activity_text_input" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/transparent_6f</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <style name="style_window">
         <item name="android:windowEnterAnimation">@anim/phoenix_fade_in</item>
         <item name="android:windowExitAnimation">@anim/phoenix_fade_out</item>

@@ -16,7 +16,7 @@ class PaintlDetailsView(ctx: Context) : FrameLayout(ctx) {
     var onColorChangeListener: ColorSeekBar.OnColorChangeListener? = null
 
     init {
-        LayoutInflater.from(ctx).inflate(R.layout.scralw_func_details, this, true)
+        LayoutInflater.from(ctx).inflate(R.layout.item_edit_paint, this, true)
         findViewById(R.id.ivRevoke).setOnClickListener {
             onRevokeListener?.revoke(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.PaintOperation)
         }

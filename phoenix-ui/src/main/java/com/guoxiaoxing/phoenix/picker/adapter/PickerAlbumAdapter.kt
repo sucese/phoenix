@@ -44,7 +44,7 @@ class PickerAlbumAdapter(private val mContext: Context) : RecyclerView.Adapter<P
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(mContext).inflate(R.layout.picture_album_folder_item, parent, false)
+        val itemView = LayoutInflater.from(mContext).inflate(R.layout.item_album_folder, parent, false)
         return ViewHolder(itemView)
     }
 

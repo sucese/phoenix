@@ -51,7 +51,9 @@ class PreviewActivity : BaseActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        finish()
-        overridePendingTransition(0, R.anim.phoenix_activity_out)
+        if(supportFragmentManager.fragments.size <= 1){
+            finish()
+            overridePendingTransition(0, R.anim.phoenix_activity_out)
+        }
     }
 }

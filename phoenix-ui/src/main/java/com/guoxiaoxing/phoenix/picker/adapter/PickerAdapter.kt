@@ -30,8 +30,8 @@ import com.guoxiaoxing.phoenix.picker.util.DebugUtil
 import com.guoxiaoxing.phoenix.picker.util.StringUtils
 import com.guoxiaoxing.phoenix.picker.util.VoiceUtils
 
-import kotlinx.android.synthetic.main.picture_item_camera.view.*
-import kotlinx.android.synthetic.main.picture_image_grid_item.view.*
+import kotlinx.android.synthetic.main.item_camera.view.*
+import kotlinx.android.synthetic.main.item_grid_media.view.*
 
 import java.util.ArrayList
 
@@ -105,10 +105,10 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == PhoenixConstant.TYPE_CAMERA) {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.picture_item_camera, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_camera, parent, false)
             return HeaderViewHolder(view)
         } else {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.picture_image_grid_item, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_grid_media, parent, false)
             return ContentViewHolder(view)
         }
     }

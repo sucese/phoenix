@@ -430,7 +430,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
 
         fun showToast() {
             if (mContext != null) {
-                val view = LayoutInflater.from(mContext).inflate(R.layout.toast_item, null)
+                val view = LayoutInflater.from(mContext).inflate(R.layout.item_toast, null)
                 val toast = Toast(mContext)
                 toast.view = view
                 toast.setGravity(Gravity.CENTER, 0, 0)
