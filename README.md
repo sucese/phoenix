@@ -6,7 +6,7 @@
 
 >Android平台上图片/视频选择、压缩、编辑的一站式解决方案。
 
-<img src=""/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_play_1.gif"/>
 
 **特点**
 
