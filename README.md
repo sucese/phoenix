@@ -73,7 +73,7 @@ compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-video:0.0.5'
 
 ```java
 Phoenix.with()
-        .theme(PhoenixOption.THEME_DEFAULT )// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+        .theme(PhoenixOption.THEME_DEFAULT )// 主题样式
         .fileType(MimeType.ofAll())
         .maxSelectNum(10)// 最大图片选择数量
         .minSelectNum(0)// 最小选择数量
