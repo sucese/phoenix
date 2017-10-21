@@ -2,8 +2,8 @@
 
 ## 功能介绍
 
-![https://jitpack.io/#guoxiaoxing/phoenix](https://jitpack.io/v/guoxiaoxing/phoenix.svg)
-![https://jitpack.io/#guoxiaoxing/phoenix](https://img.shields.io/badge/license-Apache%202-blue.svg)
+[![](https://jitpack.io/v/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix)
+[![](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://jitpack.io/#guoxiaoxing/phoenix)
 
 >Android平台上图片/视频选择，编辑和压缩的一站式解决方案。
 
