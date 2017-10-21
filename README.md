@@ -58,6 +58,19 @@
 
 ### 添加依赖
 
+在项目根目录build.gradle文件里添加
+
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+添加依赖
+
 ```
 //图片/视频选择、拍照、图片/视频预览
 compile 'com.github.guoxiaoxing.phoenix:phoenix-ui:0.0.5'
