@@ -6,7 +6,8 @@
 
 >Android平台上图片/视频选择、压缩、编辑的一站式解决方案。
 
-核心功能基于Kotlin实现，外层接口基于Java实现，方便Kotlin与Java双方的调用。
+图片/视频的选择、预览、编辑和压缩是业务中的常见需求，Phoenix完整了实现了这些功能，并提供了优雅的调用方式。Phoenix的核心功能基于Kotlin实现，外层接口
+基于Java实现，方便Kotlin与Java双方的调用。
 
 **特点**
 
@@ -16,12 +17,10 @@
 - RxJava良好的支持性，每个功能都提供了同步与异步两种实现，便于开发者利用RxJava进行功能的组合与嵌套。
 - 良好的版本兼容性，运行时权限等内容都做了兼容性处理。
 
-
 <p align="center">
 <img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/play_compress_1.gif" height="400"/>
 <img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/play_compress_2.gif" height="400"/>
 </p>
-
 
 **功能**
 
@@ -40,7 +39,6 @@
 <img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_4.png" height="400"/>
 <img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_6.png" height="400"/>
 </p>
-
 
 **主题**
 
