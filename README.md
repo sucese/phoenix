@@ -1,9 +1,9 @@
-# <img src="https://flutter.io/images/flutter-mark-square-100.png" alt="Flutter" width="40" height="40" /> Phoenix
+# <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/project_logo.png" alt="Phoenix" width="40" height="40" /> Phoenix
 
 ## 功能介绍
 
-[![Join Gitter Chat Channel -](https://jitpack.io/v/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
-[![Build Status - Travis](https://jitpack.io/v/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
+[![Jitpack version](https://jitpack.io/v/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
+[![License](https://jitpack.io/v/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
 
 >Android平台上图片/视频选择，编辑和压缩的一站式解决方案。
 
@@ -18,8 +18,8 @@
 - 良好的版本兼容性，运行时权限等内容都做了兼容性处理。
 
 <p align="center">
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/play_compress_1.gif" height="400"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/play_compress_2.gif" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/play_compress_1.gif" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/play_compress_2.gif" height="400"/>
 </p>
 
 **功能**
@@ -34,10 +34,10 @@
 - 视频压缩
 
 <p align="center">
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_1.png" height="400"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_2.png" height="400"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_4.png" height="400"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_6.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/function_1.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/function_2.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/function_4.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/function_6.png" height="400"/>
 </p>
 
 **主题**
@@ -48,10 +48,10 @@
 - 蓝色主题
 
 <p align="center">
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_default.png" height="400"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_red.png" height="400"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_orange.png" height="400"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_blue.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/theme_default.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/theme_red.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/theme_orange.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/theme_blue.png" height="400"/>
 </p>
 
 ## 快递开始
