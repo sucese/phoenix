@@ -2,7 +2,6 @@ package com.guoxiaoxing.phoenix.picker.ui.picker
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -36,7 +35,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_picker.*
 import kotlinx.android.synthetic.main.include_title_bar.*
 import java.io.Serializable
-import java.util.ArrayList
+import java.util.*
 
 /**
  * For more information, you can visit https://github.com/guoxiaoxing or contact me by

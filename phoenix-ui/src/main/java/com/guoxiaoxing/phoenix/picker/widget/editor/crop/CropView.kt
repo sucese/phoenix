@@ -6,11 +6,11 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.guoxiaoxing.phoenix.picture.edit.layer.CropWindowHelper
 import com.guoxiaoxing.phoenix.picker.listener.CustomGestureDetector
 import com.guoxiaoxing.phoenix.picker.listener.GestureDetectorListener
 import com.guoxiaoxing.phoenix.picker.listener.OnPhotoRectUpdateListener
 import com.guoxiaoxing.phoenix.picker.util.MatrixUtils
+import com.guoxiaoxing.phoenix.picture.edit.layer.CropWindowHelper
 
 class CropView : View, GestureDetectorListener, OnPhotoRectUpdateListener {
 

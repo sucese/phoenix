@@ -1,8 +1,5 @@
 package com.guoxiaoxing.phoenix.picker.rx.bus
 
-import java.util.ArrayList
-import java.util.HashMap
-
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Scheduler
@@ -11,6 +8,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import java.util.*
 
 class RxBus private constructor() {
 

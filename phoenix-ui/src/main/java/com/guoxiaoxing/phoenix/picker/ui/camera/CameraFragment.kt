@@ -4,35 +4,23 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.hardware.Camera
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
+import android.hardware.*
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.text.TextUtils
 import android.util.Log
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.OrientationEventListener
-import android.view.SurfaceHolder
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
+import android.view.*
 import android.widget.Toast
-
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.picker.ui.BaseFragment
 import kotlinx.android.synthetic.main.fragment_camera.*
 import kotlinx.android.synthetic.main.include_camera_bottom_tool.*
 import kotlinx.android.synthetic.main.include_camera_hint.*
 import kotlinx.android.synthetic.main.include_camera_top_tool.*
-
 import java.io.IOException
-import java.util.HashMap
+import java.util.*
 
 class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCallback, View.OnClickListener
         , SensorEventListener {

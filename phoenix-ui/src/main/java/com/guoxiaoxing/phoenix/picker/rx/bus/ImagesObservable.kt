@@ -3,8 +3,7 @@ package com.guoxiaoxing.phoenix.picker.rx.bus
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.picker.model.MediaFolder
 import com.guoxiaoxing.phoenix.picker.util.DebugUtil
-
-import java.util.ArrayList
+import java.util.*
 
 class ImagesObservable private constructor() : SubjectListener {
 

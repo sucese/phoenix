@@ -2,11 +2,7 @@ package com.guoxiaoxing.phoenix.picker.widget.dialog
 
 import android.app.Dialog
 import android.content.Context
-import android.content.res.Resources
-import android.util.DisplayMetrics
 import android.view.Gravity
-import android.view.Window
-import android.view.WindowManager
 
 class CustomDialog(context: Context, width: Int, height: Int, layout: Int,
                    style: Int) : Dialog(context, style) {

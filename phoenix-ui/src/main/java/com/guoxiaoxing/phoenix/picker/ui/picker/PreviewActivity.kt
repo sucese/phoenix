@@ -2,14 +2,12 @@ package com.guoxiaoxing.phoenix.picker.ui.picker
 
 import android.os.Bundle
 import android.os.Parcelable
-
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.picker.rx.bus.ImagesObservable
 import com.guoxiaoxing.phoenix.picker.ui.BaseActivity
-
-import java.util.ArrayList
+import java.util.*
 
 class PreviewActivity : BaseActivity() {
 

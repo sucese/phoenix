@@ -14,26 +14,19 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.Toast
-
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.guoxiaoxing.phoenix.R
-import com.guoxiaoxing.phoenix.picker.util.AnimationLoader
 import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
-import com.guoxiaoxing.phoenix.picker.util.DateUtils
-import com.guoxiaoxing.phoenix.picker.util.DebugUtil
-import com.guoxiaoxing.phoenix.picker.util.StringUtils
-import com.guoxiaoxing.phoenix.picker.util.VoiceUtils
-
+import com.guoxiaoxing.phoenix.picker.util.*
 import kotlinx.android.synthetic.main.item_camera.view.*
 import kotlinx.android.synthetic.main.item_grid_media.view.*
-
-import java.util.ArrayList
+import java.util.*
 
 class PickerAdapter(private val context: Context, private val config: PhoenixOption) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

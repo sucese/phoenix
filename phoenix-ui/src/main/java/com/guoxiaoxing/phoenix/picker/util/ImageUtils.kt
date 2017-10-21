@@ -9,13 +9,11 @@ import android.graphics.Point
 import android.net.Uri
 import android.os.Environment
 import android.view.WindowManager
-
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 object ImageUtils {
 

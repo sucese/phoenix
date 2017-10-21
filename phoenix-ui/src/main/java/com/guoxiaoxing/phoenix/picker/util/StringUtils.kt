@@ -6,15 +6,12 @@ import android.text.SpannableString
 import android.text.TextUtils
 import android.text.style.RelativeSizeSpan
 import android.widget.TextView
-
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.model.MimeType
-
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.security.MessageDigest
-import kotlin.experimental.and
 
 object StringUtils {
 

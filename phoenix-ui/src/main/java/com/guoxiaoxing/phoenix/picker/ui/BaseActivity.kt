@@ -9,31 +9,28 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.FragmentActivity
 import android.widget.Toast
-
 import com.guoxiaoxing.phoenix.R
-import com.guoxiaoxing.phoenix.picker.Phoenix
 import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.listener.OnPickerListener
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
 import com.guoxiaoxing.phoenix.core.util.ReflectUtils
+import com.guoxiaoxing.phoenix.picker.Phoenix
 import com.guoxiaoxing.phoenix.picker.model.MediaFolder
 import com.guoxiaoxing.phoenix.picker.util.AttrsUtils
 import com.guoxiaoxing.phoenix.picker.util.DateUtils
 import com.guoxiaoxing.phoenix.picker.util.DoubleUtils
 import com.guoxiaoxing.phoenix.picker.util.PictureFileUtils
 import com.guoxiaoxing.phoenix.picker.widget.dialog.PhoenixLoadingDialog
-
-import java.io.File
-import java.util.ArrayList
-
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.io.File
+import java.util.*
 
 
 open class BaseActivity : FragmentActivity() {

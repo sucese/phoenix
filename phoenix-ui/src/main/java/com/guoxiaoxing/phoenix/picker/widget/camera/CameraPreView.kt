@@ -9,8 +9,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.SurfaceView
-
-import java.util.ArrayList
+import java.util.*
 
 class CameraPreView : SurfaceView {
 

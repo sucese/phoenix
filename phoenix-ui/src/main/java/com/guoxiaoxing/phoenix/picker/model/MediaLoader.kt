@@ -8,17 +8,13 @@ import android.support.v4.app.LoaderManager
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
 import android.text.TextUtils
-
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
 import com.guoxiaoxing.phoenix.picker.util.DebugUtil
-
 import java.io.File
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Comparator
+import java.util.*
 
 class MediaLoader(private val activity: FragmentActivity, type: Int, private val isGif: Boolean, videoS: Long) {
 

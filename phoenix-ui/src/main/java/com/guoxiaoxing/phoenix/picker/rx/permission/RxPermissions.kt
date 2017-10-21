@@ -4,14 +4,12 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.os.Build
 import android.text.TextUtils
-
-import java.util.ArrayList
-
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.functions.Function
 import io.reactivex.subjects.PublishSubject
+import java.util.*
 
 class RxPermissions(activity: Activity) {
 

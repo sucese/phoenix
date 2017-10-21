@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.guoxiaoxing.phoenix.R;
 import com.guoxiaoxing.phoenix.core.PhoenixOption;
 import com.guoxiaoxing.phoenix.core.listener.Starter;
-import com.guoxiaoxing.phoenix.R;
 import com.guoxiaoxing.phoenix.picker.ui.camera.CameraActivity;
 import com.guoxiaoxing.phoenix.picker.ui.picker.PickerActivity;
 import com.guoxiaoxing.phoenix.picker.ui.picker.PreviewActivity;

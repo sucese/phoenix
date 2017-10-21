@@ -17,12 +17,14 @@ import android.view.animation.AnimationUtils
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
-
 import com.guoxiaoxing.phoenix.R
-import com.guoxiaoxing.phoenix.picker.adapter.PickerAlbumAdapter
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
+import com.guoxiaoxing.phoenix.picker.adapter.PickerAlbumAdapter
 import com.guoxiaoxing.phoenix.picker.model.MediaFolder
-import com.guoxiaoxing.phoenix.picker.util.*
+import com.guoxiaoxing.phoenix.picker.util.AttrsUtils
+import com.guoxiaoxing.phoenix.picker.util.DebugUtil
+import com.guoxiaoxing.phoenix.picker.util.ScreenUtil
+import com.guoxiaoxing.phoenix.picker.util.StringUtils
 
 class FolderPopWindow(private val context: Context, private val mimeType: Int) : PopupWindow(), View.OnClickListener {
     private val window: View

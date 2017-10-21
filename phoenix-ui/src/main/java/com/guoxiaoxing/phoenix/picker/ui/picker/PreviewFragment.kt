@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.widget.ImageView
-
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -32,10 +31,8 @@ import com.guoxiaoxing.phoenix.picker.util.*
 import com.guoxiaoxing.phoenix.picker.widget.photoview.OnPhotoTapListener
 import com.guoxiaoxing.phoenix.picker.widget.photoview.PhotoView
 import com.guoxiaoxing.phoenix.picker.widget.videoview.PhoenixVideoView
-
 import kotlinx.android.synthetic.main.fragment_preview.*
-
-import java.util.ArrayList
+import java.util.*
 
 class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.AnimationListener, OnPictureEditListener {
 

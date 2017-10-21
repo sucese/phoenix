@@ -4,7 +4,6 @@ import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.guoxiaoxing.phoenix.R
@@ -12,11 +11,9 @@ import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.picker.rx.permission.RxPermissions
 import com.guoxiaoxing.phoenix.picker.ui.BaseActivity
-
-import java.util.ArrayList
-
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
+import java.util.*
 
 class CameraActivity : BaseActivity() {
 
