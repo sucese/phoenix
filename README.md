@@ -4,9 +4,9 @@
 
 [![](https://jitpack.io/v/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix)
 
->Android平台上图片/视频选择、压缩、编辑的一站式解决方案。
+>Android平台上图片/视频选择，编辑和压缩的一站式解决方案。
 
-图片/视频的选择、预览、编辑和压缩是业务中的常见需求，Phoenix完整了实现了这些功能，并提供了优雅的调用方式。Phoenix的核心功能基于Kotlin实现，外层接口
+图片/视频的选择，编辑和压缩是业务中的常见需求，Phoenix完整了实现了这些功能，并提供了优雅的调用方式。Phoenix的核心功能基于Kotlin实现，外层接口
 基于Java实现，方便Kotlin与Java双方的调用。
 
 **特点**
