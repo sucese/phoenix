@@ -34,12 +34,10 @@
 - 视频压缩
 
 <p align="center">
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_1.png" height="300"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_2.png" height="300"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_3.png" height="300"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_4.png" height="300"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_5.png" height="300"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_6.png" height="300"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_1.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_2.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_4.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_6.png" height="400"/>
 </p>
 
 
