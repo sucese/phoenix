@@ -17,8 +17,8 @@
 
 
 <p align="center">
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/play_1.gif" height="400"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/play_2.gif" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/play_compress_1.gif" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/play_compress_2.gif" height="400"/>
 </p>
 
 
