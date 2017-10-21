@@ -30,6 +30,6 @@ dependencies {
     compile 'com.amap.api:location:latest.integration'
     compile 'com.google.code.gson:gson:2.8.1'
 
-//        compile "com.souche.android.sdk:media-core:$rootProject.ext.version"
-    compile project(':phoenix-core')
+    compile "com.github.guoxiaoxing.phoenix:phoenix-core:$rootProject.ext.version"
+//    compile project(':phoenix-core')
 }
