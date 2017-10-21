@@ -87,7 +87,7 @@
                     android:gravity="center"
                     android:padding="4dp"
                     android:text="@string/text_edit"
-                    android:textColor="@color/white" />
+                    android:textColor="?attr/phoenix_picker_preview_text_color" />
             </LinearLayout>
 
         </LinearLayout>

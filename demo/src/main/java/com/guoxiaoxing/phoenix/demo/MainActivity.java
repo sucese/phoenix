@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             List<MediaEntity> pickList = new ArrayList<>();
 
             Phoenix.with()
-                    .theme(PhoenixOption.THEME_DEFAULT)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
+                    .theme(PhoenixOption.THEME_DEFAULT )// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
                     .fileType(MimeType.ofAll())
                     .maxSelectNum(10)// 最大图片选择数量
                     .minSelectNum(0)// 最小选择数量
@@ -121,31 +121,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onPickSuccess(List<MediaEntity> pickList) {
                             adapter.setList(pickList);
                             adapter.notifyDataSetChanged();
-                            StringBuilder stringBuilder = new StringBuilder();
-                            for (MediaEntity mediaEntity : pickList) {
-                                stringBuilder.append("localPath: ")
-                                        .append("\n")
-                                        .append(mediaEntity.getLocalPath())
-                                        .append("\n")
-                                        .append("onlinePath: ")
-                                        .append("\n")
-                                        .append(mediaEntity.getOnlinePath())
-                                        .append("\n")
-                                        .append("compressPath: ")
-                                        .append("\n")
-                                        .append(mediaEntity.getCompressPath())
-                                        .append("\n")
-                                        .append("longitude:")
-                                        .append("\n")
-                                        .append(mediaEntity.getLongitude())
-                                        .append("\n")
-                                        .append("latitude:")
-                                        .append("\n")
-                                        .append(mediaEntity.getLatitude())
-                                        .append("\n")
-                                        .append("============================")
-                                        .append("\n");
-                            }
                         }
 
                         @Override

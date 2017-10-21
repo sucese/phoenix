@@ -26,13 +26,13 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:1.0.1'
 
-    //图片/视频库
-    compile "com.github.guoxiaoxing.phoenix:phoenix-ui:$rootProject.ext.phoenixVerson"
-    compile "com.github.guoxiaoxing.phoenix:phoenix-compress-picture:$rootProject.ext.phoenixVerson"
-    compile "com.github.guoxiaoxing.phoenix:phoenix-compress-video:$rootProject.ext.phoenixVerson"
-
 //    //图片/视频库
-//    compile project(':phoenix-ui')
-//    compile project(':phoenix-compress-video')
-//    compile project(':phoenix-compress-picture')
+//    compile "com.github.guoxiaoxing.phoenix:phoenix-ui:$rootProject.ext.phoenixVerson"
+//    compile "com.github.guoxiaoxing.phoenix:phoenix-compress-picture:$rootProject.ext.phoenixVerson"
+//    compile "com.github.guoxiaoxing.phoenix:phoenix-compress-video:$rootProject.ext.phoenixVerson"
+
+    //图片/视频库
+    compile project(':phoenix-ui')
+    compile project(':phoenix-compress-video')
+    compile project(':phoenix-compress-picture')
 }

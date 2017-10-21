@@ -50,11 +50,11 @@
     <!--中国红主题-->
     <style name="phoenix.style.red" parent="@style/PhoenixTheme">
         <!--标题栏背景色-->
-        <item name="colorPrimary">@color/default_color_primary</item>
+        <item name="colorPrimary">@color/red_color_primary</item>
         <!--状态栏背景色-->
-        <item name="colorPrimaryDark">@color/default_color_primary_dark</item>
+        <item name="colorPrimaryDark">@color/red_color_primary</item>
         <!--标题栏 - 背景色-->
-        <item name="phoenix_toolbar_background_color">@color/default_color_primary_dark</item>
+        <item name="phoenix_toolbar_background_color">@color/red_color_primary</item>
         <!--标题栏 - 返回键图标-->
         <item name="phoenix_arrow_left">@drawable/phoenix_arrow_left</item>
         <!--标题栏 - 下拉箭头-->
@@ -73,9 +73,9 @@
         <!--选择界面 - 选择图片样式0/9-->
         <item name="phoenix_style_number_complete">false</item>
         <!--选择界面 - 底部背景色-->
-        <item name="phoenix_picker_bottom_background">@color/default_color_primary</item>
+        <item name="phoenix_picker_bottom_background">@color/white</item>
         <!--选择界面 - 预览文字颜色-->
-        <item name="phoenix_picker_preview_text_color">@color/green</item>
+        <item name="phoenix_picker_preview_text_color">@color/red_color_primary</item>
         <!--选择界面 - 已完成文字颜色-->
         <item name="phoenix_picker_complete_text_color">@color/default_color_primary</item>
         <!--选择界面 - 已完成数字样式-->
@@ -88,7 +88,7 @@
         <!--预览界面 - 已完成文字颜色-->
         <item name="phoenix_preview_complete_text_color">@color/white</item>
         <!--预览界面 - 底部背景色-->
-        <item name="phoenix_preview_bottom_background">@color/green</item>
+        <item name="phoenix_preview_bottom_background">@color/white</item>
         <!--预览界面 - 状态栏颜色-->
         <item name="phoenix_preview_status_color">@color/default_color_primary</item>
     </style>
@@ -96,11 +96,11 @@
     <!--青春橙主题-->
     <style name="phoenix.style.orange" parent="@style/PhoenixTheme">
         <!--标题栏背景色-->
-        <item name="colorPrimary">@color/default_color_primary</item>
+        <item name="colorPrimary">@color/orange_color_primary</item>
         <!--状态栏背景色-->
-        <item name="colorPrimaryDark">@color/default_color_primary_dark</item>
+        <item name="colorPrimaryDark">@color/orange_color_primary</item>
         <!--标题栏 - 背景色-->
-        <item name="phoenix_toolbar_background_color">@color/default_color_primary_dark</item>
+        <item name="phoenix_toolbar_background_color">@color/orange_color_primary</item>
         <!--标题栏 - 返回键图标-->
         <item name="phoenix_arrow_left">@drawable/phoenix_arrow_left</item>
         <!--标题栏 - 下拉箭头-->
@@ -119,9 +119,9 @@
         <!--选择界面 - 选择图片样式0/9-->
         <item name="phoenix_style_number_complete">false</item>
         <!--选择界面 - 底部背景色-->
-        <item name="phoenix_picker_bottom_background">@color/color_white_1</item>
+        <item name="phoenix_picker_bottom_background">@color/white</item>
         <!--选择界面 - 预览文字颜色-->
-        <item name="phoenix_picker_preview_text_color">@color/default_color_primary</item>
+        <item name="phoenix_picker_preview_text_color">@color/orange_color_primary</item>
         <!--选择界面 - 已完成文字颜色-->
         <item name="phoenix_picker_complete_text_color">@color/default_color_primary</item>
         <!--选择界面 - 已完成数字样式-->
@@ -132,22 +132,21 @@
         <!--预览界面 - 标题文字颜色-->
         <item name="phoenix_preview_title_text_color">@color/white</item>
         <!--预览界面 - 已完成文字颜色-->
-        <item name="phoenix_preview_complete_text_color">@color/default_color_primary</item>
+        <item name="phoenix_preview_complete_text_color">@color/white</item>
         <!--预览界面 - 底部背景色-->
         <item name="phoenix_preview_bottom_background">@color/white</item>
         <!--预览界面 - 状态栏颜色-->
         <item name="phoenix_preview_status_color">@color/default_color_primary</item>
     </style>
 
-
     <!--天空蓝主题-->
     <style name="picker.style.blue" parent="@style/PhoenixTheme">
         <!--标题栏背景色-->
-        <item name="colorPrimary">@color/default_color_primary</item>
+        <item name="colorPrimary">@color/blue_color_primary</item>
         <!--状态栏背景色-->
-        <item name="colorPrimaryDark">@color/default_color_primary_dark</item>
+        <item name="colorPrimaryDark">@color/blue_color_primary</item>
         <!--标题栏 - 背景色-->
-        <item name="phoenix_toolbar_background_color">@color/default_color_primary_dark</item>
+        <item name="phoenix_toolbar_background_color">@color/blue_color_primary</item>
         <!--标题栏 - 返回键图标-->
         <item name="phoenix_arrow_left">@drawable/phoenix_arrow_left</item>
         <!--标题栏 - 下拉箭头-->
@@ -166,9 +165,9 @@
         <!--选择界面 - 选择图片样式0/9-->
         <item name="phoenix_style_number_complete">false</item>
         <!--选择界面 - 底部背景色-->
-        <item name="phoenix_picker_bottom_background">@color/color_white_1</item>
+        <item name="phoenix_picker_bottom_background">@color/white</item>
         <!--选择界面 - 预览文字颜色-->
-        <item name="phoenix_picker_preview_text_color">@color/default_color_primary</item>
+        <item name="phoenix_picker_preview_text_color">@color/blue_color_primary</item>
         <!--选择界面 - 已完成文字颜色-->
         <item name="phoenix_picker_complete_text_color">@color/default_color_primary</item>
         <!--选择界面 - 已完成数字样式-->
@@ -179,7 +178,7 @@
         <!--预览界面 - 标题文字颜色-->
         <item name="phoenix_preview_title_text_color">@color/white</item>
         <!--预览界面 - 已完成文字颜色-->
-        <item name="phoenix_preview_complete_text_color">@color/default_color_primary</item>
+        <item name="phoenix_preview_complete_text_color">@color/white</item>
         <!--预览界面 - 底部背景色-->
         <item name="phoenix_preview_bottom_background">@color/white</item>
         <!--预览界面 - 状态栏颜色-->
