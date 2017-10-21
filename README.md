@@ -2,7 +2,11 @@
 
 ## 功能介绍
 
+[![](https://jitpack.io/v/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix)
+
 >Android平台上图片/视频选择、压缩、编辑的一站式解决方案。
+
+<img src=""/>
 
 **特点**
 
