@@ -34,24 +34,22 @@
 - 视频压缩
 
 <p align="center">
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_1.png" height="500"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_2.png" height="500"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_3.png" height="500"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_1.png" height="300"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_2.png" height="300"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_3.png" height="300"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_4.png" height="300"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_5.png" height="300"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_6.png" height="300"/>
 </p>
 
-<p align="center">
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_4.png" height="500"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_5.png" height="500"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/function_6.png" height="500"/>
-</p>
 
 多种主题
 
 <p align="center">
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_default.png" height="500"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_red.png" height="500"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_orange.png" height="500"/>
-<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_blue.png" height="500"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_default.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_red.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_orange.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_blue.png" height="400"/>
 </p>
 
 ## 快递开始
