@@ -4,8 +4,6 @@ import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.amap.api.location.AMapLocationClient
-import com.amap.api.location.AMapLocationClientOption
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
@@ -93,29 +91,9 @@ class CameraActivity : BaseActivity() {
         overridePendingTransition(0, R.anim.phoenix_activity_out)
     }
 
+    //TODO location
     private fun location() {
-        val aMapLocationClient = AMapLocationClient(this@CameraActivity)
-        val aMapLocationClientOption = AMapLocationClientOption()
-        aMapLocationClientOption.locationMode = AMapLocationClientOption.AMapLocationMode.Battery_Saving
-        aMapLocationClientOption.isOnceLocation = true
-        aMapLocationClient.setLocationOption(aMapLocationClientOption)
-        aMapLocationClient.setLocationListener { aMapLocation ->
-            if (aMapLocation != null) {
-                if (aMapLocation.errorCode == 0) {
-                    latitude = aMapLocation.latitude.toString()
-                    longitude = aMapLocation.longitude.toString()
-                } else {
-                    //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
-                    Log.e("AmapError", "location Error, ErrCode:"
-                            + aMapLocation.errorCode + ", errInfo:"
-                            + aMapLocation.errorInfo)
-                }
 
-            }
-            aMapLocationClient.stopLocation()
-            aMapLocationClient.onDestroy()
-        }
-        aMapLocationClient.startLocation()
     }
 
     companion object {
