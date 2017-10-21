@@ -24,7 +24,7 @@ task clean(type: Delete) {
 }
 
 ext {
-    version = '0.0.3'
+    phoenixCoreVersion = '0.0.2'
 
     //android
     compileSdkVersion = 25
