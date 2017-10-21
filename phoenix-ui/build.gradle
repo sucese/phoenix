@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'maven'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -30,31 +29,4 @@ dependencies {
 
 //        compile "com.souche.android.sdk:media-core:$rootProject.ext.version"
     compile project(':phoenix-core')
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: 'https://repo.souche-inc.com/repository/snapshots/') {
-                authentication(userName: "sdev", password: "7J48qUFA6m2E8uJx")
-            }
-            pom.project {
-                name 'SCWidget'
-                groupId 'com.souche.android.sdk'
-                artifactId 'souche-media'
-                version rootProject.ext.version
-                packaging 'aar'
-
-                developers {
-                    developer {
-                        id 'guoxiaoxing'
-                        name 'guoxiaoxing'
-                    }
-                }
-            }
-        }
-    }
-}
-repositories {
-    mavenCentral()
 }

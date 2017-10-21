@@ -44,30 +44,24 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     private val pickMediaList: MutableList<MediaEntity> = ArrayList()
     private val enablePreview: Boolean
     private var selectMode = PhoenixConstant.MULTIPLE
-    private var enablePreviewVideo = false
-    private var enablePreviewAudio = false
     private val is_checked_num: Boolean
     private val enableVoice: Boolean
     private val overrideWidth: Int
     private val overrideHeight: Int
-    private val sizeMultiplier: Float
     private val animation: Animation by lazy { AnimationLoader.loadAnimation(context, R.anim.phoenix_window_in) }
     private val mimeType: Int
     private val zoomAnim: Boolean
     var isExceedMax: Boolean = false
 
     init {
-        this.selectMode = config.selectionMode
+        this.selectMode = config.pickMode
         this.enableCamera = config.isEnableCamera
         this.maxSelectNum = config.maxSelectNum
         this.enablePreview = config.isEnablePreview
-        this.enablePreviewVideo = config.isEnPreviewVideo
-        this.enablePreviewAudio = config.isEnablePreviewAudio
         this.is_checked_num = config.isCheckNumMode
         this.overrideWidth = config.overrideWidth
         this.overrideHeight = config.overrideHeight
-        this.enableVoice = config.isOpenClickSound
-        this.sizeMultiplier = config.sizeMultiplier
+        this.enableVoice = config.isEnableClickSound
         this.mimeType = config.fileType
         this.zoomAnim = config.isZoomAnim
     }
@@ -78,7 +72,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         notifyDataSetChanged()
     }
 
-    fun getAllMediaList(): MutableList<MediaEntity>{
+    fun getAllMediaList(): MutableList<MediaEntity> {
         return allMediaList
     }
 
@@ -91,7 +85,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         }
     }
 
-    fun getPickMediaList(): MutableList<MediaEntity>{
+    fun getPickMediaList(): MutableList<MediaEntity> {
         return pickMediaList
     }
 
@@ -162,7 +156,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             } else {
                 val options = RequestOptions()
                 if (overrideWidth <= 0 && overrideHeight <= 0) {
-                    options.sizeMultiplier(sizeMultiplier)
+                    options.sizeMultiplier(1F)
                 } else {
                     options.override(overrideWidth, overrideHeight)
                 }
@@ -175,18 +169,12 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
                         .transition(BitmapTransitionOptions().crossFade(500))
                         .into(contentHolder.itemView.iv_picture)
             }
-            if (enablePreview || enablePreviewVideo || enablePreviewAudio) {
+            if (enablePreview) {
                 contentHolder.itemView.ll_check.setOnClickListener { changeCheckboxState(contentHolder, image) }
 
             }
             contentHolder.itemView.setOnClickListener {
-                if (picture == PhoenixConstant.TYPE_IMAGE && (enablePreview || selectMode == PhoenixConstant.SINGLE)) {
-                    val index = if (enableCamera) position - 1 else position
-                    onPicktChangedListener!!.onPictureClick(image, index)
-                } else if (picture == PhoenixConstant.TYPE_VIDEO && (enablePreviewVideo || selectMode == PhoenixConstant.SINGLE)) {
-                    val index = if (enableCamera) position - 1 else position
-                    onPicktChangedListener!!.onPictureClick(image, index)
-                } else if (picture == PhoenixConstant.TYPE_AUDIO && (enablePreviewAudio || selectMode == PhoenixConstant.SINGLE)) {
+                if (enablePreview) {
                     val index = if (enableCamera) position - 1 else position
                     onPicktChangedListener!!.onPictureClick(image, index)
                 } else {
@@ -244,7 +232,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             for (mediaEntity in pickMediaList) {
                 if (mediaEntity.localPath == image.localPath) {
                     pickMediaList.remove(mediaEntity)
-                    DebugUtil.i("pickMediaList remove::", config.mediaList.size.toString() + "")
+                    DebugUtil.i("pickMediaList remove::", config.pickedMediaList.size.toString() + "")
                     subSelectPosition()
                     disZoom(contentHolderContent.itemView.iv_picture)
                     break
@@ -259,7 +247,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             }
 
             pickMediaList.add(image)
-            DebugUtil.i("pickMediaList add::", config.mediaList.size.toString() + "")
+            DebugUtil.i("pickMediaList add::", config.pickedMediaList.size.toString() + "")
             image.number = pickMediaList!!.size
             VoiceUtils.playVoice(context, enableVoice)
             zoom(contentHolderContent.itemView.iv_picture)

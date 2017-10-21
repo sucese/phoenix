@@ -1,5 +1,6 @@
 package com.guoxiaoxing.phoenix.picker.ui.camera
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -21,14 +22,14 @@ import android.view.SurfaceHolder
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.picker.ui.BaseFragment
-import com.guoxiaoxing.phoenix.picker.widget.camera.CameraPreView
+import kotlinx.android.synthetic.main.fragment_camera.*
+import kotlinx.android.synthetic.main.include_camera_bottom_tool.*
+import kotlinx.android.synthetic.main.include_camera_hint.*
+import kotlinx.android.synthetic.main.include_camera_top_tool.*
 
 import java.io.IOException
 import java.util.HashMap
@@ -36,32 +37,23 @@ import java.util.HashMap
 class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCallback, View.OnClickListener
         , SensorEventListener {
 
-    private var ivFlash: ImageView? = null
-    private var ivTakePic: ImageView? = null
-    private var tvCancel: TextView? = null
-    private var tvFinish: TextView? = null
-    private var tvModel: TextView? = null
-    private var ivModel: ImageView? = null
-    private var frCameraHint: FrameLayout? = null
-    private var tvCameraHint: TextView? = null
-    private var ivCameraHint: ImageView? = null
-    private var ivCameraRotate: ImageView? = null
-    private var confirmDialog: ConfirmDialog? = null
+    private lateinit var confirmDialog: ConfirmDialog
 
     private var mCameraID: Int = 0
-    private var mFlashMode: String? = null
-    private var mCamera: Camera? = null
-    private var mCameraPreview: CameraPreView? = null
-    private var mSurfaceHolder: SurfaceHolder? = null
+    private lateinit var mFlashMode: String
+    private lateinit var mCamera: Camera
+    private lateinit var mSurfaceHolder: SurfaceHolder
     private var mIsSafeToTakePhoto: Boolean = false
-    private var mOrientationListener: CameraOrientationListener? = null
-    private var mSensorManager: SensorManager? = null
-    private var mAccelerometer: Sensor? = null
+    private lateinit var mOrientationListener: CameraOrientationListener
+    private lateinit var mSensorManager: SensorManager
+    private lateinit var mAccelerometer: Sensor
 
-    private var handler: Handler? = null
+    private lateinit var handler: Handler
     private var isPopTips = false
     private var maxPictureNumber = -1
     private val map = HashMap<Int, CarHint>()
+    private lateinit var mCameraParameter: CameraParameter
+    private var curDegree: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +67,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mContext = context
-        return inflater!!.inflate(R.layout.fragment_camera, container, false)
+        return inflater?.inflate(R.layout.fragment_camera, container, false)
     }
 
     fun setIsSafeToTakePhoto(isSafeToTakePhoto: Boolean) {
@@ -87,8 +79,8 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
         confirmDialog = ConfirmDialog(activity)
         maxPictureNumber = option.maxSelectNum
         try {
-            frCameraHint = view!!.findViewById(R.id.camera_fr_hint) as FrameLayout
-            handler = object : Handler() {
+            handler = @SuppressLint("HandlerLeak")
+            object : Handler() {
                 override fun handleMessage(msg: Message) {
                     super.handleMessage(msg)
                     val what = msg.what
@@ -100,52 +92,28 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
                             } else if (todegree == 90) {
                                 todegree = -90
                             }
-                            frCameraHint!!.rotation = todegree.toFloat()
-                            ivModel!!.rotation = todegree.toFloat()
+                            camera_fr_hint.rotation = todegree.toFloat()
+                            camera_iv_model.rotation = todegree.toFloat()
                         }
                     }
                 }
             }
             //start oritation listener
-            mOrientationListener!!.enable()
-            mCameraPreview = view.findViewById(R.id.camera_preview) as CameraPreView
-            mCameraPreview!!.holder.addCallback(this)
-            val observer = mCameraPreview!!.viewTreeObserver
+            mOrientationListener.enable()
+            camera_preview.holder.addCallback(this)
+            val observer = camera_preview.viewTreeObserver
             observer.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    mCameraParameter!!.mPreviewWidth = mCameraPreview!!.width
-                    mCameraParameter!!.mPreviewHeight = mCameraPreview!!.height
+                    mCameraParameter.mPreviewWidth = camera_preview.width
+                    mCameraParameter.mPreviewHeight = camera_preview.height
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        mCameraPreview!!.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        camera_preview.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     } else {
-                        mCameraPreview!!.viewTreeObserver.removeGlobalOnLayoutListener(this)
+                        camera_preview.viewTreeObserver.removeGlobalOnLayoutListener(this)
                     }
                 }
             })
-
-            ivFlash = view.findViewById(R.id.camera_iv_flash) as ImageView
-            ivTakePic = view.findViewById(R.id.camera_iv_take_picture) as ImageView
-            tvCancel = view.findViewById(R.id.camera_tv_cancel) as TextView
-            tvFinish = view.findViewById(R.id.camera_tv_compelete) as TextView
-            tvModel = view.findViewById(R.id.camera_tv_model) as TextView
-            ivModel = view.findViewById(R.id.camera_iv_model) as ImageView
-            tvCameraHint = view.findViewById(R.id.camera_tv_hint) as TextView
-            ivCameraHint = view.findViewById(R.id.camera_iv_hint) as ImageView
-            frCameraHint = view.findViewById(R.id.camera_fr_hint) as FrameLayout
-            ivCameraRotate = view.findViewById(R.id.camera_iv_rotate) as ImageView
-
-            if (option.isEnableCameraHint) {
-                frCameraHint!!.visibility = View.VISIBLE
-            }
-
-            if (option.isEnableCameraModel) {
-                ivModel!!.visibility = View.VISIBLE
-                tvModel!!.visibility = View.VISIBLE
-            }
-
-            setupCameraHint()
             setupListener()
-
         } catch (e: Exception) {
             Log.v("StickerView", "oncreateViewError")
         }
@@ -158,42 +126,20 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
 
     override fun onPause() {
         super.onPause()
-        mSensorManager!!.unregisterListener(this)
+        mSensorManager.unregisterListener(this)
     }
 
     fun setupListener() {
-        tvFinish!!.setOnClickListener(this)
-        ivTakePic!!.setOnClickListener(this)
-        tvCancel!!.setOnClickListener(this)
-        ivFlash!!.setOnClickListener(this)
-        tvModel!!.setOnClickListener(this)
-        ivCameraRotate!!.setOnClickListener(this)
+        camera_tv_compelete.setOnClickListener(this)
+        camera_iv_take_picture.setOnClickListener(this)
+        camera_tv_cancel.setOnClickListener(this)
+        camera_iv_flash.setOnClickListener(this)
+        camera_tv_model.setOnClickListener(this)
+        camera_iv_rotate.setOnClickListener(this)
 
         mSensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        mAccelerometer = mSensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        mSensorManager!!.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL)
-    }
-
-    fun setupCameraHint() {
-        val index = CameraActivity.cameraList.size
-        if (option.isEnableCameraHint) {
-            if (index < 12 && index >= 0) {
-                val carHint = map[index]
-                if(carHint == null){
-                    return
-                }
-                ivCameraHint!!.setImageResource(carHint.res)
-                tvCameraHint!!.text = carHint.text
-                frCameraHint!!.visibility = View.VISIBLE
-                frCameraHint!!.visibility = View.VISIBLE
-            } else {
-                frCameraHint!!.visibility = View.GONE
-                frCameraHint!!.visibility = View.GONE
-            }
-        } else {
-            frCameraHint!!.visibility = View.GONE
-            frCameraHint!!.visibility = View.GONE
-        }
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     private fun takePicture() {
@@ -201,11 +147,11 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
         if (index < maxPictureNumber && maxPictureNumber > 0 || maxPictureNumber == 0) {
             if (mIsSafeToTakePhoto) {
                 setIsSafeToTakePhoto(false)
-                mOrientationListener!!.rememberOrientation()
+                mOrientationListener.rememberOrientation()
                 val shutterCallback: Camera.ShutterCallback? = null
                 val raw: Camera.PictureCallback? = null
                 val postView: Camera.PictureCallback? = null
-                mCamera!!.takePicture(shutterCallback, raw, postView, this)
+                mCamera.takePicture(shutterCallback, raw, postView, this)
             }
         } else {
             if (mContext != null) {
@@ -218,8 +164,8 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
         mSurfaceHolder = holder
         getCamera(mCameraID)
         if (mCamera == null) {
-            if (!confirmDialog!!.isShowing)
-                confirmDialog!!.show()
+            if (!confirmDialog.isShowing)
+                confirmDialog.show()
             return
         }
         startCameraPreview()
@@ -236,7 +182,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
 
     override fun onPictureTaken(data: ByteArray, camera: Camera) {
         val rotation = photoRotation
-        fragmentManager.beginTransaction().replace(R.id.fragment_root, CameraEditFragment.newInstance(data, rotation, mCameraParameter!!.crateCopy()))
+        fragmentManager.beginTransaction().replace(R.id.fragment_root, CameraEditFragment.newInstance(data, rotation, mCameraParameter.crateCopy()))
                 .addToBackStack(null).commitAllowingStateLoss()
         setIsSafeToTakePhoto(true)
     }
@@ -244,7 +190,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
     val photoRotation: Int
         get() {
             val rotation: Int
-            val orientation = mOrientationListener!!.rememberedNormalOrientation
+            val orientation = mOrientationListener.rememberedNormalOrientation
             val info = Camera.CameraInfo()
             Camera.getCameraInfo(mCameraID, info)
             rotation = (info.orientation + orientation) % 360
@@ -265,12 +211,12 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
             setFlashView()
             setupCamera()
         } else if (resId == R.id.camera_tv_model) {
-            if (TextUtils.equals(tvModel!!.text, getString(R.string.text_hide_model))) {
-                tvModel!!.text = getString(R.string.text_show_model)
-                ivModel!!.visibility = View.GONE
+            if (TextUtils.equals(camera_tv_model.text, getString(R.string.text_hide_model))) {
+                camera_tv_model.text = getString(R.string.text_show_model)
+                camera_iv_model.visibility = View.GONE
             } else {
-                tvModel!!.text = getString(R.string.text_hide_model)
-                ivModel!!.visibility = View.VISIBLE
+                camera_tv_model.text = getString(R.string.text_hide_model)
+                camera_iv_model.visibility = View.VISIBLE
             }
         } else if (resId == R.id.camera_iv_rotate) {
             switchCamera()
@@ -286,22 +232,22 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
             try {
                 if (mCamera != null) {
                     setupCamera()
-                    mCamera!!.setPreviewDisplay(mSurfaceHolder)
-                    mCamera!!.startPreview()
+                    mCamera.setPreviewDisplay(mSurfaceHolder)
+                    mCamera.startPreview()
                     setIsSafeToTakePhoto(true)
                     setCameraFocusReady(true)
                 }
                 return true
             } catch (e: IOException) {
-                if (!confirmDialog!!.isShowing) {
-                    confirmDialog!!.show()
+                if (!confirmDialog.isShowing) {
+                    confirmDialog.show()
                 }
                 return false
             }
 
         } else {
-            if (!confirmDialog!!.isShowing) {
-                confirmDialog!!.show()
+            if (!confirmDialog.isShowing) {
+                confirmDialog.show()
             }
         }
         return false
@@ -310,7 +256,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
     private fun getCamera(cameraID: Int): Boolean {
         try {
             mCamera = Camera.open(cameraID)
-            mCameraPreview!!.setCarmera(mCamera)
+            camera_preview.setCarmera(mCamera)
         } catch (e: Exception) {
             Log.e(TAG, "打不开 id = " + cameraID + "的相机")
             return false
@@ -323,8 +269,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
         try {
             if (mCamera != null) {
                 stopCameraPreview()
-                mCamera!!.release()
-                mCamera = null
+                mCamera.release()
             }
             getCamera(mCameraID)
             startCameraPreview()
@@ -338,8 +283,8 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
         setIsSafeToTakePhoto(false)
         setCameraFocusReady(false)
         if (mCamera != null)
-            mCamera!!.stopPreview()
-        mCameraPreview!!.setCarmera(null)
+            mCamera.stopPreview()
+        camera_preview.setCarmera(null)
     }
 
     override fun onAttach(context: Context) {
@@ -354,33 +299,32 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
         val cameraInfo = Camera.CameraInfo()
         Camera.getCameraInfo(mCameraID, cameraInfo)
         val displayOrientation = cameraInfo.orientation
-        mCameraParameter!!.setmDisplayOrientation(displayOrientation)
-        try {
-            mCamera!!.setDisplayOrientation(mCameraParameter!!.getmDisplayOrientation())
-            return true
+        mCameraParameter.setmDisplayOrientation(displayOrientation)
+        return try {
+            mCamera.setDisplayOrientation(mCameraParameter.getmDisplayOrientation())
+            true
         } catch (e: Exception) {
             e.printStackTrace()
             Log.v(TAG, "deteminieDisplayOrientation error")
-            return false
+            false
         }
 
     }
 
     private fun setCameraFocusReady(isFocusReady: Boolean) {
-        if (this.mCameraPreview != null) {
-            mCameraPreview!!.setmIsFocusReady(isFocusReady)
+        if (this.camera_preview != null) {
+            camera_preview.setmIsFocusReady(isFocusReady)
         }
     }
 
 
     override fun onStop() {
         super.onStop()
-        mOrientationListener!!.disable()
+        mOrientationListener.disable()
         //释放相机资源
         try {
             stopCameraPreview()
-            mCamera!!.release()
-            mCamera = null
+            mCamera.release()
         } catch (e: Exception) {
             Log.v(TAG, "onstop:" + e.message)
         }
@@ -390,7 +334,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
     override fun onResume() {
         super.onResume()
         restartCameraPreview()
-        mOrientationListener!!.enable()
+        mOrientationListener.enable()
     }
 
     override fun onSensorChanged(event: SensorEvent) {
@@ -417,13 +361,12 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
                 }
                 if (mCurrentNormalizedOrientation % 90 == 0) {
                     if (curDegree != mCurrentNormalizedOrientation) {
-                        val message = handler!!.obtainMessage()
+                        val message = handler.obtainMessage()
                         message.what = 1
                         curDegree = mCurrentNormalizedOrientation
                         message.obj = curDegree
-                        handler!!.sendMessage(message)
+                        handler.sendMessage(message)
                     }
-
                 }
             }
         }
@@ -445,15 +388,15 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
                 return 0
             }
 
-            if (degrees > 45 && degrees <= 135) {
+            if (degrees in 46..135) {
                 return 90
             }
 
-            if (degrees > 135 && degrees <= 225) {
+            if (degrees in 136..225) {
                 return 180
             }
 
-            if (degrees > 225 && degrees <= 315) {
+            if (degrees in 226..315) {
                 return 270
             }
 
@@ -473,16 +416,16 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
 
     fun setupFlashView(context: Context) {
         if (!context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
-            ivFlash!!.visibility = View.GONE
+            camera_iv_flash.visibility = View.GONE
         } else {
             try {
-                ivFlash!!.visibility = View.VISIBLE
-                if (mCamera!!.parameters.flashMode == Camera.Parameters.FLASH_MODE_OFF) {
+                camera_iv_flash.visibility = View.VISIBLE
+                if (mCamera.parameters.flashMode == Camera.Parameters.FLASH_MODE_OFF) {
                     mFlashMode = Camera.Parameters.FLASH_MODE_OFF
-                    ivFlash!!.setImageResource(R.drawable.phoenix_splash_close)
+                    camera_iv_flash.setImageResource(R.drawable.phoenix_splash_close)
                 } else {
                     mFlashMode = Camera.Parameters.FLASH_MODE_ON
-                    ivFlash!!.setImageResource(R.drawable.phoenix_splash_open)
+                    camera_iv_flash.setImageResource(R.drawable.phoenix_splash_open)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -492,16 +435,16 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
     }
 
     fun setFlashView() {
-        if (ivFlash!!.visibility == View.VISIBLE) {
+        if (camera_iv_flash.visibility == View.VISIBLE) {
             try {
                 if (TextUtils.equals(mFlashMode, Camera.Parameters.FLASH_MODE_OFF)) {
                     mFlashMode = Camera.Parameters.FLASH_MODE_ON
-                    mCamera!!.parameters.flashMode = mFlashMode
-                    ivFlash!!.setImageResource(R.drawable.phoenix_splash_open)
+                    mCamera.parameters.flashMode = mFlashMode
+                    camera_iv_flash.setImageResource(R.drawable.phoenix_splash_open)
                 } else {
                     mFlashMode = Camera.Parameters.FLASH_MODE_OFF
-                    mCamera!!.parameters.flashMode = mFlashMode
-                    ivFlash!!.setImageResource(R.drawable.phoenix_splash_close)
+                    mCamera.parameters.flashMode = mFlashMode
+                    camera_iv_flash.setImageResource(R.drawable.phoenix_splash_close)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -513,7 +456,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
     fun setupCamera() {
         try {
             if (mCamera != null) {
-                val parameters = mCamera!!.parameters
+                val parameters = mCamera.parameters
                 if (parameters != null) {
                     val bestPreviewSize = detemiBestPreViewSize(parameters)
                     val bestPictureSize = detemiBestPictureSize(parameters)
@@ -527,7 +470,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
                     if (flashModes != null && flashModes.contains(mFlashMode)) {
                         parameters.flashMode = mFlashMode
                     }
-                    mCamera!!.parameters = parameters
+                    mCamera.parameters = parameters
                     setupFlashView(activity)
                 }
             }
@@ -577,11 +520,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
     }
 
     companion object {
-
         val TAG = CameraFragment::class.java.simpleName
-        private var mCameraParameter: CameraParameter? = null
-        private var curDegree: Int = 0
-
 
         fun newInstance(): CameraFragment {
             return CameraFragment()

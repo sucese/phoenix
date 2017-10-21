@@ -11,7 +11,8 @@ import java.lang.annotation.Target;
 
 public final class PhoenixConstant {
 
-    public static final int REQUEST_CODE_PICTURE_EDIT = 0x000001;
+    public static final int REQUEST_CODE_PICTURE_EDIT = 0x000011;
+    public static final int RESULT_CODE_PICTURE_EDIT = 0x000022;
 
 
     /**

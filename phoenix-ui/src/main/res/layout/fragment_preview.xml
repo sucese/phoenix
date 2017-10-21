@@ -11,7 +11,7 @@
         android:background="?attr/phoenix_toolbar_background_color">
 
         <ImageView
-            android:id="@+id/picture_left_back"
+            android:id="@+id/pickTvBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -19,7 +19,7 @@
             android:src="?attr/phoenix_arrow_left" />
 
         <TextView
-            android:id="@+id/picture_title"
+            android:id="@+id/pickTvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -71,7 +71,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="50dp"
-            android:layout_toLeftOf="@+id/pick_ll_ok"
+            android:layout_toLeftOf="@+id/pickLlOk"
             android:gravity="center_vertical">
 
             <LinearLayout
@@ -103,7 +103,7 @@
             android:enabled="false"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="@dimen/phoenix_dimen_8">
+            android:padding="@dimen/phoenix_dimen_6">
 
             <TextView
                 android:id="@+id/preview_tv_ok_text"

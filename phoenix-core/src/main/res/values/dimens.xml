@@ -6,6 +6,8 @@
     <dimen name="phoenix_text_16">16sp</dimen>
     <dimen name="phoenix_text_14">14sp</dimen>
 
+    <dimen name="phoenix_dimen_5">5dp</dimen>
+    <dimen name="phoenix_dimen_6">6dp</dimen>
     <dimen name="phoenix_dimen_8">8dp</dimen>
     <dimen name="phoenix_dimen_16">16dp</dimen>
     <dimen name="phoenix_dimen_20">20dp</dimen>

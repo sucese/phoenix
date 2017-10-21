@@ -2,6 +2,7 @@ package com.guoxiaoxing.phoenix.picker.ui.picker
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -26,6 +27,7 @@ import com.guoxiaoxing.phoenix.picker.rx.bus.Subscribe
 import com.guoxiaoxing.phoenix.picker.rx.bus.ThreadMode
 import com.guoxiaoxing.phoenix.picker.rx.permission.RxPermissions
 import com.guoxiaoxing.phoenix.picker.ui.BaseActivity
+import com.guoxiaoxing.phoenix.picker.ui.camera.CameraActivity
 import com.guoxiaoxing.phoenix.picker.util.*
 import com.guoxiaoxing.phoenix.picker.widget.FolderPopWindow
 import com.guoxiaoxing.phoenix.picker.widget.GridSpacingItemDecoration
@@ -48,7 +50,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
 
     private val TAG = PickerActivity::class.java.simpleName
 
-    private lateinit var adapter: PickerAdapter
+    private lateinit var pickAdapter: PickerAdapter
     private var allMediaList: MutableList<MediaEntity> = ArrayList()
     private var allFolderList: MutableList<MediaFolder> = ArrayList()
 
@@ -69,14 +71,14 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                 isAnimation = selectImages.size > 0
                 val position = obj.position
                 DebugUtil.i(TAG, "刷新下标::" + position)
-                adapter.setPickMediaList(selectImages)
+                pickAdapter.setPickMediaList(selectImages)
                 //通知点击项发生了改变
                 val isExceedMax = selectImages.size >= maxSelectNum && maxSelectNum != 0
-                adapter.isExceedMax = isExceedMax
+                pickAdapter.isExceedMax = isExceedMax
                 if (isExceedMax || selectImages.size == maxSelectNum - 1) {
-                    adapter.notifyDataSetChanged()
+                    pickAdapter.notifyDataSetChanged()
                 } else {
-                    adapter.notifyItemChanged(position)
+                    pickAdapter.notifyItemChanged(position)
                 }
             }
             PhoenixConstant.FLAG_PREVIEW_COMPLETE -> {
@@ -128,42 +130,42 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
 
         rl_bottom.visibility = if (selectionMode == PhoenixConstant.SINGLE) View.GONE else View.VISIBLE
         if (fileType == MimeType.ofAudio()) {
-            picture_id_preview.visibility = View.GONE
+            pickTvPreview.visibility = View.GONE
         } else {
-            picture_id_preview.visibility = if (fileType == PhoenixConstant.TYPE_VIDEO) View.GONE else View.VISIBLE
+            pickTvPreview.visibility = if (fileType == PhoenixConstant.TYPE_VIDEO) View.GONE else View.VISIBLE
         }
 
-        picture_title.text = if (fileType == MimeType.ofAudio()) getString(R.string.picture_all_audio) else getString(R.string.picture_camera_roll)
-        tv_empty.text = if (fileType == MimeType.ofAudio()) getString(R.string.picture_audio_empty) else getString(R.string.picture_empty)
-        StringUtils.tempTextFont(tv_empty, fileType)
+        pickTvTitle.text = if (fileType == MimeType.ofAudio()) getString(R.string.picture_all_audio) else getString(R.string.picture_camera_roll)
+        pick_tv_empty.text = if (fileType == MimeType.ofAudio()) getString(R.string.picture_audio_empty) else getString(R.string.picture_empty)
+        StringUtils.tempTextFont(pick_tv_empty, fileType)
 
-        val titleText = picture_title.getText().toString().trim { it <= ' ' }
+        val titleText = pickTvTitle.getText().toString().trim { it <= ' ' }
         if (enableCamera) {
             enableCamera = StringUtils.isCamera(titleText)
         }
 
         folderWindow = FolderPopWindow(this, fileType)
-        folderWindow.setPictureTitleView(picture_title)
+        folderWindow.setPictureTitleView(pickTvTitle)
         folderWindow.setOnItemClickListener(this)
 
-        picture_id_preview.setOnClickListener(this)
-        picture_left_back.setOnClickListener(this)
-        picture_right.setOnClickListener(this)
-        pick_ll_ok.setOnClickListener(this)
-        picture_title.setOnClickListener(this)
+        pickTvPreview.setOnClickListener(this)
+        pickTvBack.setOnClickListener(this)
+        pickTvCancel.setOnClickListener(this)
+        pickLlOk.setOnClickListener(this)
+        pickTvTitle.setOnClickListener(this)
     }
 
-    private fun setupData(){
-        picture_recycler.setHasFixedSize(true)
-        picture_recycler.addItemDecoration(GridSpacingItemDecoration(spanCount,
+    private fun setupData() {
+        pickRecyclerView.setHasFixedSize(true)
+        pickRecyclerView.addItemDecoration(GridSpacingItemDecoration(spanCount,
                 ScreenUtil.dip2px(this, 2f), false))
-        picture_recycler.layoutManager = GridLayoutManager(this, spanCount)
-        (picture_recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        pickRecyclerView.layoutManager = GridLayoutManager(this, spanCount)
+        (pickRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
-        adapter = PickerAdapter(mContext, option)
-        picture_recycler.adapter = adapter
-        adapter.setOnPickChangedListener(this)
-        adapter.setPickMediaList(mediaList)
+        pickAdapter = PickerAdapter(mContext, option)
+        pickRecyclerView.adapter = pickAdapter
+        pickAdapter.setOnPickChangedListener(this)
+        pickAdapter.setPickMediaList(mediaList)
         changeImageNumber(mediaList)
 
         mediaLoader = MediaLoader(this, fileType, isGif, videoSecond.toLong())
@@ -192,7 +194,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      */
     @SuppressLint("StringFormatMatches")
     private fun isNumberComplete(numComplete: Boolean) {
-        picture_tv_ok.text = if (numComplete)
+        pickTvOk.text = if (numComplete)
             getString(R.string.picture_done_front_num, 0, maxSelectNum)
         else
             getString(R.string.picture_please_select)
@@ -223,12 +225,12 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                         folderWindow.bindFolder(folders)
                     }
                 }
-                if (adapter != null) {
+                if (pickAdapter != null) {
                     if (allMediaList == null) {
                         allMediaList = ArrayList<MediaEntity>()
                     }
-                    adapter.setAllMediaList(allMediaList)
-                    tv_empty.visibility = if (allMediaList.size > 0) View.INVISIBLE else View.VISIBLE
+                    pickAdapter.setAllMediaList(allMediaList)
+                    pick_tv_empty.visibility = if (allMediaList.size > 0) View.INVISIBLE else View.VISIBLE
                 }
                 dismissLoadingDialog()
             }
@@ -238,27 +240,27 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     @SuppressLint("StringFormatMatches")
     override fun onClick(v: View) {
         val id = v.id
-        if (id == R.id.picture_left_back || id == R.id.picture_right) {
+        if (id == R.id.pickTvBack || id == R.id.pickTvCancel) {
             if (folderWindow.isShowing()) {
                 folderWindow.dismiss()
             } else {
                 closeActivity()
             }
         }
-        if (id == R.id.picture_title) {
+        if (id == R.id.pickTvTitle) {
             if (folderWindow.isShowing()) {
                 folderWindow.dismiss()
             } else {
                 if (allMediaList.size > 0) {
-                    folderWindow.showAsDropDown(rl_picture_title)
-                    val selectedImages = adapter.getPickMediaList()
+                    folderWindow.showAsDropDown(pickRlTitle)
+                    val selectedImages = pickAdapter.getPickMediaList()
                     folderWindow.notifyDataCheckedStatus(selectedImages)
                 }
             }
         }
 
-        if (id == R.id.picture_id_preview) {
-            val selectedImages = adapter.getPickMediaList()
+        if (id == R.id.pickTvPreview) {
+            val selectedImages = pickAdapter.getPickMediaList()
 
             val mediaEntities = ArrayList<MediaEntity>()
             for (mediaEntity in selectedImages) {
@@ -272,8 +274,8 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
             overridePendingTransition(R.anim.phoenix_activity_in, 0)
         }
 
-        if (id == R.id.pick_ll_ok) {
-            val images = adapter.getPickMediaList()
+        if (id == R.id.pickLlOk) {
+            val images = pickAdapter.getPickMediaList()
             val pictureType = if (images.size > 0) images[0].mimeType else ""
             val size = images.size
             val eqImg = !TextUtils.isEmpty(pictureType) && pictureType.startsWith(PhoenixConstant.IMAGE)
@@ -300,8 +302,8 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     }
 
     override fun onItemClick(folderName: String, images: MutableList<MediaEntity>) {
-        picture_title.text = folderName
-        adapter.setAllMediaList(images)
+        pickTvTitle.text = folderName
+        pickAdapter.setAllMediaList(images)
         folderWindow.dismiss()
     }
 
@@ -338,7 +340,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     }
 
     override fun onPictureClick(mediaEntity: MediaEntity, position: Int) {
-        val images = adapter.getAllMediaList()
+        val images = pickAdapter.getAllMediaList()
         startPreview(images, position)
     }
 
@@ -357,21 +359,10 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         val mediaType = MimeType.getFileType(pictureType)
         DebugUtil.i(TAG, "mediaType:" + mediaType)
         if (selectionMode == PhoenixConstant.SINGLE) {
-            if (enableCrop) {
-                originalPath = mediaEntity.localPath
-                val gif = MimeType.isGif(pictureType)
-                if (gif) {
-                    result.add(mediaEntity)
-                    handlerResult(result)
-                } else {
-                    //                    cropPicture(mediaEntity);
-                }
-            } else {
-                result.add(mediaEntity)
-                handlerResult(result)
-            }
+            result.add(mediaEntity)
+            handlerResult(result)
         } else {
-            val selectedImages = adapter.getPickMediaList()
+            val selectedImages = pickAdapter.getPickMediaList()
             ImagesObservable.instance.saveLocalMedia(previewImages)
             bundle.putSerializable(PhoenixConstant.KEY_SELECT_LIST, selectedImages as Serializable)
             bundle.putInt(PhoenixConstant.KEY_POSITION, position)
@@ -393,66 +384,40 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         else
             ""
         if (fileType == MimeType.ofAudio()) {
-            picture_id_preview.setVisibility(View.GONE)
+            pickTvPreview.visibility = View.GONE
         } else {
             val isVideo = MimeType.isVideo(pictureType)
-            picture_id_preview.setVisibility(if (isVideo) View.GONE else View.VISIBLE)
+            pickTvPreview.visibility = if (isVideo) View.GONE else View.VISIBLE
         }
         val enable = selectImages.isNotEmpty()
         if (enable) {
-            pick_ll_ok.setEnabled(true)
-            picture_id_preview.setEnabled(true)
-            picture_id_preview.setTextColor(previewTextColor)
+            pickLlOk.isEnabled = true
+            pickLlOk.alpha = 1F
+            pickTvPreview.isEnabled = true
+            pickTvPreview.setTextColor(previewTextColor)
             if (numComplete) {
-                picture_tv_ok.setText(getString(R.string.picture_done_front_num, selectImages.size, maxSelectNum))
+                pickTvOk.text = getString(R.string.picture_done_front_num, selectImages.size, maxSelectNum)
             } else {
                 if (!isAnimation) {
-                    pick_tv_picture_number.startAnimation(animation)
+                    pickTvNumber.startAnimation(animation)
                 }
-                pick_tv_picture_number.visibility = View.VISIBLE
-                pick_tv_picture_number.text = selectImages.size.toString() + ""
-                picture_tv_ok.text = getString(R.string.picture_completed)
+                pickTvNumber.visibility = View.VISIBLE
+                pickTvNumber.text = selectImages.size.toString() + ""
+                pickTvOk.text = getString(R.string.picture_completed)
                 isAnimation = false
             }
         } else {
-            pick_ll_ok.setEnabled(false)
-            picture_id_preview.setEnabled(false)
-            picture_id_preview.setTextColor(ContextCompat.getColor(mContext, R.color.color_gray_1))
+            pickLlOk.isEnabled = false
+            pickLlOk.alpha = 0.7F
+            pickTvPreview.isEnabled = false
+            pickTvPreview.setTextColor(ContextCompat.getColor(mContext, R.color.color_gray_1))
             if (numComplete) {
-                picture_tv_ok.setText(getString(R.string.picture_done_front_num, 0, maxSelectNum))
+                pickTvOk.text = getString(R.string.picture_done_front_num, 0, maxSelectNum)
             } else {
-                pick_tv_picture_number.setVisibility(View.GONE)
-                picture_tv_ok.setText(getString(R.string.picture_please_select))
+                pickTvNumber.visibility = View.GONE
+                pickTvOk.text = getString(R.string.picture_please_select)
             }
         }
-    }
-
-    /**
-     * 手动添加拍照后的相片到图片列表，并设为选中
-
-     * @param mediaEntity mediaEntity
-     */
-    private fun manualSaveFolder(mediaEntity: MediaEntity) {
-        try {
-            createNewFolder(allFolderList)
-            val folder = getImageFolder(mediaEntity.localPath, allFolderList)
-            val cameraFolder = if (allFolderList.size > 0) allFolderList[0] else null
-            if (cameraFolder != null && folder != null) {
-                // 相机胶卷
-                cameraFolder.firstImagePath = mediaEntity.localPath
-                cameraFolder.images = allMediaList
-                cameraFolder.imageNumber = cameraFolder.imageNumber + 1
-                // 拍照相册
-                val num = folder.imageNumber + 1
-                folder.imageNumber = num
-                folder.images.add(0, mediaEntity)
-                folder.firstImagePath = cameraPath
-                folderWindow.bindFolder(allFolderList)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
     }
 
     override fun onBackPressed() {
@@ -470,6 +435,8 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     }
 
     private fun startCamera() {
-
+        val intent = Intent(this, CameraActivity::class.java)
+        startActivity(intent)
+        overridePendingTransition(R.anim.phoenix_activity_in, 0)
     }
 }

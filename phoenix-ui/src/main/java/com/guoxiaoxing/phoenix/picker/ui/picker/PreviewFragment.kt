@@ -40,7 +40,7 @@ import java.util.ArrayList
 class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.AnimationListener, OnPictureEditListener {
 
     private var position: Int = 0
-    private var allMediaList: List<MediaEntity> = ArrayList()
+    private var allMediaList: MutableList<MediaEntity> = ArrayList()
     private var pickMediaList: MutableList<MediaEntity> = ArrayList()
     private lateinit var adapter: SimpleFragmentAdapter
     private var refresh: Boolean = false
@@ -67,7 +67,6 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     @SuppressLint("StringFormatMatches")
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.fragment_preview, container, false)
-
         return view
     }
 
@@ -114,7 +113,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         preview_tv_ok_number.isSelected = checkNumberMode
 
         ll_check.setOnClickListener(this)
-        picture_left_back.setOnClickListener(this)
+        pickTvBack.setOnClickListener(this)
         preview_ll_ok.setOnClickListener(this)
         preview_ll_edit.setOnClickListener(this)
     }
@@ -124,7 +123,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         pickMediaList = arguments.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_SELECT_LIST)
         allMediaList = arguments.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_LIST)
 
-        picture_title.text = (position + 1).toString() + "/" + allMediaList.size
+        pickTvTitle.text = (position + 1).toString() + "/" + allMediaList.size
 
         onPickNumberChange(false)
         onImageChecked(position)
@@ -148,7 +147,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
             override fun onPageSelected(i: Int) {
                 position = i
-                picture_title.text = (position + 1).toString() + "/" + allMediaList.size
+                pickTvTitle.text = (position + 1).toString() + "/" + allMediaList.size
                 val mediaEntity = allMediaList[position]
                 index = mediaEntity.getPosition()
                 if (!previewEggs) {
@@ -177,7 +176,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
      */
     private fun isPreviewEggs(previewEggs: Boolean, position: Int, positionOffsetPixels: Int) {
         if (previewEggs) {
-            if (allMediaList.size > 0 && allMediaList != null) {
+            if (allMediaList.size > 0) {
                 val mediaEntity: MediaEntity
                 val num: Int
                 if (positionOffsetPixels < screenWidth / 2) {
@@ -253,23 +252,19 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
      * @return
      */
     fun isSelected(image: MediaEntity): Boolean {
-        for (mediaEntity in pickMediaList) {
-            if (mediaEntity.localPath == image.localPath) {
-                return true
-            }
-        }
-        return false
+        return pickMediaList.any { it.localPath == image.localPath }
     }
 
     /**
      * 更新图片选择数量
      */
     @SuppressLint("StringFormatMatches", "SetTextI18n")
-    fun onPickNumberChange(isRefresh: Boolean) {
+    private fun onPickNumberChange(isRefresh: Boolean) {
         this.refresh = isRefresh
-        val enable = pickMediaList.size != 0
+        val enable = pickMediaList.size > 0
         if (enable) {
             preview_ll_ok.isEnabled = true
+            preview_ll_ok.alpha = 1F
             if (numComplete) {
                 preview_tv_ok_text.text = getString(R.string.picture_done_front_num, pickMediaList.size, maxSelectNum)
             } else {
@@ -279,7 +274,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
             }
         } else {
             preview_ll_ok.isEnabled = false
-            //            tv_ok.setTextColor(ContextCompat.getColor(getActivity(), R.color.tab_color_false));
+            preview_ll_ok.alpha = 0.7F
             if (numComplete) {
                 preview_tv_ok_text.text = getString(R.string.picture_done_front_num, 0, maxSelectNum)
             } else {
@@ -353,10 +348,10 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
             }
 
             if (eqVideo) {
-                preview_image.visibility = View.VISIBLE
+                preview_video.visibility = View.VISIBLE
                 preview_image.visibility = View.GONE
             } else {
-                preview_image.visibility = View.GONE
+                preview_video.visibility = View.GONE
                 preview_image.visibility = View.VISIBLE
             }
 
@@ -391,7 +386,6 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                 }
             })
 
-
             preview_video.register(activity)
             preview_video.setVideoPath(path)
             preview_video.seekTo(100)
@@ -404,7 +398,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     @SuppressLint("StringFormatMatches")
     override fun onClick(view: View) {
         val id = view.id
-        if (id == R.id.picture_left_back) {
+        if (id == R.id.pickTvBack) {
             activity.finish()
             activity.overridePendingTransition(0, R.anim.phoenix_activity_out)
         } else if (id == R.id.ll_check) {
@@ -420,14 +414,6 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
                 if (isChecked) {
                     tv_check.isSelected = false
-                    VoiceUtils.playVoice(mContext, openClickSound)
-                    pickMediaList.add(image)
-                    image.number = pickMediaList.size
-                    if (checkNumberMode) {
-                        tv_check.text = image.number.toString() + ""
-                    }
-                } else {
-                    tv_check.isSelected = true
                     for (mediaEntity in pickMediaList) {
                         if (mediaEntity.localPath == image.localPath) {
                             pickMediaList.remove(mediaEntity)
@@ -436,10 +422,18 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                             break
                         }
                     }
+                } else {
+                    tv_check.isSelected = true
+                    VoiceUtils.playVoice(mContext, openClickSound)
+                    pickMediaList.add(image)
+                    image.number = pickMediaList.size
+                    if (checkNumberMode) {
+                        tv_check.text = image.number.toString() + ""
+                    }
                 }
                 onPickNumberChange(true)
             }
-        } else if (id == R.id.pick_ll_ok) {
+        } else if (id == R.id.pickLlOk) {
             val images = pickMediaList
             val pictureType = if (images.size > 0) images[0].mimeType else ""
             val size = images.size
@@ -458,14 +452,15 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
             }
             onResult(images)
         } else if (id == R.id.preview_ll_edit) {
-            val rotateFragment = PictureEditFragment.newInstance()
+            val pictureEditFragment = PictureEditFragment.newInstance()
             val bundle = Bundle()
             val path = allMediaList[preview_pager.currentItem].localPath
             if (path != null) {
-                bundle.putString(PhoenixConstant.KEY_FILE_PATH, path);
-                rotateFragment.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.preview_fragment_container, rotateFragment).addToBackStack(null).commitAllowingStateLoss();
+                bundle.putString(PhoenixConstant.KEY_FILE_PATH, path)
+                pictureEditFragment.setArguments(bundle)
+                pictureEditFragment.setTargetFragment(this, PhoenixConstant.REQUEST_CODE_PICTURE_EDIT)
+                activity.supportFragmentManager.beginTransaction()
+                        .replace(R.id.preview_fragment_container, pictureEditFragment).addToBackStack(null).commitAllowingStateLoss();
             }
         }
     }

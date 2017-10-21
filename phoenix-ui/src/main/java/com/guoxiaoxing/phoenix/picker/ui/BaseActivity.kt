@@ -44,48 +44,28 @@ open class BaseActivity : FragmentActivity() {
     protected var spanCount: Int = 0
     protected var maxSelectNum: Int = 0
     protected var minSelectNum: Int = 0
-    protected var compressQuality: Int = 0
     protected var selectionMode: Int = 0
     protected var fileType: Int = 0
     protected var videoSecond: Int = 0
     protected var compressMaxKB: Int = 0
     protected var compressWidth: Int = 0
     protected var compressHeight: Int = 0
-    protected var aspect_ratio_x: Int = 0
-    protected var aspect_ratio_y: Int = 0
     protected var recordVideoSecond: Int = 0
-    protected var videoQuality: Int = 0
-    protected var cropWidth: Int = 0
-    protected var cropHeight: Int = 0
     protected var isGif: Boolean = false
     protected var enableCamera: Boolean = false
     protected var enablePreview: Boolean = false
-    protected var enableCrop: Boolean = false
     protected var enableCompress: Boolean = false
-    protected var enPreviewVideo: Boolean = false
     protected var checkNumMode: Boolean = false
     protected var openClickSound: Boolean = false
     protected var numComplete: Boolean = false
-    protected var freeStyleCropEnabled: Boolean = false
-    protected var circleDimmedLayer: Boolean = false
-    protected var hideBottomControls: Boolean = false
-    protected var rotateEnabled: Boolean = false
-    protected var scaleEnabled: Boolean = false
     protected var previewEggs: Boolean = false
     protected var statusFont: Boolean = false
-    protected var showCropFrame: Boolean = false
-    protected var showCropGrid: Boolean = false
     protected var previewStatusFont: Boolean = false
-    protected var enableUpload: Boolean = false
-
-    protected var cameraPath: String = ""
-    protected lateinit var outputCameraPath: String
+    protected var savePath: String = ""
 
     protected var originalPath: String = ""
-    protected val dialog: PhoenixLoadingDialog by lazy { PhoenixLoadingDialog(mContext) }
+    protected val loadingDialog: PhoenixLoadingDialog by lazy { PhoenixLoadingDialog(mContext) }
 
-    protected var enableDelete: Boolean = false
-    protected var currentIndex: Int = 0
     protected lateinit var mediaList: MutableList<MediaEntity>
     protected var onPickerListener: OnPickerListener? = null
 
@@ -107,58 +87,39 @@ open class BaseActivity : FragmentActivity() {
      */
     private fun setupConfig() {
         enableCamera = option.isEnableCamera
-        outputCameraPath = option.outputCameraPath
         statusFont = AttrsUtils.getTypeValueBoolean(this, R.attr.phoenix_status_font_color)
         previewStatusFont = AttrsUtils.getTypeValueBoolean(this, R.attr.phoenix_preview_status_font_color)
         fileType = option.fileType
-        enableDelete = option.isEnableDelete
-        currentIndex = option.currentIndex
-        mediaList = option.mediaList
+        mediaList = option.pickedMediaList
         if (mediaList == null) {
             mediaList = ArrayList<MediaEntity>()
         }
-        selectionMode = option.selectionMode
+        selectionMode = option.pickMode
         if (selectionMode == PhoenixConstant.SINGLE) {
             mediaList = ArrayList<MediaEntity>()
         }
-        spanCount = option.imageSpanCount
+        spanCount = option.spanCount
         isGif = option.isEnableGif
-        freeStyleCropEnabled = option.isFreeStyleCropEnabled
         maxSelectNum = option.maxSelectNum
         minSelectNum = option.minSelectNum
         enablePreview = option.isEnablePreview
-        enPreviewVideo = option.isEnPreviewVideo
         checkNumMode = option.isCheckNumMode
-        openClickSound = option.isOpenClickSound
+        openClickSound = option.isEnableClickSound
         videoSecond = option.videoSecond
-        enableCrop = option.isEnableCrop
         enableCompress = option.isEnableCompress
-        compressQuality = option.cropCompressQuality
         numComplete = AttrsUtils.getTypeValueBoolean(this, R.attr.phoenix_style_number_complete)
         compressMaxKB = option.compressMaxSize
         compressWidth = option.compressMaxWidth
         compressHeight = option.compressMaxHeight
         recordVideoSecond = option.recordVideoSecond
-        videoQuality = option.videoQuality
-        cropWidth = option.cropWidth
-        cropHeight = option.cropHeight
-        aspect_ratio_x = option.aspect_ratio_x
-        aspect_ratio_y = option.aspect_ratio_y
-        circleDimmedLayer = option.isCircleDimmedLayer
-        showCropFrame = option.isShowCropFrame
-        showCropGrid = option.isShowCropGrid
-        rotateEnabled = option.isRotateEnabled
-        scaleEnabled = option.isScaleEnabled
         previewEggs = option.isPreviewEggs
-        hideBottomControls = option.isHideBottomControls
-
-        enableUpload = option.isEnableUpload
         onPickerListener = option.onPickerListener
+        savePath = option.savePath
     }
 
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(PhoenixConstant.BUNDLE_CAMERA_PATH, cameraPath)
+        outState.putString(PhoenixConstant.BUNDLE_CAMERA_PATH, savePath)
         outState.putString(PhoenixConstant.BUNDLE_ORIGINAL_PATH, originalPath)
     }
 
@@ -185,35 +146,33 @@ open class BaseActivity : FragmentActivity() {
     }
 
     /**
-     * show loading dialog
+     * show loading loadingDialog
      */
     protected fun showLoadingDialog() {
         if (!isFinishing) {
             dismissLoadingDialog()
-            dialog.show()
+            loadingDialog.show()
         }
     }
 
     /**
-     * dismiss loading dialog
+     * dismiss loading loadingDialog
      */
     protected fun dismissLoadingDialog() {
         try {
-            if (dialog.isShowing) {
-                dialog.dismiss()
+            if (loadingDialog.isShowing) {
+                loadingDialog.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     protected fun processMedia(mediaList: MutableList<MediaEntity>) {
 
         val enableCompress = option.isEnableCompress
-        val enableUpload = option.isEnableUpload
 
-        if (!enableCompress && !enableUpload) {
+        if (!enableCompress) {
             onResult(mediaList)
         }
 
@@ -452,7 +411,7 @@ open class BaseActivity : FragmentActivity() {
                 } else {
                     audioPath = getAudioFilePathFromUri(uri)
                 }
-                PictureFileUtils.copyAudioFile(audioPath, cameraPath)
+                PictureFileUtils.copyAudioFile(audioPath, savePath)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

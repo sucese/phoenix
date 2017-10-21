@@ -21,21 +21,21 @@
         android:id="@+id/camera_iv_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:layout_below="@+id/camera_preview_title"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/camera_preview_title"
+        android:scaleType="fitCenter" />
 
 
     <RelativeLayout
         android:id="@+id/rl_yulan_bottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/phoenix_dimen_107"
-        android:background="@android:color/black"
-        android:gravity="center_vertical"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:background="@android:color/black"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/camera_tv_rephotograph"
@@ -60,7 +60,8 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/camera_tv_next_picture"
             android:layout_toRightOf="@+id/camera_tv_rephotograph"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/camera_ll_edit"

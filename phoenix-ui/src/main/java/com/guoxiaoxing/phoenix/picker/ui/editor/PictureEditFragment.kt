@@ -148,8 +148,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
 
         getView<TextPastingView>(Operation.TextOperation)?.let {
             setUpPastingView(it)
-            it.onLayerViewDoubleClick = {
-                _, sharableData ->
+            it.onLayerViewDoubleClick = { _, sharableData ->
                 go2InputView(sharableData as InputTextModel)
             }
         }
@@ -169,8 +168,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
             imageCompose()
         }
 
-        mDragToDeleteView.onLayoutRectChange = {
-            _, rect ->
+        mDragToDeleteView.onLayoutRectChange = { _, rect ->
             getView<TextPastingView>(Operation.TextOperation)?.dragViewRect = rect
             getView<StickView>(Operation.StickOperation)?.dragViewRect = rect
         }
@@ -271,7 +269,8 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
         supportRecycle()
         val intent = Intent()
         intent.putExtra(PhoenixConstant.KEY_FILE_PATH, mEditorSavePath)
-        activity.setResult(PhoenixConstant.REQUEST_CODE_PICTURE_EDIT, intent)
+        targetFragment.onActivityResult(PhoenixConstant.REQUEST_CODE_PICTURE_EDIT, PhoenixConstant.REQUEST_CODE_PICTURE_EDIT, intent)
+        activity.supportFragmentManager.popBackStackImmediate()
     }
 
     private fun supportRecycle() {

@@ -21,7 +21,7 @@
         android:gravity="center_vertical">
 
         <TextView
-            android:id="@+id/picture_id_preview"
+            android:id="@+id/pickTvPreview"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
@@ -33,7 +33,7 @@
             android:textSize="14sp" />
 
         <LinearLayout
-            android:id="@+id/pick_ll_ok"
+            android:id="@+id/pickLlOk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -43,10 +43,10 @@
             android:enabled="false"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="@dimen/phoenix_dimen_8">
+            android:padding="@dimen/phoenix_dimen_6">
 
             <TextView
-                android:id="@+id/picture_tv_ok"
+                android:id="@+id/pickTvOk"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -55,7 +55,7 @@
                 android:textSize="@dimen/phoenix_text_14" />
 
             <TextView
-                android:id="@+id/pick_tv_picture_number"
+                android:id="@+id/pickTvNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -66,7 +66,7 @@
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/picture_recycler"
+        android:id="@+id/pickRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/rl_bottom"
@@ -75,7 +75,7 @@
         android:layout_marginRight="2dp" />
 
     <TextView
-        android:id="@+id/tv_empty"
+        android:id="@+id/pick_tv_empty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

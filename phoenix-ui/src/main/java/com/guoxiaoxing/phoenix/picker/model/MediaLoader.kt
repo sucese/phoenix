@@ -34,23 +34,23 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
         activity.supportLoaderManager.initLoader(type, null,
                 object : LoaderManager.LoaderCallbacks<Cursor> {
                     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-
-                        var cursorLoader: CursorLoader = CursorLoader(
-                                activity, QUERY_URI,
-                                PROJECTION, if (isGif) SELECTION_ALL else SELECTION_NOT_GIF,
-                                if (isGif) SELECTION_ALL_ARGS else SELECTION_NOT_GIF_ARGS, ORDER_BY)
-
-                        when (id) {
-                            PhoenixConstant.TYPE_ALL -> cursorLoader = CursorLoader(
-                                    activity, QUERY_URI,
-                                    PROJECTION, if (isGif) SELECTION_ALL else SELECTION_NOT_GIF,
-                                    if (isGif) SELECTION_ALL_ARGS else SELECTION_NOT_GIF_ARGS, ORDER_BY)
-                            PhoenixConstant.TYPE_IMAGE -> cursorLoader = CursorLoader(
-                                    activity, MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        val cursorLoader = when (id) {
+                            PhoenixConstant.TYPE_ALL -> CursorLoader(
+                                    activity,
+                                    QUERY_URI,
+                                    PROJECTION,
+                                    SELECTION_ALL,
+                                    null,
+                                    MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
+                            PhoenixConstant.TYPE_IMAGE -> CursorLoader(
+                                    activity,
+                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                                     IMAGE_PROJECTION, if (isGif) CONDITION_GIF else CONDITION,
-                                    if (isGif) SELECT_GIF else SELECT, IMAGE_PROJECTION[0] + " DESC")
-                            PhoenixConstant.TYPE_VIDEO -> cursorLoader = CursorLoader(
-                                    activity, MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                                    if (isGif) SELECT_GIF else SELECT,
+                                    IMAGE_PROJECTION[0] + " DESC")
+                            PhoenixConstant.TYPE_VIDEO -> CursorLoader(
+                                    activity,
+                                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                                     VIDEO_PROJECTION, if (videoS > 0)
                                 DURATION + " <= ? and "
                                         + DURATION + "> 0"
@@ -59,16 +59,18 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                                 arrayOf(videoS.toString())
                             else
                                 null, VIDEO_PROJECTION[0] + " DESC")
-                            PhoenixConstant.TYPE_AUDIO -> cursorLoader = CursorLoader(
-                                    activity, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                                    AUDIO_PROJECTION, if (videoS > 0)
-                                DURATION + " <= ? and "
-                                        + DURATION + ">" + AUDIO_DURATION
-                            else
-                                DURATION + "> " + AUDIO_DURATION, if (videoS > 0)
-                                arrayOf(videoS.toString())
-                            else
-                                null, AUDIO_PROJECTION[0] + " DESC")
+                            else ->
+                                CursorLoader(
+                                        activity, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                        AUDIO_PROJECTION, if (videoS > 0)
+                                    DURATION + " <= ? and "
+                                            + DURATION + ">" + AUDIO_DURATION
+                                else
+                                    DURATION + "> " + AUDIO_DURATION, if (videoS > 0)
+                                    arrayOf(videoS.toString())
+                                else
+                                    null, AUDIO_PROJECTION[0] + " DESC")
+
                         }
                         return cursorLoader
                     }
@@ -222,15 +224,12 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
         /**
          * 查询全部图片和视频，并且过滤掉已损坏图片和视频
          */
-        private val SELECTION_ALL =
-                "(" + MediaStore.Files.FileColumns.MEDIA_TYPE + "=?" +
-                        " OR " +
-                        MediaStore.Files.FileColumns.MEDIA_TYPE + "=?)" +
-                        " AND " +
-                        MediaStore.MediaColumns.SIZE + ">0" +
-                        " AND " +
-                        MediaStore.MediaColumns.WIDTH +
-                        ">0"
+        private val SELECTION_ALL = (
+                MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
+                        + " OR "
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)
 
 
         private val SELECTION_ALL_ARGS = arrayOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString(), MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString())
