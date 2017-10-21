@@ -6,7 +6,6 @@
 
 >Android平台上图片/视频选择、压缩、编辑的一站式解决方案。
 
-
 **特点**
 
 - 功能相互独立，各个功能的实现依赖于约定的接口，彼此互不依赖，开发者不必为了引入某一个功能而带入一堆依赖。
@@ -41,7 +40,12 @@
 </p>
 
 
-多种主题
+**主题**
+
+- 默认主题
+- 橙色主图
+- 红色主题
+- 蓝色主题
 
 <p align="center">
 <img src="https://github.com/guoxiaoxing/phoenix/blob/master/art/theme_default.png" height="400"/>
