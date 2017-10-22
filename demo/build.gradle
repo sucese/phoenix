@@ -24,7 +24,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.2'
 
 //    //图片/视频库
 //    compile "com.github.guoxiaoxing.phoenix:phoenix-ui:$rootProject.ext.phoenixVerson"
