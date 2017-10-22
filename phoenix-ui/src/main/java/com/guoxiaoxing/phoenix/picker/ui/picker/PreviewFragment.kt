@@ -430,7 +430,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                 }
                 onPickNumberChange(true)
             }
-        } else if (id == R.id.pickLlOk) {
+        } else if (id == R.id.preview_ll_ok) {
             val images = pickMediaList
             val pictureType = if (images.size > 0) images[0].mimeType else ""
             val size = images.size
