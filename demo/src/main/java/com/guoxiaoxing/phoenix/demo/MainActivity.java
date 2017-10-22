@@ -95,21 +95,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             List<MediaEntity> pickList = new ArrayList<>();
 
             Phoenix.with()
-                    .theme(PhoenixOption.THEME_DEFAULT )// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
-                    .fileType(MimeType.ofAll())
-                    .maxPickNumber(10)// 最大图片选择数量
+                    .theme(PhoenixOption.THEME_DEFAULT)// 主题
+                    .fileType(MimeType.ofAll())//显示的文件类型图片、视频、图片和视频
+                    .maxPickNumber(10)// 最大选择数量
                     .minPickNumber(0)// 最小选择数量
                     .spanCount(4)// 每行显示个数
-                    .pickMode(PhoenixConstant.MULTIPLE)// 多选 or 单选
-                    .enablePreview(true)// 是否可预览图片
-                    .enableCamera(true)// 是否显示拍照按钮
-                    .enableAnimation(true)// 图片列表点击 缩放效果 默认true
-                    .enableCompress(true)// 是否压缩
-                    .thumbnailHeight(160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
-                    .thumbnailWidth(160)
+                    .pickMode(PhoenixConstant.MULTIPLE)// 多选/单选
+                    .enablePreview(true)// 是否开启预览
+                    .enableCamera(true)// 是否开启拍照
+                    .enableAnimation(true)// 选择界面图片点击效果
+                    .enableCompress(true)// 是否开启压缩
+                    .thumbnailHeight(160)// 选择界面图片高度
+                    .thumbnailWidth(160)// 选择界面图片宽度
                     .enableClickSound(true)//ƒ 是否开启点击声音
-                    .pickedMediaList(pickList)// 是否传入已选图片
-                    .videoSecond(0)//显示多少秒以内的视频or音频也可适用
+                    .pickedMediaList(pickList)// 已选图片数据
+                    .videoSecond(0)//显示多少秒以内的视频
                     .onPickerListener(new OnPickerListener() {
                         @Override
                         public void onPickSuccess(List<MediaEntity> pickList) {
