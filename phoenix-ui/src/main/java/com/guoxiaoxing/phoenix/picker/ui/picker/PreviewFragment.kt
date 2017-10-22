@@ -465,8 +465,9 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val editPath = data?.getStringExtra(PhoenixConstant.KEY_FILE_PATH)
-        allMediaList.get(preview_pager.currentItem).editPath = editPath
+        allMediaList.get(position).editPath = editPath
         adapter.notifyDataSetChanged()
+        updatePickerActivity(true)
     }
 
     fun onResult(images: List<MediaEntity>) {

@@ -188,7 +188,7 @@ open class BaseFragment : Fragment() {
         compressHeight = option.compressMaxHeight
         recordVideoSecond = option.recordVideoSecond
         previewEggs = option.isPreviewEggs
-
+        savePath = option.savePath
         onPickerListener = option.onPickerListener
     }
 

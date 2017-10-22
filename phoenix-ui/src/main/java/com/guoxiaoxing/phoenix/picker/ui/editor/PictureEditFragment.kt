@@ -11,7 +11,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -67,10 +66,10 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
     private lateinit var mEditorId: String
     private var mEditorWidth: Int = 0
     private var mEditorHeight: Int = 0
-    private var mEditorOrientation: Int = 0
-    private lateinit var mEditorPath: String
-    private lateinit var mEditorBitmap: Bitmap
-    private lateinit var mEditorSavePath: String
+    private var mOriginOrientation: Int = 0
+    private lateinit var mOriginPath: String
+    private lateinit var mOriginBitmap: Bitmap
+    private lateinit var mSavePath: String
 
     private val mTextInputResultCode = 301
     private var mStickDetailsView: StickDetailsView? = null
@@ -180,15 +179,16 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
      */
     private fun setupData() {
 
-        mEditorPath = arguments.getString(PhoenixConstant.KEY_FILE_PATH)
-        mEditorOrientation = arguments.getInt(PhoenixConstant.KEY_ORIENTATION)
+        mOriginPath = arguments.getString(PhoenixConstant.KEY_FILE_PATH)
+        mOriginOrientation = arguments.getInt(PhoenixConstant.KEY_ORIENTATION)
         val byteData = arguments.getByteArray(PhoenixConstant.KEY_FILE_BYTE)
         if (byteData != null) {
-            mEditorBitmap = PictureUtils.roatePicture(mEditorOrientation, byteData, activity)
+            mOriginBitmap = PictureUtils.roatePicture(mOriginOrientation, byteData, activity)
         }
-        mEditorSavePath = getEditorSavePath()
 
-        val sourceBitmap = PictureUtils.getImageBitmap(mEditorPath)
+        mSavePath = savePath + System.currentTimeMillis() + ".png"
+
+        val sourceBitmap = PictureUtils.getImageBitmap(mOriginPath)
 
         photoView.setImageBitmap(sourceBitmap)
         blurView.setBitmap(sourceBitmap)
@@ -241,12 +241,12 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
 
     override fun getSetupEditorId() = mEditorId
 
-    override fun getResultEditorId() = mEditorPath + mEditorSavePath
+    override fun getResultEditorId() = mOriginPath + mSavePath
 
     private var imageComposeTask: ImageComposeTask? = null
 
     private fun imageCompose() {
-        val path = mEditorSavePath
+        val path = mSavePath
         val parentFile = File(path).parentFile
         parentFile?.mkdirs()
         imageComposeTask?.cancel(true)
@@ -268,7 +268,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
     private fun finish(editStatus: Boolean) {
         supportRecycle()
         val intent = Intent()
-        intent.putExtra(PhoenixConstant.KEY_FILE_PATH, mEditorSavePath)
+        intent.putExtra(PhoenixConstant.KEY_FILE_PATH, mSavePath)
         targetFragment.onActivityResult(PhoenixConstant.REQUEST_CODE_PICTURE_EDIT, PhoenixConstant.REQUEST_CODE_PICTURE_EDIT, intent)
         activity.supportFragmentManager.popBackStackImmediate()
     }
@@ -402,8 +402,6 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
     }
 
     private inline fun <reified T : View> getView(operation: Operation) = findLayerByEditorMode(operation) as? T
-
-    fun getEditorSavePath() = "${Environment.getExternalStorageDirectory()}/EditorCache/image-editor-${System.currentTimeMillis()}.png"
 
     private fun setUpPastingView(layer: BasePastingHierarchyView<*>) {
         layer.showOrHideDragCallback = {
