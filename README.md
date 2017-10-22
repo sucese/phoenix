@@ -18,8 +18,8 @@
 - 良好的版本兼容性，运行时权限等内容都做了兼容性处理。
 
 <p align="center">
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/play_compress_1.gif" height="400"/>
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/play_compress_2.gif" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/play_1.gif" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/play_2.gif" height="400"/>
 </p>
 
 **功能**
