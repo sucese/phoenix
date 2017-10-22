@@ -97,10 +97,10 @@ open class BaseActivity : FragmentActivity() {
         }
         spanCount = option.spanCount
         isGif = option.isEnableGif
-        maxSelectNum = option.maxSelectNum
-        minSelectNum = option.minSelectNum
+        maxSelectNum = option.maxPickNumber
+        minSelectNum = option.minPickNumber
         enablePreview = option.isEnablePreview
-        checkNumMode = option.isCheckNumMode
+        checkNumMode = option.isPickNumberMode
         openClickSound = option.isEnableClickSound
         videoSecond = option.videoSecond
         enableCompress = option.isEnableCompress

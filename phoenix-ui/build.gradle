@@ -29,6 +29,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:4.0.0-RC1'
     compile 'com.google.code.gson:gson:2.8.1'
 
-    compile "com.github.guoxiaoxing.phoenix:phoenix-core:$rootProject.ext.phoenixCoreVersion"
-//    compile project(':phoenix-core')
+//    compile "com.github.guoxiaoxing.phoenix:phoenix-core:$rootProject.ext.phoenixCoreVersion"
+    compile project(':phoenix-core')
 }

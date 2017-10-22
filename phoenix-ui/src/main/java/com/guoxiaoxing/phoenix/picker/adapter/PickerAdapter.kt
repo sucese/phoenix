@@ -49,14 +49,14 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     init {
         this.selectMode = config.pickMode
         this.enableCamera = config.isEnableCamera
-        this.maxSelectNum = config.maxSelectNum
+        this.maxSelectNum = config.maxPickNumber
         this.enablePreview = config.isEnablePreview
-        this.is_checked_num = config.isCheckNumMode
-        this.overrideWidth = config.overrideWidth
-        this.overrideHeight = config.overrideHeight
+        this.is_checked_num = config.isPickNumberMode
+        this.overrideWidth = config.thumbnailWidth
+        this.overrideHeight = config.thumbnailHeight
         this.enableVoice = config.isEnableClickSound
         this.mimeType = config.fileType
-        this.zoomAnim = config.isZoomAnim
+        this.zoomAnim = config.isEnableAnimation
     }
 
     fun setAllMediaList(medias: MutableList<MediaEntity>) {

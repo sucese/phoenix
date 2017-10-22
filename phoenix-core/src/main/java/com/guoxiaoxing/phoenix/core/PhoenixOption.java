@@ -47,9 +47,9 @@ public class PhoenixOption {
     //选择类型，单选、多选
     private int pickMode = PhoenixConstant.MULTIPLE;
     //最大选择张数，默认为0，表示不限制
-    private int maxSelectNum = 0;
+    private int maxPickNumber = 0;
     //最小选择张数，默认为0，表示不限制
-    private int minSelectNum = 0;
+    private int minPickNumber = 0;
     //显示多少秒以内的视频or音频也可适用
     private int videoSecond;
     //视频秒数录制 默认60s
@@ -57,17 +57,17 @@ public class PhoenixOption {
     //图片选择界面每行图片个数
     private int spanCount = 4;
     //选择列表图片宽度
-    private int overrideWidth = 160;
+    private int thumbnailWidth = 160;
     //选择列表图片高度
-    private int overrideHeight = 160;
+    private int thumbnailHeight = 160;
     //选择列表点击动画效果
-    private boolean zoomAnim = true;
+    private boolean enableAnimation = true;
     //是否显示gif图片
     private boolean enableGif;
     //是否开启点击预览
     private boolean enablePreview = true;
     //是否开启数字显示模式
-    private boolean checkNumMode;
+    private boolean pickNumberMode;
     //是否开启点击声音
     private boolean enableClickSound = true;
     //预览图片时，是否增强左右滑动图片体验
@@ -112,8 +112,8 @@ public class PhoenixOption {
         return enablePreview;
     }
 
-    public boolean isCheckNumMode() {
-        return checkNumMode;
+    public boolean isPickNumberMode() {
+        return pickNumberMode;
     }
 
     public boolean isEnableClickSound() {
@@ -176,12 +176,12 @@ public class PhoenixOption {
         return pickMode;
     }
 
-    public int getMaxSelectNum() {
-        return maxSelectNum;
+    public int getMaxPickNumber() {
+        return maxPickNumber;
     }
 
-    public int getMinSelectNum() {
-        return minSelectNum;
+    public int getMinPickNumber() {
+        return minPickNumber;
     }
 
     public int getVideoSecond() {
@@ -196,16 +196,16 @@ public class PhoenixOption {
         return spanCount;
     }
 
-    public int getOverrideWidth() {
-        return overrideWidth;
+    public int getThumbnailWidth() {
+        return thumbnailWidth;
     }
 
-    public int getOverrideHeight() {
-        return overrideHeight;
+    public int getThumbnailHeight() {
+        return thumbnailHeight;
     }
 
-    public boolean isZoomAnim() {
-        return zoomAnim;
+    public boolean isEnableAnimation() {
+        return enableAnimation;
     }
 
     public PhoenixOption fileType(int val) {
@@ -228,13 +228,13 @@ public class PhoenixOption {
         return this;
     }
 
-    public PhoenixOption maxSelectNum(int val) {
-        maxSelectNum = val;
+    public PhoenixOption maxPickNumber(int val) {
+        maxPickNumber = val;
         return this;
     }
 
-    public PhoenixOption minSelectNum(int val) {
-        minSelectNum = val;
+    public PhoenixOption minPickNumber(int val) {
+        minPickNumber = val;
         return this;
     }
 
@@ -253,18 +253,18 @@ public class PhoenixOption {
         return this;
     }
 
-    public PhoenixOption overrideWidth(int val) {
-        overrideWidth = val;
+    public PhoenixOption thumbnailWidth(int val) {
+        thumbnailWidth = val;
         return this;
     }
 
-    public PhoenixOption overrideHeight(int val) {
-        overrideHeight = val;
+    public PhoenixOption thumbnailHeight(int val) {
+        thumbnailHeight = val;
         return this;
     }
 
-    public PhoenixOption zoomAnim(boolean val) {
-        zoomAnim = val;
+    public PhoenixOption enableAnimation(boolean val) {
+        enableAnimation = val;
         return this;
     }
 
@@ -278,8 +278,8 @@ public class PhoenixOption {
         return this;
     }
 
-    public PhoenixOption checkNumMode(boolean val) {
-        checkNumMode = val;
+    public PhoenixOption pickNumberMode(boolean val) {
+        pickNumberMode = val;
         return this;
     }
 

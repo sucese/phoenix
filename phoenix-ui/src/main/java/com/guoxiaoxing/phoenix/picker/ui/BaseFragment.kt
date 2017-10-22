@@ -175,10 +175,10 @@ open class BaseFragment : Fragment() {
         }
         spanCount = option.spanCount
         isGif = option.isEnableGif
-        maxSelectNum = option.maxSelectNum
-        minSelectNum = option.minSelectNum
+        maxSelectNum = option.maxPickNumber
+        minSelectNum = option.minPickNumber
         enablePreview = option.isEnablePreview
-        checkNumberMode = option.isCheckNumMode
+        checkNumberMode = option.isPickNumberMode
         openClickSound = option.isEnableClickSound
         videoSecond = option.videoSecond
         enableCompress = option.isEnableCompress

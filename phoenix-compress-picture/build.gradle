@@ -28,6 +28,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
-    compile "com.github.guoxiaoxing.phoenix:phoenix-core:$rootProject.ext.phoenixCoreVersion"
-//    compile project(':phoenix-core')
+//    compile "com.github.guoxiaoxing.phoenix:phoenix-core:$rootProject.ext.phoenixCoreVersion"
+    compile project(':phoenix-core')
 }

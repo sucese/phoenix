@@ -2,7 +2,6 @@ package com.guoxiaoxing.phoenix.picker.ui.camera
 
 import android.Manifest
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
@@ -32,7 +31,7 @@ class CameraActivity : BaseActivity() {
 
                     override fun onNext(aBoolean: Boolean?) {
                         if (aBoolean!!) {
-                            maxCanTakePhotoNum = option.maxSelectNum
+                            maxCanTakePhotoNum = option.maxPickNumber
                             //full screen
                             setTheme(R.style.style_full_screen)
                             setContentView(R.layout.activity_camera_library)

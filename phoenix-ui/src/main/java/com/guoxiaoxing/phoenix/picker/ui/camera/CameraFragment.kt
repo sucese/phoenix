@@ -65,7 +65,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         confirmDialog = ConfirmDialog(activity)
-        maxPictureNumber = option.maxSelectNum
+        maxPictureNumber = option.maxPickNumber
         try {
             handler = @SuppressLint("HandlerLeak")
             object : Handler() {
