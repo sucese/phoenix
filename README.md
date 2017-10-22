@@ -73,13 +73,13 @@ allprojects {
 
 ```
 //图片/视频选择、拍照、图片/视频预览
-compile 'com.github.guoxiaoxing.phoenix:phoenix-ui:0.0.7'
+compile 'com.github.guoxiaoxing.phoenix:phoenix-ui:0.0.11'
 
 //选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-picture:0.0.7'
+compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-picture:0.0.11'
 
 //选填 - 视频压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-video:0.0.7'
+compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-video:0.0.11'
 ```
 
 ### 调用功能
