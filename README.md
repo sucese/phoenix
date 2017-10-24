@@ -1,4 +1,4 @@
-# <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/logo.png" alt="Phoenix" width="60" height="60" /> Phoenix
+# <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/logo.png" alt="Phoenix" width="80" height="80" align="bottom" /> Phoenix
 
 ## 功能介绍
 
