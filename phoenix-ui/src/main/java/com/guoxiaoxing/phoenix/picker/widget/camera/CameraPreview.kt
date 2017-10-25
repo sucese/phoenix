@@ -11,7 +11,7 @@ import android.view.ScaleGestureDetector
 import android.view.SurfaceView
 import java.util.*
 
-class CameraPreView : SurfaceView {
+class CameraPreview : SurfaceView {
 
     private val TAG = this.javaClass.simpleName
     private var mScaleGestureDetetor: ScaleGestureDetector? = null

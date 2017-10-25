@@ -26,10 +26,10 @@ class PhoenixVideoView : RelativeLayout {
 
     private lateinit var videoView: InternalVideoView
     private lateinit var seekbarProgress: SeekBar
-    private lateinit var btnController: ImageView
+    private lateinit var ivPlay: ImageView
     private lateinit var tvCurrentProgress: TextView
     private lateinit var tvTotalProgress: TextView
-    private lateinit var ivPlay: ImageView
+    private lateinit var ivCenterPlay: ImageView
 
     private lateinit var llController: LinearLayout
     private lateinit var flContainer: FrameLayout
@@ -55,10 +55,18 @@ class PhoenixVideoView : RelativeLayout {
         setupListener()
     }
 
+    override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
+        super.onWindowFocusChanged(hasWindowFocus)
+        if(hasWindowFocus){
+            onResume()
+        }else{
+            onPause()
+        }
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        videoView.stopPlayback()
-        mContext.unregisterReceiver(volumeReceiver)
+        onDestory()
     }
 
     fun register(activity: Activity) {
@@ -78,6 +86,7 @@ class PhoenixVideoView : RelativeLayout {
         videoPos = videoView.currentPosition
         videoView.stopPlayback()
         mHandler.removeMessages(UPDATE_PROGRESS)
+        ivPlay.setImageResource(R.drawable.phoenix_video_play)
     }
 
     fun onResume() {
@@ -86,6 +95,7 @@ class PhoenixVideoView : RelativeLayout {
     }
 
     fun onDestory() {
+        videoView.stopPlayback()
         mContext.unregisterReceiver(volumeReceiver)
     }
 
@@ -97,12 +107,12 @@ class PhoenixVideoView : RelativeLayout {
         videoLayout = LayoutInflater.from(mContext).inflate(R.layout.view_phoenix_video, this, true)
         videoView = videoLayout.findViewById(R.id.video_view) as InternalVideoView
         seekbarProgress = videoLayout.findViewById(R.id.seekbar_progress) as SeekBar
-        btnController = videoLayout.findViewById(R.id.btn_controller) as ImageView
+        ivPlay = videoLayout.findViewById(R.id.iv_play) as ImageView
         tvCurrentProgress = videoLayout.findViewById(R.id.tv_currentProgress) as TextView
         tvTotalProgress = videoLayout.findViewById(R.id.tv_totalProgress) as TextView
         llController = videoLayout.findViewById(R.id.ll_controller) as LinearLayout
         flContainer = videoLayout.findViewById(R.id.rl_container) as FrameLayout
-        ivPlay = findViewById(R.id.iv_play) as ImageView
+        ivCenterPlay = findViewById(R.id.iv_center_play) as ImageView
     }
 
     private fun setupData() {
@@ -111,48 +121,35 @@ class PhoenixVideoView : RelativeLayout {
         mAudioManager = mContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val filter = IntentFilter("android.media.VOLUME_CHANGED_ACTION")
         mContext.registerReceiver(volumeReceiver, filter)
-        val currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
     }
 
     private fun setupListener() {
-
-        //        btnScreen.setOnClickListener(new OnClickListener() {
-        //            @Override
-        //            public void onClick(View v) {
-        //                if (isVerticalScreen) {
-        //                    mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        //                } else {
-        //                    mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //                }
-        //            }
-        //        });
-
-        ivPlay.setOnClickListener {
+        ivCenterPlay.setOnClickListener {
             videoView.start()
             mHandler.sendEmptyMessage(UPDATE_PROGRESS)
-            ivPlay.visibility = View.GONE
+            ivCenterPlay.visibility = View.GONE
             llController.visibility = View.VISIBLE
-            btnController.setImageResource(R.drawable.phoenix_video_pause)
+            ivPlay.setImageResource(R.drawable.phoenix_video_pause)
         }
 
-        btnController.setOnClickListener {
+        ivPlay.setOnClickListener {
             if (videoView.isPlaying) {
-                btnController.setImageResource(R.drawable.phoenix_video_play)
+                ivPlay.setImageResource(R.drawable.phoenix_video_play)
                 videoView.pause()
                 mHandler.removeMessages(UPDATE_PROGRESS)
-                ivPlay.visibility = View.VISIBLE
+                ivCenterPlay.visibility = View.VISIBLE
             } else {
-                btnController.setImageResource(R.drawable.phoenix_video_pause)
+                ivPlay.setImageResource(R.drawable.phoenix_video_pause)
                 videoView.start()
                 mHandler.sendEmptyMessage(UPDATE_PROGRESS)
                 if (state == 0) state = 1
-                ivPlay.visibility = View.GONE
+                ivCenterPlay.visibility = View.GONE
             }
         }
 
         videoView.setOnCompletionListener {
-            btnController.setImageResource(R.drawable.phoenix_video_play)
-            ivPlay.visibility = View.VISIBLE
+            ivPlay.setImageResource(R.drawable.phoenix_video_play)
+            ivCenterPlay.visibility = View.VISIBLE
             llController.visibility = View.GONE
         }
 
@@ -247,7 +244,7 @@ class PhoenixVideoView : RelativeLayout {
                     videoView.pause()
                     videoView.seekTo(0)
                     seekbarProgress.progress = 0
-                    btnController.setImageResource(R.drawable.phoenix_video_play)
+                    ivPlay.setImageResource(R.drawable.phoenix_video_play)
                     updateTextViewFormat(tvCurrentProgress, 0)
                     this.removeMessages(UPDATE_PROGRESS)
                 } else {

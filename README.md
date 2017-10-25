@@ -130,6 +130,10 @@ public static final int TYPE_BROWSER_PICTURE = 0x000003;
 
 ## 更新日志
 
+扫描二维码下载，或用手机浏览器输入这个网址:  https://fir.im/phoenix。
+
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/apk.png"/>
+
 ## 贡献代码
 
 欢迎加入改进本项目

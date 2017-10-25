@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
-import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -28,7 +27,6 @@ import com.guoxiaoxing.phoenix.picker.ui.BaseFragment
 import com.guoxiaoxing.phoenix.picker.ui.camera.OnPictureEditListener
 import com.guoxiaoxing.phoenix.picker.ui.editor.PictureEditFragment
 import com.guoxiaoxing.phoenix.picker.util.*
-import com.guoxiaoxing.phoenix.picker.widget.photoview.OnPhotoTapListener
 import com.guoxiaoxing.phoenix.picker.widget.photoview.PhotoView
 import com.guoxiaoxing.phoenix.picker.widget.videoview.PhoenixVideoView
 import kotlinx.android.synthetic.main.fragment_preview.*
@@ -337,35 +335,46 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
             val mediaEntity = allMediaList[position]
             val mimeType = mediaEntity.mimeType
-            val eqVideo: Boolean
+            val isVideo: Boolean
             if (TextUtils.isEmpty(mimeType)) {
-                eqVideo = mediaEntity.fileType == MimeType.ofVideo()
+                isVideo = mediaEntity.fileType == MimeType.ofVideo()
             } else {
-                eqVideo = mimeType.startsWith(PhoenixConstant.VIDEO)
+                isVideo = mimeType.startsWith(PhoenixConstant.VIDEO)
             }
 
-            if (eqVideo) {
+            val path = if (TextUtils.isEmpty(mediaEntity.finalPath))
+                mediaEntity.localPath
+            else
+                mediaEntity.finalPath
+
+            if (isVideo) {
                 preview_video.visibility = View.VISIBLE
                 preview_image.visibility = View.GONE
+
+                preview_video.register(activity)
+                preview_video.setVideoPath(path)
+                preview_video.seekTo(100)
+
+                preview_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                    override fun onPageScrollStateChanged(state: Int) {
+                        if (state == ViewPager.SCROLL_STATE_DRAGGING) {
+                            preview_video.onPause()
+                        }else{
+                            preview_video.onResume()
+                        }
+                    }
+
+                    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                    }
+
+                    override fun onPageSelected(position: Int) {
+                    }
+
+                })
             } else {
                 preview_video.visibility = View.GONE
                 preview_image.visibility = View.VISIBLE
-            }
 
-            val path = mediaEntity.finalPath
-            val isGif = MimeType.isGif(mimeType)
-            // 压缩过的gif就不是gif了
-            if (isGif && !mediaEntity.isCompressed) {
-                val gifOptions = RequestOptions()
-                        .override(480, 800)
-                        .priority(Priority.HIGH)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                Glide.with(this@PreviewFragment)
-                        .asGif()
-                        .load(path)
-                        .apply(gifOptions)
-                        .into(preview_image)
-            } else {
                 val options = RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .override(480, 800)
@@ -375,18 +384,6 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                         .apply(options)
                         .into(preview_image)
             }
-
-            preview_image.setOnPhotoTapListener(object : OnPhotoTapListener {
-                override fun onPhotoTap(view: ImageView, x: Float, y: Float) {
-                    activity.finish()
-                    activity.overridePendingTransition(0, R.anim.phoenix_activity_out)
-                }
-            })
-
-            preview_video.register(activity)
-            preview_video.setVideoPath(path)
-            preview_video.seekTo(100)
-
             container.addView(contentView, 0)
             return contentView
         }

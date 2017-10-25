@@ -286,7 +286,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
     private fun detemineDisPlayOrientation(): Boolean {
         val cameraInfo = Camera.CameraInfo()
         Camera.getCameraInfo(mCameraID, cameraInfo)
-        val displayOrientation = cameraInfo.orientation
+        val displayOrientation = 90
         mCameraParameter.setmDisplayOrientation(displayOrientation)
         return try {
             mCamera.setDisplayOrientation(mCameraParameter.getmDisplayOrientation())
