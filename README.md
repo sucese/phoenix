@@ -136,7 +136,7 @@ public static final int TYPE_BROWSER_PICTURE = 0x000003;
 
 ## 贡献代码
 
-欢迎加入改进本项目
+欢迎加入改进本项目、
 
 ## License
 
