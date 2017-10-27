@@ -11,17 +11,17 @@
 
 [中文文档](https://github.com/guoxiaoxing/phoenix/blob/master/README_CN.md)
 
-Image/video selection, editing and compression is a common requirement in the business, and Phoenix fully implements these features and provides 
-elegant invocation styles. The core function of Phoenix is based on the Kotlin implementation, which is based on the Java implementation and 
-facilitates the calls between Kotlin and Java.
+Picture/video selection, editing and compression is a common requirement in the daily development, Phoenix fully implements these features and provides 
+an elegant way of calling. The core function of Phoenix is implemented by Kotlin and the outer interface is implemented by Java, so it's easy to use
+between Kotlin and Java.
 
 **Feature**
 
-- Functions are independent of each other, and the implementation of each function depends on the agreed interface.
-- High level of UI customization, built-in four color schemes, developers can customize their own UI through simple configuration of simple style files.
-- The convenience of invocation, the ability to turn on a function requires only the invocation of the enableXXX(true) method, which is obtained in the MediaEntity.
+- The implementation of each function depends on the agreed interface，the functions are independent of each other.
+- Built-in four color schemes, developers can also customize their own UI through simple configuration of simple style files.
+- Use  the enableXXX(true) method to turn on a function and get the result from the MediaEntity.
 - Support for RxJava, each feature provides synchronous and asynchronous implementations for developers to make use of RxJava for functional composition and nesting.
-- Support for runtime permission
+- Support for runtime permission.
 
 <p align="center">
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/play_1.gif" height="400"/>
@@ -79,13 +79,13 @@ Add the dependency
 
 ```
 //Picture/video selection, preview, edit and take photos
-compile 'com.github.guoxiaoxing.phoenix:phoenix-ui:0.0.12'
+compile 'com.github.guoxiaoxing.phoenix:phoenix-ui:0.0.13'
 
-//Optional - image compression, open function: Phoenix, with (). EnableCompress (true), obtain results: MediaEntity. GetCompressPath ()
-compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-picture:0.0.12'
+//Optional - image compression, open function: Phoenix,with().enableCompress(true), obtain results: MediaEntity.getCompressPath()
+compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-picture:0.0.13'
 
-//Optional - video compression, open function: Phoenix, with (). EnableCompress (true), obtain results: MediaEntity. GetCompressPath ()
-compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-video:0.0.12'
+//Optional - video compression, open function: Phoenix,with().enableCompress(true), obtain results: MediaEntity.getCompressPath()
+compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-video:0.0.13'
 ```
 
 ### Start
