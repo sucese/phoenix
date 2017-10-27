@@ -36,6 +36,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
 
     compile 'org.aspectj:aspectjrt:1.7.3'
+    compile 'com.googlecode.mp4parser:isoparser:1.0.6'
+
     compile "com.github.guoxiaoxing.phoenix:phoenix-core:$rootProject.ext.phoenixCoreVersion"
 //    compile project(':phoenix-core')
 }
