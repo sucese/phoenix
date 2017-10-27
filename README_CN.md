@@ -74,7 +74,7 @@ allprojects {
 添加依赖
 
 ```
-//图片/视频选择、预览、编辑与拍照
+//图片/视频选择、拍照、图片/视频预览
 compile 'com.github.guoxiaoxing.phoenix:phoenix-ui:0.0.12'
 
 //选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
@@ -114,9 +114,20 @@ Phoenix.with()
             public void onPickFailed(String errorMessage) {
 
             }
-        })//start开启功能，TYPE_PICK_MEDIA - 选择图片/视频/音频 TYPE_TAKE_PICTURE - 拍照
-        .start(MainActivity.this, PhoenixOption.TYPE_PICK_MEDIA);
+        }).start(MainActivity.this, PhoenixOption.TYPE_PICK_MEDIA);
 ```
+
+最后的start()方法用来完成启动某项功能，根据type不同启动不同的功能，具体含义如下：
+
+```
+//功能 - 选择图片/视频/音频
+public static final int TYPE_PICK_MEDIA = 0x000001;
+//功能 - 拍照
+public static final int TYPE_TAKE_PICTURE = 0x000002;
+//功能 - 预览
+public static final int TYPE_BROWSER_PICTURE = 0x000003;
+```
+
 ## 更新日志
 
 扫描二维码下载Demo，或用手机浏览器输入这个网址:  https://fir.im/phoenix
