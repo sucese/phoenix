@@ -122,9 +122,11 @@ Phoenix.with()
 
 ## Update
 
+[Change log](https://github.com/guoxiaoxing/phoenix/wiki/Change-log)
+
 Scan the qr code to download the Demo or enter the site with your mobile browser:  https://fir.im/phoenix
 
-Note: firs.im downloads are full if you can download [Demo](https://github.com/guoxiaoxing/phoenix/raw/master/art/Phoenix.apk) from github
+Note: you can also download the [demo](https://github.com/guoxiaoxing/phoenix/raw/master/art/Phoenix.apk) from github.
 
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/apk.png"/>
 
