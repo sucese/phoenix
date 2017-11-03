@@ -9,7 +9,8 @@
 
 >The one-stop solution for image/video selection, editing and compression on the Android platform.
 
-[中文文档](https://github.com/guoxiaoxing/phoenix/blob/master/README_CN.md)
+- [中文文档](https://github.com/guoxiaoxing/phoenix/blob/master/README_CN.md)
+- [更多关于图片视频处理技术的文章](https://github.com/guoxiaoxing/phoenix/blob/master/doc/目录.md)
 
 Picture/video selection, editing and compression is a common requirement in the daily development, Phoenix fully implements these features and provides 
 an elegant way of calling. The core function of Phoenix is implemented by Kotlin and the outer interface is implemented by Java, so it's easy to use
