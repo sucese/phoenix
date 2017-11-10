@@ -36,7 +36,7 @@ class CropDetailView(val view: View) : ViewTreeObserver.OnPreDrawListener {
     }
 
     fun setRestoreTextStatus(restore: Boolean) {
-        var color = if (restore) R.color.green else R.color.white_f
+        var color = if (restore) R.color.green else R.color.white
         color = MatrixUtils.getResourceColor(view.context, color)
         mRestoreView.setTextColor(color)
     }

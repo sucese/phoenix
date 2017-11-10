@@ -36,7 +36,7 @@
                 android:id="@+id/iv_play"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/phoenix_video_play" />
+                android:src="@drawable/phoenix_video_play_center" />
 
             <TextView
                 android:id="@+id/tv_currentProgress"

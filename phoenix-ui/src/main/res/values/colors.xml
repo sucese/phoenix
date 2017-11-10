@@ -17,31 +17,13 @@
     <color name="color_gray_4">#E0DBDBDB</color>
     <color name="color_gray_5">#999999</color>
 
-    <!--活力橙-->
-    <color name="default_color_primary">#333333</color>
-    <color name="default_color_primary_dark">#333333</color>
-    <color name="default_color_accent">#333333</color>
+    <color name="theme_color_black">#333333</color>
+    <color name="theme_color_red">#FF4040</color>
+    <color name="theme_color_orange">#FF571A</color>
+    <color name="theme_color_blue">#538EEB</color>
 
-    <!--中国红-->
-    <color name="red_color_primary">#FF4040</color>
-    <color name="red_color_primary_dark">#FF4040</color>
-    <color name="red_color_accent">#DF4135</color>
-
-    <!--青春橙-->
-    <color name="orange_color_primary">#FF571A</color>
-    <color name="orange_color_primary_dark">#FF571A</color>
-    <color name="orange_color_accent">#FF571A</color>
-
-    <!--天空蓝-->
-    <color name="blue_color_primary">#538EEB</color>
-    <color name="blue_color_primary_dark">#538EEB</color>
-    <color name="blue_color_accent">#538EEB</color>
-
-    <color name="editor_line_space">#444444</color>
-    <color name="bg_33">#333333</color>
-    <color name="bg_black">#000</color>
-    <color name="white_f">#fff</color>
     <color name="green">#1ad42f</color>
+    <color name="editor_line_space">#444444</color>
     <color name="transparent_6f">#6f000000</color>
     <array name="color_seeds">
         <item>#ffffff</item>

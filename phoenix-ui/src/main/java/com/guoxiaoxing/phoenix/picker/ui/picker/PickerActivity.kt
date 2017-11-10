@@ -3,6 +3,7 @@ package com.guoxiaoxing.phoenix.picker.ui.picker
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
@@ -54,7 +55,6 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     private var allFolderList: MutableList<MediaFolder> = ArrayList()
 
     private var isAnimation = false
-    private var previewTextColor: Int = 0
     private lateinit var folderWindow: FolderPopWindow
     private lateinit var animation: Animation
 
@@ -89,7 +89,8 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LightStatusBarUtils.setLightStatusBar(this, statusFont)
+        ToolbarUtil.setColorNoTranslucent(this, themeColor)
+        LightStatusBarUtils.setLightStatusBar(this, false)
         if (!RxBus.default.isRegistered(this)) {
             RxBus.default.register(this)
         }
@@ -123,17 +124,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      * init views
      */
     private fun setupView() {
-        previewTextColor = AttrsUtils.getTypeValueColor(this, R.attr.phoenix_picker_preview_text_color)
-
-        isNumberComplete(numComplete)
-
-        rl_bottom.visibility = if (selectionMode == PhoenixConstant.SINGLE) View.GONE else View.VISIBLE
-        if (fileType == MimeType.ofAudio()) {
-            pickTvPreview.visibility = View.GONE
-        } else {
-            pickTvPreview.visibility = if (fileType == PhoenixConstant.TYPE_VIDEO) View.GONE else View.VISIBLE
-        }
-
+        isNumberComplete()
         pickTvTitle.text = if (fileType == MimeType.ofAudio()) getString(R.string.picture_all_audio) else getString(R.string.picture_camera_roll)
         pick_tv_empty.text = if (fileType == MimeType.ofAudio()) getString(R.string.picture_audio_empty) else getString(R.string.picture_empty)
         StringUtils.tempTextFont(pick_tv_empty, fileType)
@@ -167,7 +158,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         pickAdapter.setPickMediaList(mediaList)
         changeImageNumber(mediaList)
 
-        mediaLoader = MediaLoader(this, fileType, isGif, videoSecond.toLong())
+        mediaLoader = MediaLoader(this, fileType, isGif, videoFilterTime.toLong())
         rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(object : Observer<Boolean> {
                     override fun onSubscribe(d: Disposable) {}
@@ -192,15 +183,8 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      * none number style
      */
     @SuppressLint("StringFormatMatches")
-    private fun isNumberComplete(numComplete: Boolean) {
-        pickTvOk.text = if (numComplete)
-            getString(R.string.picture_done_front_num, 0, maxSelectNum)
-        else
-            getString(R.string.picture_please_select)
-
-        if (!numComplete) {
-            animation = AnimationUtils.loadAnimation(this, R.anim.phoenix_window_in)
-        }
+    private fun isNumberComplete() {
+        pickTvOk.text = getString(R.string.picture_please_select)
         animation = AnimationUtils.loadAnimation(this, R.anim.phoenix_window_in)
     }
 
@@ -280,7 +264,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
             val eqImg = !TextUtils.isEmpty(pictureType) && pictureType.startsWith(PhoenixConstant.IMAGE)
 
             // 如果设置了图片最小选择数量，则判断是否满足条件
-            if (minSelectNum > 0 && selectionMode == PhoenixConstant.MULTIPLE) {
+            if (minSelectNum > 0) {
                 if (size < minSelectNum) {
                     @SuppressLint("StringFormatMatches") val str = if (eqImg)
                         getString(R.string.picture_min_img_num, minSelectNum)
@@ -357,17 +341,12 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         val result = ArrayList<MediaEntity>()
         val mediaType = MimeType.getFileType(pictureType)
         DebugUtil.i(TAG, "mediaType:" + mediaType)
-        if (selectionMode == PhoenixConstant.SINGLE) {
-            result.add(mediaEntity)
-            handlerResult(result)
-        } else {
-            val selectedImages = pickAdapter.getPickMediaList()
-            ImagesObservable.instance.saveLocalMedia(previewImages)
-            bundle.putSerializable(PhoenixConstant.KEY_SELECT_LIST, selectedImages as Serializable)
-            bundle.putInt(PhoenixConstant.KEY_POSITION, position)
-            startActivity(PreviewActivity::class.java, bundle)
-            overridePendingTransition(R.anim.phoenix_activity_in, 0)
-        }
+        val selectedImages = pickAdapter.getPickMediaList()
+        ImagesObservable.instance.saveLocalMedia(previewImages)
+        bundle.putSerializable(PhoenixConstant.KEY_SELECT_LIST, selectedImages as Serializable)
+        bundle.putInt(PhoenixConstant.KEY_POSITION, position)
+        startActivity(PreviewActivity::class.java, bundle)
+        overridePendingTransition(R.anim.phoenix_activity_in, 0)
     }
 
     /**
@@ -377,45 +356,26 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      */
     @SuppressLint("StringFormatMatches")
     fun changeImageNumber(selectImages: List<MediaEntity>) {
-        // 如果选择的视频没有预览功能
-        val pictureType = if (selectImages.isNotEmpty())
-            selectImages[0].mimeType
-        else
-            ""
-        if (fileType == MimeType.ofAudio()) {
-            pickTvPreview.visibility = View.GONE
-        } else {
-            val isVideo = MimeType.isVideo(pictureType)
-            pickTvPreview.visibility = if (isVideo) View.GONE else View.VISIBLE
-        }
         val enable = selectImages.isNotEmpty()
         if (enable) {
             pickLlOk.isEnabled = true
             pickLlOk.alpha = 1F
             pickTvPreview.isEnabled = true
-            pickTvPreview.setTextColor(previewTextColor)
-            if (numComplete) {
-                pickTvOk.text = getString(R.string.picture_done_front_num, selectImages.size, maxSelectNum)
-            } else {
-                if (!isAnimation) {
-                    pickTvNumber.startAnimation(animation)
-                }
-                pickTvNumber.visibility = View.VISIBLE
-                pickTvNumber.text = selectImages.size.toString() + ""
-                pickTvOk.text = getString(R.string.picture_completed)
-                isAnimation = false
+            pickTvPreview.setTextColor(ContextCompat.getColor(mContext, R.color.green))
+            if (!isAnimation) {
+                pickTvNumber.startAnimation(animation)
             }
+            pickTvNumber.visibility = View.VISIBLE
+            pickTvNumber.text = "(" + selectImages.size.toString() + ")"
+            pickTvOk.text = getString(R.string.picture_completed)
+            isAnimation = false
         } else {
             pickLlOk.isEnabled = false
             pickLlOk.alpha = 0.7F
             pickTvPreview.isEnabled = false
             pickTvPreview.setTextColor(ContextCompat.getColor(mContext, R.color.color_gray_1))
-            if (numComplete) {
-                pickTvOk.text = getString(R.string.picture_done_front_num, 0, maxSelectNum)
-            } else {
-                pickTvNumber.visibility = View.GONE
-                pickTvOk.text = getString(R.string.picture_please_select)
-            }
+            pickTvNumber.visibility = View.GONE
+            pickTvOk.text = getString(R.string.picture_please_select)
         }
     }
 

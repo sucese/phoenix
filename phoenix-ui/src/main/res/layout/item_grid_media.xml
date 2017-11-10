@@ -22,7 +22,7 @@
             android:id="@+id/tv_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/phoenix_checked_style"
+            android:background="@drawable/phoenix_selector_check"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="12sp" />

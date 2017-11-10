@@ -1,44 +1,41 @@
 # <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/logo.png" alt="Phoenix" width="40" height="40" align="bottom" /> Phoenix
 
-## Introduce
+## 功能介绍
 
 [![Jitpack version](https://jitpack.io/v/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
 [![License](https://img.shields.io/github/license/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
 [![Stars](https://img.shields.io/github/stars/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
 [![Forks](https://img.shields.io/github/forks/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
 
->The one-stop solution for image/video selection, editing and compression on the Android platform.
+>Android平台上图片/视频选择，编辑和压缩的一站式解决方案。
 
-- [中文文档](https://github.com/guoxiaoxing/phoenix/blob/master/README_CN.md)
-- [更多关于图片视频处理技术的文章](https://github.com/guoxiaoxing/phoenix/blob/master/doc/目录.md)
+- [English Document](https://github.com/guoxiaoxing/phoenix/blob/master/README_EN.md)
 
-Picture/video selection, editing and compression is a common requirement in the daily development, Phoenix fully implements these features and provides 
-an elegant way of calling. The core function of Phoenix is implemented by Kotlin and the outer interface is implemented by Java, so it's easy to use
-between Kotlin and Java.
+图片/视频的选择，编辑和压缩是日常开发中的常见需求，Phoenix完整的实现了这些功能，并提供了优雅的调用方式。Phoenix的核心功能基于Kotlin实现，外层接口基于Java实现，方便Kotlin与Java双方的调用。
 
-**Feature**
+**特点**
 
-- The implementation of each function depends on the agreed interface，the functions are independent of each other.
-- Built-in four color schemes, developers can also customize their own UI through simple configuration of simple style files.
-- Use  the enableXXX(true) method to turn on a function and get the result from the MediaEntity.
-- Support for RxJava, each feature provides synchronous and asynchronous implementations for developers to make use of RxJava for functional composition and nesting.
-- Support for runtime permission.
+- 功能相互独立，各个功能的实现依赖于约定的接口，彼此互不依赖，开发者不必为了引入某一个功能而带入一堆依赖。
+- 高度的UI定制性，内置四种配色方案，开发者也可以通过简单的style文件的简单配置来定制自己的UI。
+- 调用的便利性，开启某个功能只需要调用enableXXX(true)方法，结果统一在MediaEntity里获取。
+- RxJava良好的支持性，每个功能都提供了同步与异步两种实现，便于开发者利用RxJava进行功能的组合与嵌套。
+- 良好的版本兼容性，运行时权限等内容都做了兼容性处理。
 
 <p align="center">
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/play_1.gif" height="400"/>
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/play_2.gif" height="400"/>
 </p>
 
-**Function**
+**功能**
 
-- Take pictures
-- Picture select
-- Picture preview
-- Picture compression
-- Picture marking, mapping, smearing and cutting
-- Video select
-- Video preview
-- Video compression
+- 拍照
+- 图片选择
+- 图片预览
+- 图片压缩
+- 图片标记、贴图、涂抹与裁剪
+- 视频选择
+- 视频预览
+- 视频压缩
 
 <p align="center">
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/function_1.png" height="400"/>
@@ -47,12 +44,12 @@ between Kotlin and Java.
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/function_4.png" height="400"/>
 </p>
 
-**Theme**
+**主题**
 
-- Default theme
-- Orange theme
-- Red theme
-- Blue theme
+- 默认主题
+- 橙色主图
+- 红色主题
+- 蓝色主题
 
 <p align="center">
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/theme_default.png" height="400"/>
@@ -61,11 +58,11 @@ between Kotlin and Java.
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/theme_blue.png" height="400"/>
 </p>
 
-## Getting started
+## 快递开始
 
-### Dependency
+### 添加依赖
 
-Add it in your root build.gradle at the end of repositories
+在项目根目录build.gradle文件里添加
 
 ```
 allprojects {
@@ -76,40 +73,38 @@ allprojects {
 }
 ```
 
-Add the dependency
+添加依赖
 
 ```
-//Picture/video selection, preview, edit and take photos
+//图片/视频选择、预览、编辑与拍照
 compile 'com.github.guoxiaoxing.phoenix:phoenix-ui:0.0.13'
 
-//Optional - image compression, open function: Phoenix,with().enableCompress(true)
-//obtain results: MediaEntity.getCompressPath()
+//选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
 compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-picture:0.0.13'
 
-//Optional - video compression, open function: Phoenix,with().enableCompress(true)
-//obtain results: MediaEntity.getCompressPath()
+//选填 - 视频压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
 compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-video:0.0.13'
 ```
 
-### Start
+### 调用功能
 
 ```java
 Phoenix.with()
-        .theme(PhoenixOption.THEME_DEFAULT)// theme
-        .fileType(MimeType.ofAll())//Display file type images, video, image and video
-        .maxPickNumber(10)// Maximum number of options
-        .minPickNumber(0)// Minimum number of options
-        .spanCount(4)// The number of displays per row
-        .pickMode(PhoenixConstant.MULTIPLE)// Multiple choice/option
-        .enablePreview(true)// Whether to open a preview
-        .enableCamera(true)// Whether to open a photo or not
-        .enableAnimation(true)// Select interface image to click effect
-        .enableCompress(true)// Open compression
-        .thumbnailHeight(160)// Select the image height of the interface
-        .thumbnailWidth(160)// Select interface image width
-        .enableClickSound(true)//ƒ Whether to turn on the click sound
-        .pickedMediaList(pickList)// Selected image data
-        .videoSecond(0)//Show video within seconds
+        .themeColor(PhoenixOption.THEME_DEFAULT)// 主题
+        .fileType(MimeType.ofAll())//显示的文件类型图片、视频、图片和视频
+        .maxPickNumber(10)// 最大选择数量
+        .minPickNumber(0)// 最小选择数量
+        .spanCount(4)// 每行显示个数
+        .pickMode(PhoenixConstant.MULTIPLE)// 多选/单选
+        .enablePreview(true)// 是否开启预览
+        .enableCamera(true)// 是否开启拍照
+        .enableAnimation(true)// 选择界面图片点击效果
+        .enableCompress(true)// 是否开启压缩
+        .thumbnailHeight(160)// 选择界面图片高度
+        .thumbnailWidth(160)// 选择界面图片宽度
+        .enableClickSound(true)//ƒ 是否开启点击声音
+        .pickedMediaList(pickList)// 已选图片数据
+        .videoFilterTime(0)//显示多少秒以内的视频
         .onPickerListener(new OnPickerListener() {
             @Override
             public void onPickSuccess(List<MediaEntity> pickList) {
@@ -121,23 +116,20 @@ Phoenix.with()
             public void onPickFailed(String errorMessage) {
 
             }
-        })//Open function, TYPE_PICK_MEDIA - select the image/video/audio TYPE_TAKE_PICTURE - to take a picture
+        })//start开启功能，TYPE_PICK_MEDIA - 选择图片/视频/音频 TYPE_TAKE_PICTURE - 拍照
         .start(MainActivity.this, PhoenixOption.TYPE_PICK_MEDIA);
 ```
+## 更新日志
 
-## Update
+扫描二维码下载Demo，或用手机浏览器输入这个网址:  https://fir.im/phoenix
 
-[Change log](https://github.com/guoxiaoxing/phoenix/wiki/Change-log)
-
-Scan the qr code to download the Demo or enter the site with your mobile browser:  https://fir.im/phoenix
-
-Note: you can also download the [demo](https://github.com/guoxiaoxing/phoenix/raw/master/art/Phoenix.apk) from github.
+注：fir.im下载次数如果满了可以去[仓库](https://github.com/guoxiaoxing/phoenix/raw/master/art/Phoenix.apk)下载
 
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/apk.png"/>
 
-## Contribute
+## 贡献代码
 
-Welcome to join in the improvement of this project.
+欢迎加入改进本项目。
 
 ## License
 

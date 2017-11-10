@@ -1,190 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--默认样式-->
-    <style name="phoenix.style.default" parent="@style/PhoenixTheme">
-        <!--标题栏背景色-->
-        <item name="colorPrimary">@color/default_color_primary</item>
-        <!--状态栏背景色-->
-        <item name="colorPrimaryDark">@color/default_color_primary_dark</item>
-        <!--标题栏 - 背景色-->
-        <item name="phoenix_toolbar_background_color">@color/default_color_primary_dark</item>
-        <!--标题栏 - 返回键图标-->
-        <item name="phoenix_arrow_left">@drawable/phoenix_arrow_left</item>
-        <!--标题栏 - 下拉箭头-->
-        <item name="phoenix_arrow_down">@drawable/phoenix_arrow_down</item>
-        <!--标题栏 - 上拉箭头-->
-        <item name="phoenix_arrow_up">@drawable/phoenix_arrow_up</item>
-        <!--标题栏 - 标题文字颜色-->
-        <item name="phoenix_title_text_color">@color/white</item>
-        <!--标题栏 - 右边文字颜色-->
-        <item name="phoenix_right_text_color">@color/white</item>
-
-        <!--选择界面 - 勾选样式-->
-        <item name="phoenix_checked_style">@drawable/phoenix_selector_checkbox</item>
-        <!--选择界面 - 勾选数字模式-->
-        <item name="phoenix_style_check_number_mode">false</item>
-        <!--选择界面 - 选择图片样式0/9-->
-        <item name="phoenix_style_number_complete">false</item>
-        <!--选择界面 - 底部背景色-->
-        <item name="phoenix_picker_bottom_background">@color/default_color_primary</item>
-        <!--选择界面 - 预览文字颜色-->
-        <item name="phoenix_picker_preview_text_color">@color/green</item>
-        <!--选择界面 - 已完成文字颜色-->
-        <item name="phoenix_picker_complete_text_color">@color/default_color_primary</item>
-        <!--选择界面 - 已完成数字样式-->
-        <item name="phoenix_picker_complete_number_style">@drawable/phoenix_red_number_oval</item>
-        <!--选择界面 - 相册文件夹列表选中图标-->
-        <item name="phoenix_picker_folder_checked_icon">@drawable/phoenix_shape_orange_oval</item>
-
-        <!--预览界面 - 标题文字颜色-->
-        <item name="phoenix_preview_title_text_color">@color/white</item>
-        <!--预览界面 - 已完成文字颜色-->
-        <item name="phoenix_preview_complete_text_color">@color/default_color_primary</item>
-        <!--预览界面 - 底部背景色-->
-        <item name="phoenix_preview_bottom_background">@color/default_color_primary</item>
-        <!--预览界面 - 状态栏颜色-->
-        <item name="phoenix_preview_status_color">@color/default_color_primary</item>
-    </style>
-
-    <!--中国红主题-->
-    <style name="phoenix.style.red" parent="@style/PhoenixTheme">
-        <!--标题栏背景色-->
-        <item name="colorPrimary">@color/red_color_primary</item>
-        <!--状态栏背景色-->
-        <item name="colorPrimaryDark">@color/red_color_primary</item>
-        <!--标题栏 - 背景色-->
-        <item name="phoenix_toolbar_background_color">@color/red_color_primary</item>
-        <!--标题栏 - 返回键图标-->
-        <item name="phoenix_arrow_left">@drawable/phoenix_arrow_left</item>
-        <!--标题栏 - 下拉箭头-->
-        <item name="phoenix_arrow_down">@drawable/phoenix_arrow_down</item>
-        <!--标题栏 - 上拉箭头-->
-        <item name="phoenix_arrow_up">@drawable/phoenix_arrow_up</item>
-        <!--标题栏 - 标题文字颜色-->
-        <item name="phoenix_title_text_color">@color/white</item>
-        <!--标题栏 - 右边文字颜色-->
-        <item name="phoenix_right_text_color">@color/white</item>
-
-        <!--选择界面 - 勾选样式-->
-        <item name="phoenix_checked_style">@drawable/phoenix_selector_checkbox</item>
-        <!--选择界面 - 勾选数字模式-->
-        <item name="phoenix_style_check_number_mode">false</item>
-        <!--选择界面 - 选择图片样式0/9-->
-        <item name="phoenix_style_number_complete">false</item>
-        <!--选择界面 - 底部背景色-->
-        <item name="phoenix_picker_bottom_background">@color/white</item>
-        <!--选择界面 - 预览文字颜色-->
-        <item name="phoenix_picker_preview_text_color">@color/red_color_primary</item>
-        <!--选择界面 - 已完成文字颜色-->
-        <item name="phoenix_picker_complete_text_color">@color/default_color_primary</item>
-        <!--选择界面 - 已完成数字样式-->
-        <item name="phoenix_picker_complete_number_style">@drawable/phoenix_red_number_oval</item>
-        <!--选择界面 - 相册文件夹列表选中图标-->
-        <item name="phoenix_picker_folder_checked_icon">@drawable/phoenix_shape_orange_oval</item>
-
-        <!--预览界面 - 标题文字颜色-->
-        <item name="phoenix_preview_title_text_color">@color/white</item>
-        <!--预览界面 - 已完成文字颜色-->
-        <item name="phoenix_preview_complete_text_color">@color/white</item>
-        <!--预览界面 - 底部背景色-->
-        <item name="phoenix_preview_bottom_background">@color/white</item>
-        <!--预览界面 - 状态栏颜色-->
-        <item name="phoenix_preview_status_color">@color/default_color_primary</item>
-    </style>
-
-    <!--青春橙主题-->
-    <style name="phoenix.style.orange" parent="@style/PhoenixTheme">
-        <!--标题栏背景色-->
-        <item name="colorPrimary">@color/orange_color_primary</item>
-        <!--状态栏背景色-->
-        <item name="colorPrimaryDark">@color/orange_color_primary</item>
-        <!--标题栏 - 背景色-->
-        <item name="phoenix_toolbar_background_color">@color/orange_color_primary</item>
-        <!--标题栏 - 返回键图标-->
-        <item name="phoenix_arrow_left">@drawable/phoenix_arrow_left</item>
-        <!--标题栏 - 下拉箭头-->
-        <item name="phoenix_arrow_down">@drawable/phoenix_arrow_down</item>
-        <!--标题栏 - 上拉箭头-->
-        <item name="phoenix_arrow_up">@drawable/phoenix_arrow_up</item>
-        <!--标题栏 - 标题文字颜色-->
-        <item name="phoenix_title_text_color">@color/white</item>
-        <!--标题栏 - 右边文字颜色-->
-        <item name="phoenix_right_text_color">@color/white</item>
-
-        <!--选择界面 - 勾选样式-->
-        <item name="phoenix_checked_style">@drawable/phoenix_selector_checkbox</item>
-        <!--选择界面 - 勾选数字模式-->
-        <item name="phoenix_style_check_number_mode">false</item>
-        <!--选择界面 - 选择图片样式0/9-->
-        <item name="phoenix_style_number_complete">false</item>
-        <!--选择界面 - 底部背景色-->
-        <item name="phoenix_picker_bottom_background">@color/white</item>
-        <!--选择界面 - 预览文字颜色-->
-        <item name="phoenix_picker_preview_text_color">@color/orange_color_primary</item>
-        <!--选择界面 - 已完成文字颜色-->
-        <item name="phoenix_picker_complete_text_color">@color/default_color_primary</item>
-        <!--选择界面 - 已完成数字样式-->
-        <item name="phoenix_picker_complete_number_style">@drawable/phoenix_red_number_oval</item>
-        <!--选择界面 - 相册文件夹列表选中图标-->
-        <item name="phoenix_picker_folder_checked_icon">@drawable/phoenix_shape_orange_oval</item>
-
-        <!--预览界面 - 标题文字颜色-->
-        <item name="phoenix_preview_title_text_color">@color/white</item>
-        <!--预览界面 - 已完成文字颜色-->
-        <item name="phoenix_preview_complete_text_color">@color/white</item>
-        <!--预览界面 - 底部背景色-->
-        <item name="phoenix_preview_bottom_background">@color/white</item>
-        <!--预览界面 - 状态栏颜色-->
-        <item name="phoenix_preview_status_color">@color/default_color_primary</item>
-    </style>
-
-    <!--天空蓝主题-->
-    <style name="picker.style.blue" parent="@style/PhoenixTheme">
-        <!--标题栏背景色-->
-        <item name="colorPrimary">@color/blue_color_primary</item>
-        <!--状态栏背景色-->
-        <item name="colorPrimaryDark">@color/blue_color_primary</item>
-        <!--标题栏 - 背景色-->
-        <item name="phoenix_toolbar_background_color">@color/blue_color_primary</item>
-        <!--标题栏 - 返回键图标-->
-        <item name="phoenix_arrow_left">@drawable/phoenix_arrow_left</item>
-        <!--标题栏 - 下拉箭头-->
-        <item name="phoenix_arrow_down">@drawable/phoenix_arrow_down</item>
-        <!--标题栏 - 上拉箭头-->
-        <item name="phoenix_arrow_up">@drawable/phoenix_arrow_up</item>
-        <!--标题栏 - 标题文字颜色-->
-        <item name="phoenix_title_text_color">@color/white</item>
-        <!--标题栏 - 右边文字颜色-->
-        <item name="phoenix_right_text_color">@color/white</item>
-
-        <!--选择界面 - 勾选样式-->
-        <item name="phoenix_checked_style">@drawable/phoenix_selector_checkbox</item>
-        <!--选择界面 - 勾选数字模式-->
-        <item name="phoenix_style_check_number_mode">false</item>
-        <!--选择界面 - 选择图片样式0/9-->
-        <item name="phoenix_style_number_complete">false</item>
-        <!--选择界面 - 底部背景色-->
-        <item name="phoenix_picker_bottom_background">@color/white</item>
-        <!--选择界面 - 预览文字颜色-->
-        <item name="phoenix_picker_preview_text_color">@color/blue_color_primary</item>
-        <!--选择界面 - 已完成文字颜色-->
-        <item name="phoenix_picker_complete_text_color">@color/default_color_primary</item>
-        <!--选择界面 - 已完成数字样式-->
-        <item name="phoenix_picker_complete_number_style">@drawable/phoenix_red_number_oval</item>
-        <!--选择界面 - 相册文件夹列表选中图标-->
-        <item name="phoenix_picker_folder_checked_icon">@drawable/phoenix_shape_orange_oval</item>
-
-        <!--预览界面 - 标题文字颜色-->
-        <item name="phoenix_preview_title_text_color">@color/white</item>
-        <!--预览界面 - 已完成文字颜色-->
-        <item name="phoenix_preview_complete_text_color">@color/white</item>
-        <!--预览界面 - 底部背景色-->
-        <item name="phoenix_preview_bottom_background">@color/white</item>
-        <!--预览界面 - 状态栏颜色-->
-        <item name="phoenix_preview_status_color">@color/default_color_primary</item>
-    </style>
-
     <style name="theme_activity" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
@@ -282,7 +98,7 @@
     </style>
 
     <style name="style_full_screen" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
+        <!-- Customize ythemeColorheme here. -->
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
@@ -300,7 +116,7 @@
     </style>
 
     <style name="PictureEditTheme" parent="@style/PhoenixTheme">
-        <item name="colorPrimary">@color/default_color_primary</item>
+        <item name="colorPrimary">@color/theme_color_black</item>
         <item name="android:windowBackground">@color/transparent_6f</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowFullscreen">true</item>

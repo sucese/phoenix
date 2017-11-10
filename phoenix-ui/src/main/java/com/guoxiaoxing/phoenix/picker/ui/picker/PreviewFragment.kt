@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import com.bumptech.glide.Glide
-import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.guoxiaoxing.phoenix.R
@@ -97,15 +96,10 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         }
         screenWidth = ScreenUtil.getScreenWidth(activity)
 
-        val status_color = AttrsUtils.getTypeValueColor(activity, R.attr.phoenix_preview_status_color)
-        ToolbarUtil.setColorNoTranslucent(activity, status_color)
-        LightStatusBarUtils.setLightStatusBar(activity, previewStatusFont)
+        ToolbarUtil.setColorNoTranslucent(activity, themeColor)
+        LightStatusBarUtils.setLightStatusBar(activity, false)
 
-        preview_tv_ok_text.text = if (numComplete)
-            getString(R.string.picture_done_front_num, 0, maxSelectNum)
-        else
-            getString(R.string.picture_please_select)
-        preview_tv_ok_number.isSelected = checkNumberMode
+        preview_tv_ok_text.text = getString(R.string.picture_please_select)
 
         ll_check.setOnClickListener(this)
         pickTvBack.setOnClickListener(this)
@@ -125,11 +119,6 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         if (allMediaList.isNotEmpty()) {
             val mediaEntity = allMediaList[position]
             index = mediaEntity.getPosition()
-            if (checkNumberMode) {
-                preview_tv_ok_number.isSelected = true
-                tv_check.text = mediaEntity.number.toString() + ""
-                notifyCheckChanged(mediaEntity)
-            }
         }
 
         adapter = SimpleFragmentAdapter()
@@ -146,10 +135,6 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                 val mediaEntity = allMediaList[position]
                 index = mediaEntity.getPosition()
                 if (!previewEggs) {
-                    if (checkNumberMode) {
-                        tv_check.text = mediaEntity.number.toString() + ""
-                        notifyCheckChanged(mediaEntity)
-                    }
                     onImageChecked(position)
                 }
                 if (mediaEntity.fileType == MimeType.ofImage()) {
@@ -177,36 +162,9 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                 if (positionOffsetPixels < screenWidth / 2) {
                     mediaEntity = allMediaList[position]
                     tv_check.isSelected = isSelected(mediaEntity)
-                    if (checkNumberMode) {
-                        num = mediaEntity.number
-                        tv_check.text = num.toString() + ""
-                        notifyCheckChanged(mediaEntity)
-                        onImageChecked(position)
-                    }
                 } else {
                     mediaEntity = allMediaList[position + 1]
                     tv_check.isSelected = isSelected(mediaEntity)
-                    if (checkNumberMode) {
-                        num = mediaEntity.number
-                        tv_check.text = num.toString() + ""
-                        notifyCheckChanged(mediaEntity)
-                        onImageChecked(position + 1)
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * 选择按钮更新
-     */
-    private fun notifyCheckChanged(imageBean: MediaEntity) {
-        if (checkNumberMode) {
-            tv_check.text = ""
-            for (mediaEntity in pickMediaList) {
-                if (mediaEntity.localPath == imageBean.localPath) {
-                    imageBean.number = mediaEntity.number
-                    tv_check.text = imageBean.number.toString()
                 }
             }
         }
@@ -260,22 +218,14 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         if (enable) {
             preview_ll_ok.isEnabled = true
             preview_ll_ok.alpha = 1F
-            if (numComplete) {
-                preview_tv_ok_text.text = getString(R.string.picture_done_front_num, pickMediaList.size, maxSelectNum)
-            } else {
-                preview_tv_ok_number.visibility = View.VISIBLE
-                preview_tv_ok_number.text = pickMediaList.size.toString() + ""
-                preview_tv_ok_text.text = getString(R.string.picture_completed)
-            }
+            preview_tv_ok_number.visibility = View.VISIBLE
+            preview_tv_ok_number.text = pickMediaList.size.toString() + ""
+            preview_tv_ok_text.text = getString(R.string.picture_completed)
         } else {
             preview_ll_ok.isEnabled = false
             preview_ll_ok.alpha = 0.7F
-            if (numComplete) {
-                preview_tv_ok_text.text = getString(R.string.picture_done_front_num, 0, maxSelectNum)
-            } else {
-                preview_tv_ok_number.visibility = View.INVISIBLE
-                preview_tv_ok_text.text = getString(R.string.picture_please_select)
-            }
+            preview_tv_ok_number.visibility = View.INVISIBLE
+            preview_tv_ok_text.text = getString(R.string.picture_please_select)
         }
         updatePickerActivity(refresh)
     }
@@ -412,7 +362,6 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                         if (mediaEntity.localPath == image.localPath) {
                             pickMediaList.remove(mediaEntity)
                             subSelectPosition()
-                            notifyCheckChanged(mediaEntity)
                             break
                         }
                     }
@@ -421,9 +370,6 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                     VoiceUtils.playVoice(mContext, openClickSound)
                     pickMediaList.add(image)
                     image.number = pickMediaList.size
-                    if (checkNumberMode) {
-                        tv_check.text = image.number.toString() + ""
-                    }
                 }
                 onPickNumberChange(true)
             }
@@ -434,7 +380,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
             val eqImg = !TextUtils.isEmpty(pictureType) && pictureType.startsWith(PhoenixConstant.IMAGE)
 
             // 如果设置了图片最小选择数量，则判断是否满足条件
-            if (minSelectNum > 0 && selectionMode == PhoenixConstant.MULTIPLE) {
+            if (minSelectNum > 0) {
                 if (size < minSelectNum) {
                     @SuppressLint("StringFormatMatches") val str = if (eqImg)
                         getString(R.string.picture_min_img_num, minSelectNum)

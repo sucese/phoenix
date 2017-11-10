@@ -36,7 +36,6 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     private val allMediaList: MutableList<MediaEntity> = ArrayList()
     private val pickMediaList: MutableList<MediaEntity> = ArrayList()
     private val enablePreview: Boolean
-    private var selectMode = PhoenixConstant.MULTIPLE
     private val is_checked_num: Boolean
     private val enableVoice: Boolean
     private val overrideWidth: Int
@@ -47,7 +46,6 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     var isExceedMax: Boolean = false
 
     init {
-        this.selectMode = config.pickMode
         this.enableCamera = config.isEnableCamera
         this.maxSelectNum = config.maxPickNumber
         this.enablePreview = config.isEnablePreview
@@ -114,10 +112,6 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             image.position = contentHolder.adapterPosition
             val path = image.finalPath
             val pictureType = image.mimeType
-            contentHolder.itemView.ll_check.visibility = if (selectMode == PhoenixConstant.SINGLE)
-                View.GONE
-            else
-                View.VISIBLE
             if (is_checked_num) {
                 notifyCheckChanged(contentHolder, image)
             }

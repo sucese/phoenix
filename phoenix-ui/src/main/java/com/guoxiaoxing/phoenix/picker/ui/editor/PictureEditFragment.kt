@@ -93,7 +93,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (Build.VERSION.SDK_INT >= 21) {
-            this.activity.window.statusBarColor = MatrixUtils.getResourceColor(activity, R.color.bg_black);
+            this.activity.window.statusBarColor = MatrixUtils.getResourceColor(activity, R.color.black);
         }
         //transparent necessary
         activity.window.setBackgroundDrawableResource(R.color.transparent)

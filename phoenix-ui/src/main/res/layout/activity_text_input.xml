@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="@string/editor_cancel"
-            android:textColor="@color/white_f"
+            android:textColor="@color/white"
             android:textSize="18sp" />
 
         <TextView
@@ -43,7 +43,7 @@
         android:gravity="top"
         android:inputType="none"
         android:maxLength="30"
-        android:textColor="@color/white_f"
+        android:textColor="@color/white"
         android:textCursorDrawable="@null"
         android:textSize="25sp"
         tools:text="测试文本" />

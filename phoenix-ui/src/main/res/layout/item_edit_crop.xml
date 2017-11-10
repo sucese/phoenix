@@ -28,7 +28,7 @@
             android:layout_marginLeft="18dp"
             android:contentDescription="@string/app_name"
             android:padding="8dp"
-            android:src="@drawable/alert_cancel" />
+            android:src="@drawable/phoenix_alert_cancel" />
 
         <TextView
             android:id="@+id/tvCropRestore"
@@ -38,7 +38,7 @@
             android:gravity="center"
             android:padding="8dp"
             android:text="@string/editor_restore"
-            android:textColor="@color/white_f"
+            android:textColor="@color/white"
             android:textSize="16sp" />
 
         <ImageView
@@ -50,6 +50,6 @@
             android:layout_marginRight="18dp"
             android:contentDescription="@string/app_name"
             android:padding="8dp"
-            android:src="@drawable/alert_selected" />
+            android:src="@drawable/phoenix_alert_selected" />
     </RelativeLayout>
 </LinearLayout>

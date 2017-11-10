@@ -23,7 +23,6 @@
             android:layout_height="12dp"
             android:layout_alignParentRight="true"
             android:layout_margin="4dp"
-            android:background="?attr/phoenix_picker_folder_checked_icon"
             android:visibility="invisible" />
 
     </RelativeLayout>

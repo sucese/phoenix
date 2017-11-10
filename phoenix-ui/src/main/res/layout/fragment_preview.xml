@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/black"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="?attr/phoenix_toolbar_background_color">
+        android:background="@color/theme_color_black">
 
         <ImageView
             android:id="@+id/pickTvBack"
@@ -16,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:src="?attr/phoenix_arrow_left" />
+            android:src="@drawable/phoenix_arrow_left" />
 
         <TextView
             android:id="@+id/pickTvTitle"
@@ -27,7 +28,8 @@
             android:layout_marginLeft="16dp"
             android:ellipsize="end"
             android:maxEms="11"
-            android:textColor="?attr/phoenix_preview_title_text_color"
+            tools:text="预览"
+            android:textColor="@color/white"
             android:textSize="18sp" />
 
         <LinearLayout
@@ -44,7 +46,7 @@
                 android:id="@+id/tv_check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?attr/phoenix_checked_style"
+                android:background="@drawable/phoenix_selector_check"
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
@@ -60,7 +62,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:background="?attr/phoenix_preview_bottom_background"
+        android:background="@color/theme_color_black"
         android:gravity="center_vertical">
 
         <LinearLayout
@@ -87,14 +89,14 @@
                     android:gravity="center"
                     android:padding="4dp"
                     android:text="@string/text_edit"
-                    android:textColor="?attr/phoenix_picker_preview_text_color" />
+                    android:textColor="@color/green" />
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/preview_ll_ok"
-            android:layout_width="wrap_content"
+            android:layout_width="75dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -110,6 +112,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="@string/picture_please_select"
                 android:textColor="@color/white"
                 android:textSize="@dimen/phoenix_text_14" />

@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
                 .maxPickNumber(10)// 最大选择数量
                 .minPickNumber(0)// 最小选择数量
                 .spanCount(4)// 每行显示个数
-                .pickMode(PhoenixConstant.MULTIPLE)// 多选/单选
                 .enablePreview(true)// 是否开启预览
                 .enableCamera(true)// 是否开启拍照
                 .enableAnimation(true)// 选择界面图片点击效果
@@ -110,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
                 .thumbnailWidth(160)// 选择界面图片宽度
                 .enableClickSound(false)// 是否开启点击声音
                 .pickedMediaList(mMediaAdapter.getData())// 已选图片数据
-                .videoSecond(0)//显示多少秒以内的视频
+                .videoFilterTime(0)//显示多少秒以内的视频
                 .onPickerListener(new OnPickerListener() {
                     @Override
                     public void onPickSuccess(List<MediaEntity> pickList) {

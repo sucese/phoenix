@@ -18,7 +18,6 @@ import com.guoxiaoxing.phoenix.core.model.MimeType
 import com.guoxiaoxing.phoenix.core.util.ReflectUtils
 import com.guoxiaoxing.phoenix.picker.Phoenix
 import com.guoxiaoxing.phoenix.picker.model.MediaFolder
-import com.guoxiaoxing.phoenix.picker.util.AttrsUtils
 import com.guoxiaoxing.phoenix.picker.util.DateUtils
 import com.guoxiaoxing.phoenix.picker.util.DoubleUtils
 import com.guoxiaoxing.phoenix.picker.util.PictureFileUtils
@@ -37,26 +36,20 @@ open class BaseActivity : FragmentActivity() {
     protected lateinit var mContext: Context
     protected lateinit var option: PhoenixOption
 
+    protected var themeColor: Int = 0
     protected var spanCount: Int = 0
     protected var maxSelectNum: Int = 0
     protected var minSelectNum: Int = 0
-    protected var selectionMode: Int = 0
     protected var fileType: Int = 0
-    protected var videoSecond: Int = 0
-    protected var compressMaxKB: Int = 0
-    protected var compressWidth: Int = 0
-    protected var compressHeight: Int = 0
-    protected var recordVideoSecond: Int = 0
+    protected var videoFilterTime: Int = 0
+    protected var recordVideoTime: Int = 0
     protected var isGif: Boolean = false
     protected var enableCamera: Boolean = false
     protected var enablePreview: Boolean = false
     protected var enableCompress: Boolean = false
     protected var checkNumMode: Boolean = false
     protected var openClickSound: Boolean = false
-    protected var numComplete: Boolean = false
     protected var previewEggs: Boolean = false
-    protected var statusFont: Boolean = false
-    protected var previewStatusFont: Boolean = false
     protected var savePath: String = ""
 
     protected var originalPath: String = ""
@@ -67,52 +60,10 @@ open class BaseActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         option = Phoenix.with()
-        when (option.theme) {
-            PhoenixOption.THEME_DEFAULT -> setTheme(R.style.phoenix_style_default)
-            PhoenixOption.THEME_RED -> setTheme(R.style.phoenix_style_red)
-            PhoenixOption.THEME_ORANGE -> setTheme(R.style.phoenix_style_orange)
-            PhoenixOption.THEME_BLUE -> setTheme(R.style.picker_style_blue)
-        }
         super.onCreate(savedInstanceState)
         mContext = this
         setupConfig()
     }
-
-    /**
-     * 获取配置参数
-     */
-    private fun setupConfig() {
-        enableCamera = option.isEnableCamera
-        statusFont = AttrsUtils.getTypeValueBoolean(this, R.attr.phoenix_status_font_color)
-        previewStatusFont = AttrsUtils.getTypeValueBoolean(this, R.attr.phoenix_preview_status_font_color)
-        fileType = option.fileType
-        mediaList = option.pickedMediaList
-        if (mediaList == null) {
-            mediaList = ArrayList<MediaEntity>()
-        }
-        selectionMode = option.pickMode
-        if (selectionMode == PhoenixConstant.SINGLE) {
-            mediaList = ArrayList<MediaEntity>()
-        }
-        spanCount = option.spanCount
-        isGif = option.isEnableGif
-        maxSelectNum = option.maxPickNumber
-        minSelectNum = option.minPickNumber
-        enablePreview = option.isEnablePreview
-        checkNumMode = option.isPickNumberMode
-        openClickSound = option.isEnableClickSound
-        videoSecond = option.videoSecond
-        enableCompress = option.isEnableCompress
-        numComplete = AttrsUtils.getTypeValueBoolean(this, R.attr.phoenix_style_number_complete)
-        compressMaxKB = option.compressMaxSize
-        compressWidth = option.compressMaxWidth
-        compressHeight = option.compressMaxHeight
-        recordVideoSecond = option.recordVideoSecond
-        previewEggs = option.isPreviewEggs
-        onPickerListener = option.onPickerListener
-        savePath = option.savePath
-    }
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(PhoenixConstant.BUNDLE_CAMERA_PATH, savePath)
@@ -299,11 +250,6 @@ open class BaseActivity : FragmentActivity() {
      */
     protected fun onResult(images: MutableList<MediaEntity>) {
         dismissLoadingDialog()
-        if (enableCamera
-                && selectionMode == PhoenixConstant.MULTIPLE
-                && mediaList != null) {
-            images.addAll(mediaList)
-        }
         onPickerListener?.onPickSuccess(images)
         closeActivity()
     }
@@ -435,8 +381,23 @@ open class BaseActivity : FragmentActivity() {
         return path
     }
 
-    companion object {
-
-        private val TAG = "BaseActivity"
+    private fun setupConfig() {
+        themeColor = option.theme
+        enableCamera = option.isEnableCamera
+        fileType = option.fileType
+        mediaList = option.pickedMediaList
+        spanCount = option.spanCount
+        isGif = option.isEnableGif
+        maxSelectNum = option.maxPickNumber
+        minSelectNum = option.minPickNumber
+        enablePreview = option.isEnablePreview
+        checkNumMode = option.isPickNumberMode
+        openClickSound = option.isEnableClickSound
+        videoFilterTime = option.videoFilterTime
+        recordVideoTime = option.recordVideoTime
+        enableCompress = option.isEnableCompress
+        previewEggs = option.isPreviewEggs
+        onPickerListener = option.onPickerListener
+        savePath = option.savePath
     }
 }

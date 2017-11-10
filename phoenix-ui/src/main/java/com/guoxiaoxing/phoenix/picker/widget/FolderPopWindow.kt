@@ -48,8 +48,8 @@ class FolderPopWindow(private val context: Context, private val mimeType: Int) :
         this.isOutsideTouchable = true
         this.update()
         this.setBackgroundDrawable(ColorDrawable(Color.argb(123, 0, 0, 0)))
-        drawableUp = AttrsUtils.getTypeValuePopWindowImg(context, R.attr.phoenix_arrow_up)
-        drawableDown = AttrsUtils.getTypeValuePopWindowImg(context, R.attr.phoenix_arrow_down)
+        drawableUp = ContextCompat.getDrawable(context, R.drawable.phoenix_arrow_up)
+        drawableDown = ContextCompat.getDrawable(context, R.drawable.phoenix_arrow_down)
         animationIn = AnimationUtils.loadAnimation(context, R.anim.phoenix_album_show)
         animationOut = AnimationUtils.loadAnimation(context, R.anim.phoenix_album_dismiss)
         initView()

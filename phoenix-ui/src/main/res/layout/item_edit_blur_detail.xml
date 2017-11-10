@@ -12,5 +12,5 @@
         android:layout_height="18dp"
         android:layout_centerInParent="true"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/edit_image_brush_mosaic_btn"/>
+        android:src="@drawable/phoenix_edit_brush_mosaic_btn"/>
 </RelativeLayout>

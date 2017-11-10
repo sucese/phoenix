@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="?attr/phoenix_preview_bottom_background"
+        android:background="@color/theme_color_black"
         android:gravity="center_vertical">
 
         <TextView
@@ -29,12 +29,12 @@
             android:gravity="left|center"
             android:padding="12dp"
             android:text="@string/picture_preview"
-            android:textColor="?attr/phoenix_picker_preview_text_color"
+            android:textColor="@color/green"
             android:textSize="14sp" />
 
         <LinearLayout
             android:id="@+id/pickLlOk"
-            android:layout_width="wrap_content"
+            android:layout_width="75dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -51,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/picture_please_select"
+                android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="@dimen/phoenix_text_14" />
 

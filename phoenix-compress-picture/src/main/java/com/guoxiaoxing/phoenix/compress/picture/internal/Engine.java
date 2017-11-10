@@ -12,26 +12,29 @@ import java.io.IOException;
 
 class Engine {
 
-  private ExifInterface srcExif;
-  private File srcImg;
-  private File tagImg;
-  private int srcWidth;
-  private int srcHeight;
+  private int mFilterSize;
+  private ExifInterface mSourceExif;
+  private File mSourcePicture;
+  private File mTargetPicture;
+  private int mSourceWidth;
+  private int mSourceHeight;
 
-  Engine(File srcImg, File tagImg) throws IOException {
-    if (isJpeg(srcImg)) {
-      this.srcExif = new ExifInterface(srcImg.getAbsolutePath());
+  Engine(File sourcePicture, File targetPicture, int filterSize) throws IOException {
+    if (isJpeg(sourcePicture)) {
+      this.mSourceExif = new ExifInterface(sourcePicture.getAbsolutePath());
     }
-    this.tagImg = tagImg;
-    this.srcImg = srcImg;
+
+    this.mSourcePicture = sourcePicture;
+    this.mTargetPicture = targetPicture;
+    this.mFilterSize = filterSize;
 
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;
     options.inSampleSize = 1;
 
-    BitmapFactory.decodeFile(srcImg.getAbsolutePath(), options);
-    this.srcWidth = options.outWidth;
-    this.srcHeight = options.outHeight;
+    BitmapFactory.decodeFile(mSourcePicture.getAbsolutePath(), options);
+    this.mSourceWidth = options.outWidth;
+    this.mSourceHeight = options.outHeight;
   }
 
   private boolean isJpeg(File photo) {
@@ -41,39 +44,39 @@ class Engine {
   private int computeSize() {
     int mSampleSize;
 
-    srcWidth = srcWidth % 2 == 1 ? srcWidth + 1 : srcWidth;
-    srcHeight = srcHeight % 2 == 1 ? srcHeight + 1 : srcHeight;
+    mSourceWidth = mSourceWidth % 2 == 1 ? mSourceWidth + 1 : mSourceWidth;
+    mSourceHeight = mSourceHeight % 2 == 1 ? mSourceHeight + 1 : mSourceHeight;
 
-    srcWidth = srcWidth > srcHeight ? srcHeight : srcWidth;
-    srcHeight = srcWidth > srcHeight ? srcWidth : srcHeight;
+    mSourceWidth = mSourceWidth > mSourceHeight ? mSourceHeight : mSourceWidth;
+    mSourceHeight = mSourceWidth > mSourceHeight ? mSourceWidth : mSourceHeight;
 
-    double scale = ((double) srcWidth / srcHeight);
+    double scale = ((double) mSourceWidth / mSourceHeight);
 
     if (scale <= 1 && scale > 0.5625) {
-      if (srcHeight < 1664) {
+      if (mSourceHeight < 1664) {
         mSampleSize = 1;
-      } else if (srcHeight >= 1664 && srcHeight < 4990) {
+      } else if (mSourceHeight >= 1664 && mSourceHeight < 4990) {
         mSampleSize = 2;
-      } else if (srcHeight >= 4990 && srcHeight < 10240) {
+      } else if (mSourceHeight >= 4990 && mSourceHeight < 10240) {
         mSampleSize = 4;
       } else {
-        mSampleSize = srcHeight / 1280 == 0 ? 1 : srcHeight / 1280;
+        mSampleSize = mSourceHeight / 1280 == 0 ? 1 : mSourceHeight / 1280;
       }
     } else if (scale <= 0.5625 && scale > 0.5) {
-      mSampleSize = srcHeight / 1280 == 0 ? 1 : srcHeight / 1280;
+      mSampleSize = mSourceHeight / 1280 == 0 ? 1 : mSourceHeight / 1280;
     } else {
-      mSampleSize = (int) Math.ceil(srcHeight / (1280.0 / scale));
+      mSampleSize = (int) Math.ceil(mSourceHeight / (1280.0 / scale));
     }
 
     return mSampleSize;
   }
 
   private Bitmap rotatingImage(Bitmap bitmap) {
-    if (srcExif == null) return bitmap;
+    if (mSourceExif == null) return bitmap;
 
     Matrix matrix = new Matrix();
     int angle = 0;
-    int orientation = srcExif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+    int orientation = mSourceExif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
     switch (orientation) {
       case ExifInterface.ORIENTATION_ROTATE_90:
         angle = 90;
@@ -92,22 +95,28 @@ class Engine {
   }
 
   File compress() throws IOException {
+
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inSampleSize = computeSize();
 
-    Bitmap tagBitmap = BitmapFactory.decodeFile(srcImg.getAbsolutePath(), options);
+    Bitmap tagBitmap = BitmapFactory.decodeFile(mSourcePicture.getAbsolutePath(), options);
+
+    if (tagBitmap.getByteCount() < mFilterSize) {
+
+    }
+
+
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
     tagBitmap = rotatingImage(tagBitmap);
     tagBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
     tagBitmap.recycle();
 
-    FileOutputStream fos = new FileOutputStream(tagImg);
+    FileOutputStream fos = new FileOutputStream(mTargetPicture);
     fos.write(stream.toByteArray());
     fos.flush();
     fos.close();
     stream.close();
-
-    return tagImg;
+    return mTargetPicture;
   }
 }

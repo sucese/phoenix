@@ -23,15 +23,16 @@ public class PictureCompresser implements Handler.Callback {
     private static final int MSG_COMPRESS_START = 1;
     private static final int MSG_COMPRESS_ERROR = 2;
 
-    private File file;
-    private String savePath;
+    private File mFile;
+    private int mFilterSize;
+    private String mSavePath;
     private OnCompressListener onCompressListener;
-
     private Handler mHandler;
 
     private PictureCompresser(Builder builder) {
-        this.file = builder.file;
-        this.savePath = builder.savePath;
+        this.mFile = builder.file;
+        this.mSavePath = builder.savePath;
+        this.mFilterSize = builder.filterSize;
         this.onCompressListener = builder.onCompressListener;
         mHandler = new Handler(Looper.getMainLooper(), this);
     }
@@ -41,7 +42,7 @@ public class PictureCompresser implements Handler.Callback {
     }
 
     /**
-     * Returns a file with a cache audio name in the private cache directory.
+     * Returns a mFile with a cache audio name in the private cache directory.
      *
      * @param context A context.
      */
@@ -74,7 +75,7 @@ public class PictureCompresser implements Handler.Callback {
      */
     @Nullable
     private File getImageCacheDir(Context context, String cacheName) {
-        File cacheDir = new File(savePath);
+        File cacheDir = new File(mSavePath);
         File result = new File(cacheDir, cacheName);
         if (!result.mkdirs() && (!result.exists() || !result.isDirectory())) {
             // File wasn't able to create a directory, or the result exists but not a directory
@@ -88,8 +89,8 @@ public class PictureCompresser implements Handler.Callback {
      */
     @UiThread
     private void launch(final Context context) {
-        if (file == null && onCompressListener != null) {
-            onCompressListener.onError(new NullPointerException("image file cannot be null"));
+        if (mFile == null && onCompressListener != null) {
+            onCompressListener.onError(new NullPointerException("image mFile cannot be null"));
         }
 
         new Thread(new Runnable() {
@@ -98,7 +99,7 @@ public class PictureCompresser implements Handler.Callback {
                 try {
                     mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_START));
 
-                    File result = new Engine(file, getImageCacheFile(context)).compress();
+                    File result = new Engine(mFile, getImageCacheFile(context), mFilterSize).compress();
                     mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_SUCCESS, result));
                 } catch (IOException e) {
                     mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_ERROR, e));
@@ -108,11 +109,11 @@ public class PictureCompresser implements Handler.Callback {
     }
 
     /**
-     * start compress and return the file
+     * start compress and return the mFile
      */
     @WorkerThread
     private File get(final Context context) throws IOException {
-        return new Engine(file, getImageCacheFile(context)).compress();
+        return new Engine(mFile, getImageCacheFile(context), mFilterSize).compress();
     }
 
     @Override
@@ -134,7 +135,9 @@ public class PictureCompresser implements Handler.Callback {
     }
 
     public static class Builder {
+
         private Context context;
+        private int filterSize;
         private File file;
         private String savePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
         private OnCompressListener onCompressListener;
@@ -149,6 +152,11 @@ public class PictureCompresser implements Handler.Callback {
 
         public Builder load(File file) {
             this.file = file;
+            return this;
+        }
+
+        public Builder filterSize(int filterSize) {
+            this.filterSize = filterSize;
             return this;
         }
 

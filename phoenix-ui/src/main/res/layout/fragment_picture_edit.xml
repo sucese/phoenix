@@ -7,7 +7,7 @@
         android:id="@+id/layerActionView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_black">
+        android:background="@color/black">
 
         <com.guoxiaoxing.phoenix.picture.edit.widget.photoview.PhotoView
             android:id="@+id/photoView"

@@ -12,5 +12,5 @@
         android:layout_height="45dp"
         android:contentDescription="@string/app_name"
         android:padding="6dp"
-        android:src="@drawable/f77"/>
+        android:src="@drawable/phoenix_emoji_f77"/>
 </LinearLayout>

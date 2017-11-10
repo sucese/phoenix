@@ -36,7 +36,7 @@
             android:layout_marginRight="16dp"
             android:contentDescription="@string/app_name"
             android:padding="8dp"
-            android:src="@drawable/edit_image_revoke"/>
+            android:src="@drawable/phoenix_edit_revoke"/>
 
     </LinearLayout>
 

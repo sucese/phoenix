@@ -86,7 +86,7 @@ class PhoenixVideoView : RelativeLayout {
         videoPos = videoView.currentPosition
         videoView.stopPlayback()
         mHandler.removeMessages(UPDATE_PROGRESS)
-        ivPlay.setImageResource(R.drawable.phoenix_video_play)
+        ivPlay.setImageResource(R.drawable.phoenix_video_play_center)
     }
 
     fun onResume() {
@@ -134,7 +134,7 @@ class PhoenixVideoView : RelativeLayout {
 
         ivPlay.setOnClickListener {
             if (videoView.isPlaying) {
-                ivPlay.setImageResource(R.drawable.phoenix_video_play)
+                ivPlay.setImageResource(R.drawable.phoenix_video_play_center)
                 videoView.pause()
                 mHandler.removeMessages(UPDATE_PROGRESS)
                 ivCenterPlay.visibility = View.VISIBLE
@@ -148,7 +148,7 @@ class PhoenixVideoView : RelativeLayout {
         }
 
         videoView.setOnCompletionListener {
-            ivPlay.setImageResource(R.drawable.phoenix_video_play)
+            ivPlay.setImageResource(R.drawable.phoenix_video_play_center)
             ivCenterPlay.visibility = View.VISIBLE
             llController.visibility = View.GONE
         }
@@ -244,7 +244,7 @@ class PhoenixVideoView : RelativeLayout {
                     videoView.pause()
                     videoView.seekTo(0)
                     seekbarProgress.progress = 0
-                    ivPlay.setImageResource(R.drawable.phoenix_video_play)
+                    ivPlay.setImageResource(R.drawable.phoenix_video_play_center)
                     updateTextViewFormat(tvCurrentProgress, 0)
                     this.removeMessages(UPDATE_PROGRESS)
                 } else {

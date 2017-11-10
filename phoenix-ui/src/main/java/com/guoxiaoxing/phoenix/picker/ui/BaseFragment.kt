@@ -6,13 +6,11 @@ import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.PhoenixOption
-import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.listener.OnPickerListener
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
 import com.guoxiaoxing.phoenix.core.util.ReflectUtils
 import com.guoxiaoxing.phoenix.picker.Phoenix
-import com.guoxiaoxing.phoenix.picker.util.AttrsUtils
 import com.guoxiaoxing.phoenix.picker.widget.dialog.PhoenixLoadingDialog
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -35,27 +33,20 @@ open class BaseFragment : Fragment() {
     protected lateinit var mContext: Context
     protected lateinit var option: PhoenixOption
 
+    protected var themeColor: Int = 0
     protected var spanCount: Int = 0
     protected var maxSelectNum: Int = 0
     protected var minSelectNum: Int = 0
-    protected var selectionMode: Int = 0
     protected var fileType: Int = 0
-    protected var videoSecond: Int = 0
-    protected var compressMaxKB: Int = 0
-    protected var compressWidth: Int = 0
-    protected var compressHeight: Int = 0
-    protected var recordVideoSecond: Int = 0
-    protected var checkNumberMode: Boolean = false
+    protected var videoFilterTime: Int = 0
+    protected var recordVideoTime: Int = 0
     protected var isGif: Boolean = false
     protected var enableCamera: Boolean = false
     protected var enablePreview: Boolean = false
     protected var enableCompress: Boolean = false
     protected var checkNumMode: Boolean = false
     protected var openClickSound: Boolean = false
-    protected var numComplete: Boolean = false
     protected var previewEggs: Boolean = false
-    protected var statusFont: Boolean = false
-    protected var previewStatusFont: Boolean = false
     protected var savePath: String = ""
 
     protected var originalPath: String = ""
@@ -157,39 +148,24 @@ open class BaseFragment : Fragment() {
         activity.overridePendingTransition(0, R.anim.phoenix_activity_out)
     }
 
-    /**
-     * 获取配置参数
-     */
     private fun setupConfig() {
+        themeColor = option.theme
         enableCamera = option.isEnableCamera
-        statusFont = AttrsUtils.getTypeValueBoolean(activity, R.attr.phoenix_status_font_color)
-        previewStatusFont = AttrsUtils.getTypeValueBoolean(activity, R.attr.phoenix_preview_status_font_color)
         fileType = option.fileType
         mediaList = option.pickedMediaList
-        if (mediaList == null) {
-            mediaList = ArrayList<MediaEntity>()
-        }
-        selectionMode = option.pickMode
-        if (selectionMode == PhoenixConstant.SINGLE) {
-            mediaList = ArrayList<MediaEntity>()
-        }
         spanCount = option.spanCount
         isGif = option.isEnableGif
         maxSelectNum = option.maxPickNumber
         minSelectNum = option.minPickNumber
         enablePreview = option.isEnablePreview
-        checkNumberMode = option.isPickNumberMode
+        checkNumMode = option.isPickNumberMode
         openClickSound = option.isEnableClickSound
-        videoSecond = option.videoSecond
+        videoFilterTime = option.videoFilterTime
+        recordVideoTime = option.recordVideoTime
         enableCompress = option.isEnableCompress
-        numComplete = AttrsUtils.getTypeValueBoolean(activity, R.attr.phoenix_style_number_complete)
-        compressMaxKB = option.compressMaxSize
-        compressWidth = option.compressMaxWidth
-        compressHeight = option.compressMaxHeight
-        recordVideoSecond = option.recordVideoSecond
         previewEggs = option.isPreviewEggs
-        savePath = option.savePath
         onPickerListener = option.onPickerListener
+        savePath = option.savePath
     }
 
     private fun onResult(mediaList: List<MediaEntity>) {

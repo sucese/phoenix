@@ -9,7 +9,7 @@
         android:id="@+id/pickRlTitle"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="?attr/phoenix_toolbar_background_color"
+        android:background="@color/theme_color_black"
         android:gravity="center_vertical">
 
         <ImageView
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:padding="15dp"
-            android:src="?attr/phoenix_arrow_left" />
+            android:src="@drawable/phoenix_arrow_left" />
 
         <TextView
             android:id="@+id/pickTvTitle"
@@ -26,13 +26,13 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:drawablePadding="2dp"
-            android:drawableRight="?attr/phoenix_arrow_down"
+            android:drawableRight="@drawable/phoenix_arrow_down"
             android:ellipsize="end"
             android:gravity="center"
             android:maxEms="11"
             android:padding="6dp"
             android:text="@string/picture_camera_roll"
-            android:textColor="?attr/phoenix_title_text_color"
+            android:textColor="@color/white"
             android:textSize="17sp" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/picture_cancel"
-            android:textColor="?attr/phoenix_right_text_color"
+            android:textColor="@color/green"
             android:textSize="14sp" />
     </RelativeLayout>
 
