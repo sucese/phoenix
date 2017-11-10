@@ -349,7 +349,7 @@ public class PhoenixOption {
     }
 
     public void start(Context context, int type) {
-        Starter starter = ReflectUtils.loadStarter(ReflectUtils.SCPicker);
+        Starter starter = ReflectUtils.loadStarter(ReflectUtils.Phoenix);
         if (starter != null) {
             starter.start(context, type);
         }

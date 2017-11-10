@@ -32,7 +32,6 @@ import io.reactivex.schedulers.Schedulers
 import java.io.File
 import java.util.*
 
-
 open class BaseActivity : FragmentActivity() {
 
     protected lateinit var mContext: Context
@@ -214,7 +213,6 @@ open class BaseActivity : FragmentActivity() {
                         onResult(result)
                     }
                 })
-
     }
 
     /**

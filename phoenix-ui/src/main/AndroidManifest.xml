@@ -34,14 +34,6 @@
             android:name="com.guoxiaoxing.phoenix.picker.ui.BaseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.guoxiaoxing.phoenix.crop.ui.CropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name="com.guoxiaoxing.phoenix.crop.ui.MultiCropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
             android:name="com.guoxiaoxing.phoenix.picker.ui.camera.CameraActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
@@ -63,6 +55,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/theme_activity_text_input"
             android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
+
     </application>
 
 </manifest>

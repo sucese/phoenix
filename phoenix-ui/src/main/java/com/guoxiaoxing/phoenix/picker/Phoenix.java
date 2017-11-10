@@ -12,6 +12,7 @@ import com.guoxiaoxing.phoenix.picker.ui.picker.PickerActivity;
 import com.guoxiaoxing.phoenix.picker.ui.picker.PreviewActivity;
 import com.guoxiaoxing.phoenix.picker.util.DoubleUtils;
 
+
 public final class Phoenix implements Starter {
 
     private static volatile PhoenixOption option;

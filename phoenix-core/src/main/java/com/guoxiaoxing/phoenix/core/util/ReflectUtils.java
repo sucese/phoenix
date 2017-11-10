@@ -25,12 +25,12 @@ public class ReflectUtils {
     /**
      * 视频压缩
      */
-    public static final String VideoCompressProcessor = "com.guoxiaoxing.phoenix.compress.video.compress.VideoCompressProcessor";
+    public static final String VideoCompressProcessor = "com.guoxiaoxing.phoenix.compress.video.soft.VideoCompressProcessor";
 
     /**
      * 图片/视频选择
      */
-    public static final String SCPicker = "com.guoxiaoxing.phoenix.picker.Phoenix";
+    public static final String Phoenix = "com.guoxiaoxing.phoenix.picker.Phoenix";
 
     public static Processor loadProcessor(String className) {
         try {

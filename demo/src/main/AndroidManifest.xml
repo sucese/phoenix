@@ -16,5 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name="com.guoxiaoxing.phoenix.compress.video.soft.MediaRecorderActivity" />
     </application>
 </manifest>

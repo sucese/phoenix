@@ -127,13 +127,13 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             val gif = MimeType.isGif(pictureType)
             contentHolder.itemView.tv_isGif.visibility = if (gif) View.VISIBLE else View.GONE
             if (mimeType == MimeType.ofAudio()) {
-                contentHolder.itemView.tv_duration.visibility = View.VISIBLE
+                contentHolder.itemView.tvDuration.visibility = View.VISIBLE
                 val drawable = ContextCompat.getDrawable(context, R.drawable.phoenix_audio)
-                StringUtils.modifyTextViewDrawable(contentHolder.itemView.tv_duration, drawable, 0)
+                StringUtils.modifyTextViewDrawable(contentHolder.itemView.tvDuration, drawable, 0)
             } else {
                 val drawable = ContextCompat.getDrawable(context, R.drawable.phoenix_video_icon)
-                StringUtils.modifyTextViewDrawable(contentHolder.itemView.tv_duration, drawable, 0)
-                contentHolder.itemView.tv_duration.visibility = if (picture == PhoenixConstant.TYPE_VIDEO)
+                StringUtils.modifyTextViewDrawable(contentHolder.itemView.tvDuration, drawable, 0)
+                contentHolder.itemView.tvDuration.visibility = if (picture == PhoenixConstant.TYPE_VIDEO)
                     View.VISIBLE
                 else
                     View.GONE
@@ -143,7 +143,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             val h = width * 5
             contentHolder.itemView.tv_long_chart.visibility = if (height > h) View.VISIBLE else View.GONE
             val duration = image.duration
-            contentHolder.itemView.tv_duration.text = DateUtils.timeParse(duration)
+            contentHolder.itemView.tvDuration.text = DateUtils.timeParse(duration)
             if (mimeType == MimeType.ofAudio()) {
                 contentHolder.itemView.iv_picture.setImageResource(R.drawable.phoenix_audio_placeholder)
             } else {

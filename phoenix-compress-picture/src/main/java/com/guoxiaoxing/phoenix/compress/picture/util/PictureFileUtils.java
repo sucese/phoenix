@@ -39,7 +39,7 @@ public class PictureFileUtils {
     public static final String POSTFIX = ".JPEG";
     public static final String POST_VIDEO = ".mp4";
     public static final String POST_AUDIO = ".mp3";
-    public static final String APP_NAME = "SCPicker";
+    public static final String APP_NAME = "Phoenix";
     public static final String CAMERA_PATH = "/" + APP_NAME + "/CameraImage/";
     public static final String CAMERA_AUDIO_PATH = "/" + APP_NAME + "/CameraAudio/";
     public static final String CROP_PATH = "/" + APP_NAME + "/CropImage/";
@@ -409,7 +409,7 @@ public class PictureFileUtils {
             // 自定义保存目录
             path = new File(rootDir.getAbsolutePath() + directory_path);
         } else {
-            path = new File(rootDir.getAbsolutePath() + "/SCPicker");
+            path = new File(rootDir.getAbsolutePath() + "/Phoenix");
         }
         if (!path.exists())
             // 若不存在，创建目录，可以在应用启动的时候创建
@@ -472,7 +472,7 @@ public class PictureFileUtils {
     }
 
     /**
-     * set empty SCPicker Cache
+     * set empty Phoenix Cache
      *
      * @param mContext
      */
