@@ -48,16 +48,16 @@ Android Studio的CMake插件来进行JNI开发的方式，这是Android Studio 2
 
 1 首先在Android Studio创建项目时，选择添加C++支持，并选择C++ 11.
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/ffmpeg/ffmpeg_build_01.png"/>
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/ffmpeg/ffmpeg_build_02.png"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/ffmpeg/ffmpeg_build_01.png" width="500"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/ffmpeg/ffmpeg_build_02.png" width="500"/>
 
 2 然后创建出来的项目是这个样子的，比常规的项目多了cpp的源码目录，以及存放编译出来的so库的目录。
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/ffmpeg/ffmpeg_build_03.png"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/ffmpeg/ffmpeg_build_03.png" width="500"/>
 
 build.gradle也有些变化，cppFlags指定了我们使用的C++版本，CMakeLists.txt用来定制原生代码的。
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/ffmpeg/ffmpeg_build_04.png"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/ffmpeg/ffmpeg_build_04.png" width="500"/>
 
 我们可以来看下CMakeLists.txt里面的信息。
 
