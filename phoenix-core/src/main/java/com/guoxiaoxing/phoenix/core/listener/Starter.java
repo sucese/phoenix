@@ -1,6 +1,8 @@
 package com.guoxiaoxing.phoenix.core.listener;
 
-import android.content.Context;
+import android.app.Activity;
+
+import com.guoxiaoxing.phoenix.core.PhoenixOption;
 
 /**
  * For more information, you can visit https://github.com/guoxiaoxing or contact me by
@@ -10,6 +12,5 @@ import android.content.Context;
  * @since 2017/8/14 上午10:17
  */
 public interface Starter {
-
-    void start(Context context, int type);
+    void start(Activity activity, PhoenixOption option, int type, int requestCode);
 }

@@ -1,21 +1,17 @@
 package com.guoxiaoxing.phoenix.picker.adapter
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.guoxiaoxing.phoenix.R
+import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
+import com.guoxiaoxing.phoenix.picker.Phoenix
 import com.guoxiaoxing.phoenix.picker.model.MediaFolder
 import java.util.*
 
@@ -58,23 +54,10 @@ class PickerAlbumAdapter(private val mContext: Context) : RecyclerView.Adapter<P
         if (mimeType == MimeType.ofAudio()) {
             holder.first_image.setImageResource(R.drawable.phoenix_audio_placeholder)
         } else {
-            val options = RequestOptions()
-                    .placeholder(R.drawable.phoenix_placeholder)
-                    .centerCrop()
-                    .sizeMultiplier(0.5f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .override(160, 160)
-            Glide.with(holder.itemView.context)
-                    .asBitmap()
-                    .load(imagePath)
-                    .apply(options)
-                    .into(object : BitmapImageViewTarget(holder.first_image) {
-                        override fun setResource(resource: Bitmap?) {
-                            val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(mContext.resources, resource)
-                            circularBitmapDrawable.cornerRadius = 8f
-                            holder.first_image.setImageDrawable(circularBitmapDrawable)
-                        }
-                    })
+
+            Phoenix.config()
+                    .imageLoader
+                    .loadImage(holder.itemView.context, holder.first_image, imagePath, PhoenixConstant.IMAGE_PROCESS_TYPE_DEFAULT)
         }
         holder.image_num.text = "($imageNum)"
         holder.tv_folder_name.text = name

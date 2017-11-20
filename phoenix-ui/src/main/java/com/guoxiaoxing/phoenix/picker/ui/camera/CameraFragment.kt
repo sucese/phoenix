@@ -192,9 +192,7 @@ class CameraFragment : BaseFragment(), SurfaceHolder.Callback, Camera.PictureCal
         } else if (resId == R.id.camera_tv_cancel) {
             closeActivity()
         } else if (resId == R.id.camera_tv_compelete) {
-            val onPickerListener = option.onPickerListener
-            onPickerListener?.onPickSuccess(CameraActivity.cameraList)
-            activity.finish()
+            processMedia(CameraActivity.cameraList)
         } else if (resId == R.id.camera_iv_flash) {
             setFlashView()
             setupCamera()

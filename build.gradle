@@ -5,17 +5,20 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-rc2'
+        classpath 'com.android.tools.build:gradle:3.1.0-alpha03'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'com.novoda:bintray-release:0.7.0'
     }
 }
 
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://jitpack.io" }
         google()
+    }
+
+    tasks.withType(Javadoc).all {
+        enabled = false
     }
 }
 
@@ -24,8 +27,8 @@ task clean(type: Delete) {
 }
 
 ext {
-    phoenixVerson = '0.0.12'
-    phoenixCoreVersion = '0.0.12'
+    phoenixVerson = '1.0.1'
+    phoenixCoreVersion = '1.0.1'
 
     //android
     compileSdkVersion = 25

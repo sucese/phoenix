@@ -12,7 +12,6 @@ import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
-import com.guoxiaoxing.phoenix.picker.util.DebugUtil
 import java.io.File
 import java.util.*
 
@@ -34,44 +33,44 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                             PhoenixConstant.TYPE_ALL -> CursorLoader(
                                     activity,
                                     QUERY_URI,
-                                    PROJECTION_ALL,
+                                    PROJECTION,
                                     SELECTION_ALL,
                                     null,
                                     MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
                             PhoenixConstant.TYPE_IMAGE -> CursorLoader(
                                     activity,
                                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                    PROJECTION_IMAGE, if (isGif) CONDITION_GIF else CONDITION,
+                                    PROJECTION, if (isGif) CONDITION_GIF else CONDITION,
                                     if (isGif) SELECT_GIF else SELECT,
-                                    PROJECTION_IMAGE[0] + " DESC")
+                                    PROJECTION[0] + " DESC")
                             PhoenixConstant.TYPE_VIDEO -> CursorLoader(
                                     activity,
                                     MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                                    PROJECTION_VIDEO, if (videoS > 0)
+                                    PROJECTION, if (videoS > 0)
                                 DURATION + " <= ? and "
                                         + DURATION + "> 0"
                             else
                                 DURATION + "> 0", if (videoS > 0)
                                 arrayOf(videoS.toString())
                             else
-                                null, PROJECTION_VIDEO[0] + " DESC")
+                                null, PROJECTION[0] + " DESC")
                             else ->
                                 CursorLoader(
                                         activity, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                                        PROJECTION_AUDIO, if (videoS > 0)
+                                        PROJECTION, if (videoS > 0)
                                     DURATION + " <= ? and "
                                             + DURATION + ">" + AUDIO_DURATION
                                 else
                                     DURATION + "> " + AUDIO_DURATION, if (videoS > 0)
                                     arrayOf(videoS.toString())
                                 else
-                                    null, PROJECTION_AUDIO[0] + " DESC")
+                                    null, PROJECTION[0] + " DESC")
 
                         }
                         return cursorLoader
                     }
 
-                    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
+                    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor) {
 
                         if (data == null) {
                             return
@@ -86,27 +85,13 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                             if (count > 0) {
                                 data.moveToFirst()
                                 do {
-                                    val path = data.getString(data.getColumnIndexOrThrow(PROJECTION_IMAGE[1]))
+                                    val path = data.getString(data.getColumnIndexOrThrow(PROJECTION[1]))
                                     // 如原图路径不存在或者路径存在但文件不存在,就结束当前循环
                                     if (TextUtils.isEmpty(path) || !File(path).exists()) {
                                         continue
                                     }
-                                    val mimeType = data.getString(data.getColumnIndexOrThrow(PROJECTION_IMAGE[6]))
-                                    val eqImg = mimeType.startsWith(PhoenixConstant.IMAGE)
-                                    val duration = if (eqImg)
-                                        0
-                                    else
-                                        data.getInt(data.getColumnIndexOrThrow(PROJECTION_VIDEO[7]))
-                                    val w = if (eqImg)
-                                        data.getInt(data.getColumnIndexOrThrow(PROJECTION_IMAGE[4]))
-                                    else
-                                        0
-                                    val h = if (eqImg)
-                                        data.getInt(data.getColumnIndexOrThrow(PROJECTION_IMAGE[5]))
-                                    else
-                                        0
-                                    DebugUtil.i("media mime type:", mimeType)
-
+                                    val mimeType = data.getString(data.getColumnIndexOrThrow(PROJECTION[4]))
+                                    val duration = data.getLong(data.getColumnIndexOrThrow(PROJECTION[6]))
                                     var fileType = 0
                                     if (mimeType.startsWith(PhoenixConstant.AUDIO)) {
                                         fileType = MimeType.ofAudio()
@@ -115,14 +100,21 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                                     } else if (mimeType.startsWith(PhoenixConstant.VIDEO)) {
                                         fileType = MimeType.ofVideo()
                                     }
-
+                                    val size = data.getLong(data.getColumnIndexOrThrow(PROJECTION[5]))
+                                    val width = data.getInt(data.getColumnIndexOrThrow(PROJECTION[7]))
+                                    val height = data.getInt(data.getColumnIndexOrThrow(PROJECTION[8]))
+                                    val latitude = data.getDouble(data.getColumnIndexOrThrow(PROJECTION[9]))
+                                    val longitude = data.getDouble(data.getColumnIndexOrThrow(PROJECTION[10]))
                                     val image = MediaEntity.newBuilder()
                                             .localPath(path)
-                                            .duration(duration.toLong())
+                                            .duration(duration)
                                             .fileType(fileType)
                                             .mimeType(mimeType)
-                                            .width(w)
-                                            .height(h)
+                                            .size(size)
+                                            .width(width)
+                                            .height(height)
+                                            .latitude(latitude)
+                                            .longitude(longitude)
                                             .build()
 
                                     val folder = getImageFolder(path, imageFolders)
@@ -218,53 +210,17 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
         private val SELECTION_ALL_ARGS = arrayOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString(),
                 MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString())
 
-        /**
-         * 全部
-         */
-        private val PROJECTION_ALL = arrayOf(MediaStore.Files.FileColumns._ID,
-                MediaStore.MediaColumns.DATA,
-                MediaStore.MediaColumns.DATE_ADDED,
-                MediaStore.MediaColumns.DISPLAY_NAME,
-                MediaStore.MediaColumns.SIZE, DURATION,
-                MediaStore.MediaColumns.MIME_TYPE,
-                MediaStore.MediaColumns.WIDTH,
-                MediaStore.MediaColumns.HEIGHT)
-
-        /**
-         * 图片
-         */
-        private val PROJECTION_IMAGE = arrayOf(MediaStore.Images.Media._ID,
+        private val PROJECTION = arrayOf(MediaStore.Images.Media._ID,
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.DATE_ADDED,
+                MediaStore.Images.Media.MIME_TYPE,
+                MediaStore.Images.Media.SIZE,
+                MediaStore.Video.Media.DURATION,
                 MediaStore.Images.Media.WIDTH,
                 MediaStore.Images.Media.HEIGHT,
-                MediaStore.Images.Media.MIME_TYPE,
-                MediaStore.Images.Media.SIZE)
-
-        /**
-         * 视频
-         */
-        private val PROJECTION_VIDEO = arrayOf(MediaStore.Video.Media._ID,
-                MediaStore.Video.Media.DATA,
-                MediaStore.Video.Media.DISPLAY_NAME,
-                MediaStore.Video.Media.DATE_ADDED,
-                MediaStore.Video.Media.WIDTH,
-                MediaStore.Video.Media.HEIGHT,
-                MediaStore.Video.Media.MIME_TYPE,
-                MediaStore.Video.Media.DURATION)
-
-        /**
-         * 音频
-         */
-        private val PROJECTION_AUDIO = arrayOf(MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.DISPLAY_NAME,
-                MediaStore.Audio.Media.DATE_ADDED,
-                MediaStore.Audio.Media.IS_MUSIC,
-                MediaStore.Audio.Media.IS_PODCAST,
-                MediaStore.Audio.Media.MIME_TYPE,
-                MediaStore.Audio.Media.DURATION)
+                MediaStore.Images.Media.LATITUDE,
+                MediaStore.Images.Media.LONGITUDE)
 
         /**
          * 只查询图片条件

@@ -33,6 +33,14 @@ public final class PictureCompressProcessor implements Processor {
             throw new IllegalArgumentException("The onProcessorListener can not be null");
         }
 
+        if (mediaEntity.getSize() < phoenixOption.getCompressPictureFilterSize() * 1000) {
+            return mediaEntity;
+        }
+
+        if (!TextUtils.isEmpty(mediaEntity.getCompressPath())) {
+            return mediaEntity;
+        }
+
         String path;
         if(!TextUtils.isEmpty(mediaEntity.getEditPath())){
             path = mediaEntity.getEditPath();
@@ -42,6 +50,7 @@ public final class PictureCompressProcessor implements Processor {
         File file = new File(path);
         try {
             File compressFIle = PictureCompresser.with(context)
+                    .savePath(context.getCacheDir().getAbsolutePath())
                     .load(file)
                     .get();
             if (compressFIle != null) {
@@ -65,6 +74,16 @@ public final class PictureCompressProcessor implements Processor {
         if (onProcessorListener == null) {
             Log.d(TAG, "The onProcessorListener can not be null");
             throw new IllegalArgumentException("The onProcessorListener can not be null");
+        }
+
+        if (!TextUtils.isEmpty(mediaEntity.getCompressPath())) {
+            onProcessorListener.onSuccess(mediaEntity);
+            return;
+        }
+
+        if (mediaEntity.getSize() < phoenixOption.getCompressPictureFilterSize() * 1000) {
+            onProcessorListener.onSuccess(mediaEntity);
+            return;
         }
 
         String path;

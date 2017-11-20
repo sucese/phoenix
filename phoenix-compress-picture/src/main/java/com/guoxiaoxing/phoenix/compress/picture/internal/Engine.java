@@ -100,12 +100,6 @@ class Engine {
     options.inSampleSize = computeSize();
 
     Bitmap tagBitmap = BitmapFactory.decodeFile(mSourcePicture.getAbsolutePath(), options);
-
-    if (tagBitmap.getByteCount() < mFilterSize) {
-
-    }
-
-
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
     tagBitmap = rotatingImage(tagBitmap);

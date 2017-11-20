@@ -61,6 +61,7 @@ class CameraActivity : BaseActivity() {
     fun setupFragment() {
         val fragment = CameraFragment.newInstance()
         val bundle = Bundle()
+        bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
         bundle.putInt(PhoenixConstant.KEY_TAKE_PICTURE_MAX_NUM, maxCanTakePhotoNum)
         fragment.arguments = bundle
         supportFragmentManager
@@ -76,9 +77,7 @@ class CameraActivity : BaseActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        if (onPickerListener != null) {
-            onPickerListener?.onPickSuccess(cameraList)
-        }
+        processMedia(cameraList)
     }
 
     override fun showToast(msg: String) {

@@ -28,6 +28,7 @@ class PictureEditActivity : BaseActivity() {
 
         val pictureFragment = PictureEditFragment.newInstance()
         val bundle = Bundle()
+        bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
         bundle.putString(PhoenixConstant.KEY_FILE_PATH, path)
         pictureFragment.arguments = bundle
         supportFragmentManager.beginTransaction()

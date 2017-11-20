@@ -1,18 +1,21 @@
 package com.guoxiaoxing.phoenix.picker.ui
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.FragmentActivity
+import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.widget.Toast
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
-import com.guoxiaoxing.phoenix.core.listener.OnPickerListener
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
 import com.guoxiaoxing.phoenix.core.util.ReflectUtils
@@ -29,7 +32,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.io.File
-import java.util.*
 
 open class BaseActivity : FragmentActivity() {
 
@@ -56,10 +58,9 @@ open class BaseActivity : FragmentActivity() {
     protected val loadingDialog: PhoenixLoadingDialog by lazy { PhoenixLoadingDialog(mContext) }
 
     protected lateinit var mediaList: MutableList<MediaEntity>
-    protected var onPickerListener: OnPickerListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        option = Phoenix.with()
+        option = intent.getParcelableExtra(PhoenixConstant.PHOENIX_OPTION)
         super.onCreate(savedInstanceState)
         mContext = this
         setupConfig()
@@ -250,7 +251,11 @@ open class BaseActivity : FragmentActivity() {
      */
     protected fun onResult(images: MutableList<MediaEntity>) {
         dismissLoadingDialog()
-        onPickerListener?.onPickSuccess(images)
+        val intent = Intent()
+        val result = ArrayList<MediaEntity>(images.size)
+        result.addAll(images)
+        intent.putExtra(PhoenixConstant.PHOENIX_RESULT, result)
+        setResult(Activity.RESULT_OK, intent)
         closeActivity()
     }
 
@@ -381,6 +386,12 @@ open class BaseActivity : FragmentActivity() {
         return path
     }
 
+    protected fun tintDrawable(resId: Int, color: Int): Drawable {
+        val drawable = ContextCompat.getDrawable(this, resId)
+        DrawableCompat.setTint(drawable, color)
+        return drawable
+    }
+
     private fun setupConfig() {
         themeColor = option.theme
         enableCamera = option.isEnableCamera
@@ -397,7 +408,6 @@ open class BaseActivity : FragmentActivity() {
         recordVideoTime = option.recordVideoTime
         enableCompress = option.isEnableCompress
         previewEggs = option.isPreviewEggs
-        onPickerListener = option.onPickerListener
         savePath = option.savePath
     }
 }

@@ -1,11 +1,17 @@
 package com.guoxiaoxing.phoenix.picker.ui
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.widget.Toast
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.PhoenixOption
+import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.listener.OnPickerListener
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
@@ -53,14 +59,12 @@ open class BaseFragment : Fragment() {
     protected val loadingDialog: PhoenixLoadingDialog by lazy { PhoenixLoadingDialog(mContext) }
 
     protected lateinit var mediaList: MutableList<MediaEntity>
-    protected var onPickerListener: OnPickerListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mContext = context
-        option = Phoenix.with()
+        option = arguments.getParcelable(PhoenixConstant.PHOENIX_OPTION)
         setupConfig()
-        onPickerListener = option.onPickerListener
     }
 
     /**
@@ -148,6 +152,12 @@ open class BaseFragment : Fragment() {
         activity.overridePendingTransition(0, R.anim.phoenix_activity_out)
     }
 
+    protected fun tintDrawable(resId: Int, color: Int): Drawable {
+        val drawable = ContextCompat.getDrawable(activity, resId)
+        DrawableCompat.setTint(drawable, color)
+        return drawable
+    }
+
     private fun setupConfig() {
         themeColor = option.theme
         enableCamera = option.isEnableCamera
@@ -164,12 +174,21 @@ open class BaseFragment : Fragment() {
         recordVideoTime = option.recordVideoTime
         enableCompress = option.isEnableCompress
         previewEggs = option.isPreviewEggs
-        onPickerListener = option.onPickerListener
         savePath = option.savePath
     }
 
-    private fun onResult(mediaList: List<MediaEntity>) {
-        onPickerListener?.onPickSuccess(mediaList)
-        activity.finish()
+    /**
+     * return image result
+     * @param images images
+     */
+    protected fun onResult(images: List<MediaEntity>) {
+        dismissLoadingDialog()
+        val intent = Intent()
+        val result = ArrayList<MediaEntity>(images.size)
+        result.addAll(images)
+        intent.putExtra(PhoenixConstant.PHOENIX_RESULT, result)
+        activity.setResult(Activity.RESULT_OK, intent)
+        closeActivity()
     }
+
 }

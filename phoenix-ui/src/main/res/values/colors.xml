@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="blue">#7D7DFF</color>
+    <color name="orange">#FF571A</color>
+    <color name="green">#15af26</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="phoenix_transparent_black">#4D000000</color>
+    <color name="phoenix_transparent_white">#4DFFFFFF</color>
+    <color name="phoenix_transparent_gray">#BFCCCCCC</color>
+
     <color name="color_white_1">#FAFAFA</color>
     <color name="color_white_2">#F0FFFFFF</color>
     <color name="color_white_3">#EEEEEE</color>
@@ -22,7 +33,6 @@
     <color name="theme_color_orange">#FF571A</color>
     <color name="theme_color_blue">#538EEB</color>
 
-    <color name="green">#1ad42f</color>
     <color name="editor_line_space">#444444</color>
     <color name="transparent_6f">#6f000000</color>
     <array name="color_seeds">

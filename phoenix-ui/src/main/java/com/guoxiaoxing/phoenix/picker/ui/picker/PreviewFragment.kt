@@ -3,6 +3,7 @@ package com.guoxiaoxing.phoenix.picker.ui.picker
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
@@ -11,13 +12,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.guoxiaoxing.phoenix.R
+import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
+import com.guoxiaoxing.phoenix.picker.Phoenix
 import com.guoxiaoxing.phoenix.picker.model.EventEntity
 import com.guoxiaoxing.phoenix.picker.rx.bus.RxBus
 import com.guoxiaoxing.phoenix.picker.rx.bus.Subscribe
@@ -98,6 +98,17 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
         ToolbarUtil.setColorNoTranslucent(activity, themeColor)
         LightStatusBarUtils.setLightStatusBar(activity, false)
+
+        preview_rl_title.setBackgroundColor(themeColor)
+
+        if (themeColor == PhoenixOption.THEME_DEFAULT) {
+            preview_rl_bottom.setBackgroundColor(themeColor)
+
+        } else {
+            preview_tv_edit.setTextColor(themeColor)
+            preview_rl_bottom.setBackgroundColor(Color.WHITE)
+            preview_ll_ok.background = tintDrawable(R.drawable.phoenix_shape_complete_background, themeColor)
+        }
 
         preview_tv_ok_text.text = getString(R.string.picture_please_select)
 
@@ -324,15 +335,9 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
             } else {
                 preview_video.visibility = View.GONE
                 preview_image.visibility = View.VISIBLE
-
-                val options = RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .override(480, 800)
-                Glide.with(this@PreviewFragment)
-                        .asBitmap()
-                        .load(path)
-                        .apply(options)
-                        .into(preview_image)
+                Phoenix.config()
+                        .imageLoader
+                        .loadImage(context, preview_image, path, PhoenixConstant.IMAGE_PROCESS_TYPE_DEFAULT)
             }
             container.addView(contentView, 0)
             return contentView
@@ -390,10 +395,11 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                     return
                 }
             }
-            onResult(images)
+            updatePickResult(images)
         } else if (id == R.id.preview_ll_edit) {
             val pictureEditFragment = PictureEditFragment.newInstance()
             val bundle = Bundle()
+            bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
             val path = allMediaList[preview_pager.currentItem].localPath
             if (path != null) {
                 bundle.putString(PhoenixConstant.KEY_FILE_PATH, path)
@@ -413,7 +419,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         updatePickerActivity(true)
     }
 
-    fun onResult(images: List<MediaEntity>) {
+    fun updatePickResult(images: List<MediaEntity>) {
         RxBus.default.post(EventEntity(PhoenixConstant.FLAG_PREVIEW_COMPLETE, images))
         activity.finish()
         activity.overridePendingTransition(0, R.anim.phoenix_activity_out)

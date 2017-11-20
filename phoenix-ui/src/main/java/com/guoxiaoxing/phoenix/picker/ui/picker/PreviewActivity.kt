@@ -37,6 +37,7 @@ class PreviewActivity : BaseActivity() {
 
         val fragment = PreviewFragment.newInstance()
         val bundle = Bundle()
+        bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
         bundle.putInt(PhoenixConstant.KEY_POSITION, position)
         bundle.putParcelableArrayList(PhoenixConstant.KEY_SELECT_LIST, selectImages as ArrayList<out Parcelable>)
         bundle.putParcelableArrayList(PhoenixConstant.KEY_LIST, images as ArrayList<out Parcelable>)

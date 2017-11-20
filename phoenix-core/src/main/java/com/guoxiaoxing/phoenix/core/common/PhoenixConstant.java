@@ -11,6 +11,12 @@ import java.lang.annotation.Target;
 
 public final class PhoenixConstant {
 
+    public static final String PHOENIX_RESULT = "PHOENIX_RESULT";
+    public static final String PHOENIX_OPTION = "PHOENIX_OPTION";
+
+    public static final int IMAGE_PROCESS_TYPE_DEFAULT = 0x000000;
+
+
     public static final int REQUEST_CODE_PICTURE_EDIT = 0x000011;
     public static final int RESULT_CODE_PICTURE_EDIT = 0x000022;
 

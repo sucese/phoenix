@@ -1,9 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.github.dcendents.android-maven'
-
-group='com.github.guoxiaoxing'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -45,4 +41,13 @@ dependencies {
 
     compile "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxJavaVerstion"
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxAndroidVerstion"
+}
+
+publish {
+    userOrg = 'guoxiaoxing'
+    groupId = 'com.github.guoxiaoxing'
+    artifactId = 'phoenix-core'
+    publishVersion = "$rootProject.ext.phoenixVerson"
+    desc = 'The one-stop solution for image/video selection, editing and compression on the Android platform.'
+    website = 'https://github.com/guoxiaoxing/phoenix'
 }

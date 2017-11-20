@@ -3,7 +3,7 @@ package com.guoxiaoxing.phoenix.picker.ui.picker
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.opengl.Visibility
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
@@ -13,6 +13,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.guoxiaoxing.phoenix.R
+import com.guoxiaoxing.phoenix.core.PhoenixOption.THEME_DEFAULT
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
@@ -124,6 +125,18 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      * init views
      */
     private fun setupView() {
+
+        pickRlTitle.setBackgroundColor(themeColor)
+
+        if (themeColor == THEME_DEFAULT) {
+            rl_bottom.setBackgroundColor(themeColor)
+
+        } else {
+            rl_bottom.setBackgroundColor(Color.WHITE)
+            pickTvPreview.setTextColor(themeColor)
+            pickLlOk.background = tintDrawable(R.drawable.phoenix_shape_complete_background, themeColor)
+        }
+
         isNumberComplete()
         pickTvTitle.text = if (fileType == MimeType.ofAudio()) getString(R.string.picture_all_audio) else getString(R.string.picture_camera_roll)
         pick_tv_empty.text = if (fileType == MimeType.ofAudio()) getString(R.string.picture_audio_empty) else getString(R.string.picture_empty)
@@ -250,6 +263,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                 mediaEntities.add(mediaEntity)
             }
             val bundle = Bundle()
+            bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
             bundle.putSerializable(PhoenixConstant.KEY_LIST, mediaEntities as Serializable)
             bundle.putSerializable(PhoenixConstant.KEY_SELECT_LIST, selectedImages as Serializable)
             bundle.putBoolean(PhoenixConstant.EXTRA_BOTTOM_PREVIEW, true)
@@ -343,6 +357,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         DebugUtil.i(TAG, "mediaType:" + mediaType)
         val selectedImages = pickAdapter.getPickMediaList()
         ImagesObservable.instance.saveLocalMedia(previewImages)
+        bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
         bundle.putSerializable(PhoenixConstant.KEY_SELECT_LIST, selectedImages as Serializable)
         bundle.putInt(PhoenixConstant.KEY_POSITION, position)
         startActivity(PreviewActivity::class.java, bundle)
@@ -361,7 +376,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
             pickLlOk.isEnabled = true
             pickLlOk.alpha = 1F
             pickTvPreview.isEnabled = true
-            pickTvPreview.setTextColor(ContextCompat.getColor(mContext, R.color.green))
+            pickTvPreview.setTextColor(if (themeColor == THEME_DEFAULT) ContextCompat.getColor(mContext, R.color.green) else themeColor)
             if (!isAnimation) {
                 pickTvNumber.startAnimation(animation)
             }

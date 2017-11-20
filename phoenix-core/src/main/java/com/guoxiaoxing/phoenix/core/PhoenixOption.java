@@ -1,10 +1,11 @@
 package com.guoxiaoxing.phoenix.core;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Environment;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import com.guoxiaoxing.phoenix.core.listener.OnPickerListener;
 import com.guoxiaoxing.phoenix.core.listener.Starter;
 import com.guoxiaoxing.phoenix.core.model.MediaEntity;
 import com.guoxiaoxing.phoenix.core.model.MimeType;
@@ -20,7 +21,7 @@ import java.util.List;
  * @author guoxiaoxing
  * @since 2017/8/14 上午9:47
  */
-public class PhoenixOption {
+public class PhoenixOption implements Parcelable {
 
     //功能 - 选择图片/视频/音频
     public static final int TYPE_PICK_MEDIA = 0x000001;
@@ -73,18 +74,16 @@ public class PhoenixOption {
 
     //是否开启压缩
     private boolean enableCompress;
-    //视频压缩阈值（kb以下的视频不进行压缩）
-    private int compressVideoFilterSize;
-    //图片压缩阈值（kb以下的图片不进行压缩）
-    private int compressPictureFilterSize;
+    //视频压缩阈值（多少kb以下的视频不进行压缩，默认2048kb）
+    private int compressVideoFilterSize = 2048;
+    //图片压缩阈值（多少kb以下的图片不进行压缩，默认1024kb）
+    private int compressPictureFilterSize = 1024;
 
     //已选择的数据、图片/视频/音频预览的数据
     private List<MediaEntity> pickedMediaList = new ArrayList<>();
 
     //拍照、视频的保存地址
     private String savePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
-    //选择监听
-    private OnPickerListener onPickerListener;
 
     public PhoenixOption() {
 
@@ -136,10 +135,6 @@ public class PhoenixOption {
 
     public String getSavePath() {
         return savePath;
-    }
-
-    public OnPickerListener getOnPickerListener() {
-        return onPickerListener;
     }
 
     public int getTheme() {
@@ -283,15 +278,77 @@ public class PhoenixOption {
         return this;
     }
 
-    public PhoenixOption onPickerListener(OnPickerListener val) {
-        onPickerListener = val;
-        return this;
-    }
-
-    public void start(Context context, int type) {
+    public void start(Activity activity, int type, int requestCode) {
         Starter starter = ReflectUtils.loadStarter(ReflectUtils.Phoenix);
         if (starter != null) {
-            starter.start(context, type);
+            starter.start(activity, this, type, requestCode);
         }
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.fileType);
+        dest.writeByte(this.enableCamera ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.theme);
+        dest.writeInt(this.maxPickNumber);
+        dest.writeInt(this.minPickNumber);
+        dest.writeInt(this.videoFilterTime);
+        dest.writeInt(this.recordVideoTime);
+        dest.writeInt(this.spanCount);
+        dest.writeInt(this.thumbnailWidth);
+        dest.writeInt(this.thumbnailHeight);
+        dest.writeByte(this.enableAnimation ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.enableGif ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.enablePreview ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.pickNumberMode ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.enableClickSound ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.previewEggs ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.enableCompress ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.compressVideoFilterSize);
+        dest.writeInt(this.compressPictureFilterSize);
+        dest.writeTypedList(this.pickedMediaList);
+        dest.writeString(this.savePath);
+    }
+
+    protected PhoenixOption(Parcel in) {
+        this.fileType = in.readInt();
+        this.enableCamera = in.readByte() != 0;
+        this.theme = in.readInt();
+        this.maxPickNumber = in.readInt();
+        this.minPickNumber = in.readInt();
+        this.videoFilterTime = in.readInt();
+        this.recordVideoTime = in.readInt();
+        this.spanCount = in.readInt();
+        this.thumbnailWidth = in.readInt();
+        this.thumbnailHeight = in.readInt();
+        this.enableAnimation = in.readByte() != 0;
+        this.enableGif = in.readByte() != 0;
+        this.enablePreview = in.readByte() != 0;
+        this.pickNumberMode = in.readByte() != 0;
+        this.enableClickSound = in.readByte() != 0;
+        this.previewEggs = in.readByte() != 0;
+        this.enableCompress = in.readByte() != 0;
+        this.compressVideoFilterSize = in.readInt();
+        this.compressPictureFilterSize = in.readInt();
+        this.pickedMediaList = in.createTypedArrayList(MediaEntity.CREATOR);
+        this.savePath = in.readString();
+    }
+
+    public static final Creator<PhoenixOption> CREATOR = new Creator<PhoenixOption>() {
+        @Override
+        public PhoenixOption createFromParcel(Parcel source) {
+            return new PhoenixOption(source);
+        }
+
+        @Override
+        public PhoenixOption[] newArray(int size) {
+            return new PhoenixOption[size];
+        }
+    };
 }

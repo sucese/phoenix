@@ -32,6 +32,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
     compile 'com.android.support:multidex:1.0.2'
 
+    compile 'com.github.bumptech.glide:glide:4.0.0-RC1'
+
 //    //图片/视频库
 //    compile "com.github.guoxiaoxing.phoenix:phoenix-ui:$rootProject.ext.phoenixVerson"
 //    compile "com.github.guoxiaoxing.phoenix:phoenix-compress-picture:$rootProject.ext.phoenixVerson"

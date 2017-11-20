@@ -1,5 +1,6 @@
 package com.guoxiaoxing.phoenix.demo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +13,6 @@ import com.guoxiaoxing.phoenix.compress.video.soft.SCCamera;
 import com.guoxiaoxing.phoenix.compress.video.soft.model.MediaRecorderConfig;
 import com.guoxiaoxing.phoenix.compress.video.soft.util.DeviceUtils;
 import com.guoxiaoxing.phoenix.core.PhoenixOption;
-import com.guoxiaoxing.phoenix.core.common.PhoenixConstant;
-import com.guoxiaoxing.phoenix.core.listener.OnPickerListener;
 import com.guoxiaoxing.phoenix.core.model.MediaEntity;
 import com.guoxiaoxing.phoenix.core.model.MimeType;
 import com.guoxiaoxing.phoenix.picker.Phoenix;
@@ -59,18 +58,7 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
                     //预览
                     Phoenix.with()
                             .pickedMediaList(mMediaAdapter.getData())
-                            .onPickerListener(new OnPickerListener() {
-                                @Override
-                                public void onPickSuccess(List<MediaEntity> pickList) {
-
-                                }
-
-                                @Override
-                                public void onPickFailed(String errorMessage) {
-
-                                }
-                            })
-                            .start(MainActivity.this, PhoenixOption.TYPE_BROWSER_PICTURE);
+                            .start(MainActivity.this, PhoenixOption.TYPE_BROWSER_PICTURE, 0);
                 }
             }
         });
@@ -93,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
         });
     }
 
+    private int REQUEST_CODE = 0x000111;
+
     @Override
     public void onaddMedia() {
         Phoenix.with()
@@ -105,21 +95,23 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
                 .enableCamera(true)// 是否开启拍照
                 .enableAnimation(true)// 选择界面图片点击效果
                 .enableCompress(true)// 是否开启压缩
+                .compressPictureFilterSize(1024)//多少kb以下的图片不压缩
+                .compressVideoFilterSize(2018)//多少kb以下的视频不压缩
                 .thumbnailHeight(160)// 选择界面图片高度
                 .thumbnailWidth(160)// 选择界面图片宽度
                 .enableClickSound(false)// 是否开启点击声音
                 .pickedMediaList(mMediaAdapter.getData())// 已选图片数据
                 .videoFilterTime(0)//显示多少秒以内的视频
-                .onPickerListener(new OnPickerListener() {
-                    @Override
-                    public void onPickSuccess(List<MediaEntity> pickList) {
-                        mMediaAdapter.setData(pickList);
-                    }
+                .start(MainActivity.this, PhoenixOption.TYPE_PICK_MEDIA, REQUEST_CODE);
+    }
 
-                    @Override
-                    public void onPickFailed(String errorMessage) {
-
-                    }
-                }).start(MainActivity.this, PhoenixOption.TYPE_PICK_MEDIA);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            //返回的数据
+            List<MediaEntity> result = Phoenix.result(data);
+            mMediaAdapter.setData(result);
+        }
     }
 }

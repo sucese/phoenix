@@ -2,7 +2,7 @@
 
 ## 功能介绍
 
-[![Jitpack version](https://jitpack.io/v/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
+[![Download](https://api.bintray.com/packages/guoxiaoxing/maven/phoenix/images/download.svg)](https://bintray.com/guoxiaoxing/maven/phoenix/_latestVersion)
 [![License](https://img.shields.io/github/license/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
 [![Stars](https://img.shields.io/github/stars/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
 [![Forks](https://img.shields.io/github/forks/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
@@ -62,63 +62,56 @@
 
 ### 添加依赖
 
-在项目根目录build.gradle文件里添加
-
-```
-allprojects {
-    repositories {
-        ...
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
-
-添加依赖
-
 ```
 //图片/视频选择、预览、编辑与拍照
-compile 'com.github.guoxiaoxing.phoenix:phoenix-ui:0.0.13'
+compile 'com.github.guoxiaoxing:phoenix:1.0.1'
 
 //选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-picture:0.0.13'
+compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.1'
 
 //选填 - 视频压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-video:0.0.13'
+compile 'com.github.guoxiaoxing:phoenix-compress-video-hard:1.0.1'
 ```
 
 ### 调用功能
 
+开启功能
+
 ```java
 Phoenix.with()
-        .themeColor(PhoenixOption.THEME_DEFAULT)// 主题
+        .theme(PhoenixOption.THEME_DEFAULT)// 主题
         .fileType(MimeType.ofAll())//显示的文件类型图片、视频、图片和视频
         .maxPickNumber(10)// 最大选择数量
         .minPickNumber(0)// 最小选择数量
         .spanCount(4)// 每行显示个数
-        .pickMode(PhoenixConstant.MULTIPLE)// 多选/单选
         .enablePreview(true)// 是否开启预览
         .enableCamera(true)// 是否开启拍照
         .enableAnimation(true)// 选择界面图片点击效果
         .enableCompress(true)// 是否开启压缩
+        .compressPictureFilterSize(1024)//多少kb以下的图片不压缩
+        .compressVideoFilterSize(2018)//多少kb以下的视频不压缩
         .thumbnailHeight(160)// 选择界面图片高度
         .thumbnailWidth(160)// 选择界面图片宽度
-        .enableClickSound(true)//ƒ 是否开启点击声音
-        .pickedMediaList(pickList)// 已选图片数据
+        .enableClickSound(false)// 是否开启点击声音
+        .pickedMediaList(mMediaAdapter.getData())// 已选图片数据
         .videoFilterTime(0)//显示多少秒以内的视频
-        .onPickerListener(new OnPickerListener() {
-            @Override
-            public void onPickSuccess(List<MediaEntity> pickList) {
-                adapter.setList(pickList);
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onPickFailed(String errorMessage) {
-
-            }
-        })//start开启功能，TYPE_PICK_MEDIA - 选择图片/视频/音频 TYPE_TAKE_PICTURE - 拍照
-        .start(MainActivity.this, PhoenixOption.TYPE_PICK_MEDIA);
+        .start(MainActivity.this, PhoenixOption.TYPE_PICK_MEDIA, REQUEST_CODE);
 ```
+
+获取结果
+
+```java
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+        //返回的数据
+        List<MediaEntity> result = Phoenix.result(data);
+        mMediaAdapter.setData(result);
+    }
+}
+```
+
 ## 更新日志
 
 扫描二维码下载Demo，或用手机浏览器输入这个网址:  https://fir.im/phoenix

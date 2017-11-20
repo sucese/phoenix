@@ -1,91 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context="com.guoxiaoxing.phoenix.picker.ui.picker.PickerActivity">
 
-    <include
-        android:id="@+id/id_titleBar"
-        layout="@layout/include_title_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <RelativeLayout
-        android:id="@+id/rl_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/theme_color_black"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/pickTvPreview"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:enabled="false"
-            android:gravity="left|center"
-            android:padding="12dp"
-            android:text="@string/picture_preview"
-            android:textColor="@color/green"
-            android:textSize="14sp" />
-
-        <LinearLayout
-            android:id="@+id/pickLlOk"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/phoenix_dimen_8"
-            android:background="@drawable/phoenix_shape_complete_background"
-            android:enabled="false"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="@dimen/phoenix_dimen_6">
-
-            <TextView
-                android:id="@+id/pickTvOk"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/picture_please_select"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/phoenix_text_14" />
-
-            <TextView
-                android:id="@+id/pickTvNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/phoenix_text_14"
-                android:visibility="gone" />
-        </LinearLayout>
-    </RelativeLayout>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pickRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/rl_bottom"
-        android:layout_below="@id/id_titleBar"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp" />
 
-    <TextView
-        android:id="@+id/pick_tv_empty"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:gravity="center"
-        android:lineSpacingExtra="3dp"
-        android:text="@string/picture_empty"
-        android:textColor="@color/color_gray_1"
-        android:textSize="18sp"
-        android:visibility="invisible" />
-</RelativeLayout>
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/id_titleBar"
+            layout="@layout/include_title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:id="@+id/rl_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/theme_color_black"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/pickTvPreview"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:enabled="false"
+                android:gravity="left|center"
+                android:padding="12dp"
+                android:text="@string/picture_preview"
+                android:textColor="@color/green"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/pickLlOk"
+                android:layout_width="75dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/phoenix_dimen_8"
+                android:background="@drawable/phoenix_shape_complete_background"
+                android:enabled="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/phoenix_dimen_6">
+
+                <TextView
+                    android:id="@+id/pickTvOk"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/picture_please_select"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/phoenix_text_14" />
+
+                <TextView
+                    android:id="@+id/pickTvNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/phoenix_text_14"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/pick_tv_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:text="@string/picture_empty"
+            android:textColor="@color/color_gray_1"
+            android:textSize="18sp"
+            android:visibility="invisible" />
+    </RelativeLayout>
+</FrameLayout>

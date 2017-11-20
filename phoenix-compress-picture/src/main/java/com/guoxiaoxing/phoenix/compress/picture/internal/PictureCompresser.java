@@ -139,7 +139,7 @@ public class PictureCompresser implements Handler.Callback {
         private Context context;
         private int filterSize;
         private File file;
-        private String savePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+        private String savePath;
         private OnCompressListener onCompressListener;
 
         Builder(Context context) {

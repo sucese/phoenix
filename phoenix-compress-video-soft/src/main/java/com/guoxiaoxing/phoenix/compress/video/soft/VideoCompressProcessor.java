@@ -55,6 +55,10 @@ public class VideoCompressProcessor implements Processor {
             throw new IllegalArgumentException("The onProcessorListener can not be null");
         }
 
+        if(mediaEntity.getSize() < phoenixOption.getCompressVideoFilterSize() * 1000){
+            return mediaEntity;
+        }
+
         if (!TextUtils.isEmpty(mediaEntity.getCompressPath())) {
             return mediaEntity;
         }
@@ -87,6 +91,16 @@ public class VideoCompressProcessor implements Processor {
         if (onProcessorListener == null) {
             Log.d(TAG, "The onProcessorListener can not be null");
             throw new IllegalArgumentException("The onProcessorListener can not be null");
+        }
+
+        if (!TextUtils.isEmpty(mediaEntity.getCompressPath())) {
+            onProcessorListener.onSuccess(mediaEntity);
+            return;
+        }
+
+        if(mediaEntity.getSize() < phoenixOption.getCompressVideoFilterSize() * 1000){
+            onProcessorListener.onSuccess(mediaEntity);
+            return;
         }
     }
 }

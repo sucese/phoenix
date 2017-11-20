@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="phoenix_text_4">4sp</dimen>
+    <dimen name="phoenix_text_8">8dp</dimen>
+    <dimen name="phoenix_text_16">16sp</dimen>
+    <dimen name="phoenix_text_14">14sp</dimen>
+
+    <dimen name="phoenix_dimen_5">5dp</dimen>
+    <dimen name="phoenix_dimen_6">6dp</dimen>
+    <dimen name="phoenix_dimen_8">8dp</dimen>
+    <dimen name="phoenix_dimen_16">16dp</dimen>
+    <dimen name="phoenix_dimen_20">20dp</dimen>
+    <dimen name="phoenix_dimen_22">22dp</dimen>
+    <dimen name="phoenix_dimen_30">30dp</dimen>
+    <dimen name="phoenix_dimen_60">60dp</dimen>
+    <dimen name="phoenix_dimen_75">75dp</dimen>
+    <dimen name="phoenix_dimen_107">107dp</dimen>
 </resources>

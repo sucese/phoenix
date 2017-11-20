@@ -37,10 +37,12 @@ public class MediaEntity implements Serializable, Parcelable {
     private int width;
     //高度
     private int height;
+    //大小 byte
+    private long size;
     //经度
-    private String latitude;
+    private double latitude;
     //纬度
-    private String longitude;
+    private double longitude;
 
     //upload
     //是否上传
@@ -106,33 +108,34 @@ public class MediaEntity implements Serializable, Parcelable {
     }
 
     private MediaEntity(Builder builder) {
-        setFileType(builder.fileType);
-        setMimeType(builder.mimeType);
-        setMediaName(builder.mediaName);
-        setCreateTime(builder.createTime);
-        setLocalPath(builder.localPath);
-        setLocalThumbnailPath(builder.localThumbnailPath);
-        setDuration(builder.duration);
-        setChecked(builder.isChecked);
-        setPosition(builder.position);
-        setNumber(builder.number);
-        setWidth(builder.width);
-        setHeight(builder.height);
-        setLatitude(builder.latitude);
-        setLongitude(builder.longitude);
-        setUploaded(builder.isUploaded);
-        setOnlinePath(builder.onlinePath);
-        setOnlineThumbnailPath(builder.onlineThumbnailPath);
-        setCompressed(builder.isCompressed);
-        setCompressPath(builder.compressPath);
-        setCutPath(builder.cutPath);
-        setCropOffsetX(builder.cropOffsetX);
-        setCropOffsetY(builder.cropOffsetY);
-        setCropWidth(builder.cropWidth);
-        setCropHeight(builder.cropHeight);
-        setCropAspectRatio(builder.cropAspectRatio);
-        setCut(builder.isCut);
-        setEditPath(builder.editPath);
+        fileType = builder.fileType;
+        mimeType = builder.mimeType;
+        mediaName = builder.mediaName;
+        createTime = builder.createTime;
+        localPath = builder.localPath;
+        localThumbnailPath = builder.localThumbnailPath;
+        duration = builder.duration;
+        isChecked = builder.isChecked;
+        position = builder.position;
+        number = builder.number;
+        width = builder.width;
+        height = builder.height;
+        size = builder.size;
+        latitude = builder.latitude;
+        longitude = builder.longitude;
+        isUploaded = builder.isUploaded;
+        onlinePath = builder.onlinePath;
+        onlineThumbnailPath = builder.onlineThumbnailPath;
+        isCompressed = builder.isCompressed;
+        compressPath = builder.compressPath;
+        cutPath = builder.cutPath;
+        cropOffsetX = builder.cropOffsetX;
+        cropOffsetY = builder.cropOffsetY;
+        cropWidth = builder.cropWidth;
+        cropHeight = builder.cropHeight;
+        cropAspectRatio = builder.cropAspectRatio;
+        isCut = builder.isCut;
+        editPath = builder.editPath;
     }
 
     public static Builder newBuilder() {
@@ -252,19 +255,27 @@ public class MediaEntity implements Serializable, Parcelable {
         this.height = height;
     }
 
-    public String getLatitude() {
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
@@ -372,9 +383,7 @@ public class MediaEntity implements Serializable, Parcelable {
         this.editPath = editPath;
     }
 
-
-    public static final class Builder {
-        //默认文件类型是图片
+    public static final class Builder implements Parcelable{
         private int fileType = MimeType.ofImage();
         private String mimeType;
         private String mediaName;
@@ -387,8 +396,9 @@ public class MediaEntity implements Serializable, Parcelable {
         private int number;
         private int width;
         private int height;
-        private String latitude;
-        private String longitude;
+        private long size;
+        private double latitude;
+        private double longitude;
         private boolean isUploaded;
         private String onlinePath;
         private String onlineThumbnailPath;
@@ -466,12 +476,17 @@ public class MediaEntity implements Serializable, Parcelable {
             return this;
         }
 
-        public Builder latitude(String val) {
+        public Builder size(long val) {
+            size = val;
+            return this;
+        }
+
+        public Builder latitude(double val) {
             latitude = val;
             return this;
         }
 
-        public Builder longitude(String val) {
+        public Builder longitude(double val) {
             longitude = val;
             return this;
         }
@@ -544,6 +559,87 @@ public class MediaEntity implements Serializable, Parcelable {
         public MediaEntity build() {
             return new MediaEntity(this);
         }
+
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.fileType);
+            dest.writeString(this.mimeType);
+            dest.writeString(this.mediaName);
+            dest.writeLong(this.createTime);
+            dest.writeString(this.localPath);
+            dest.writeString(this.localThumbnailPath);
+            dest.writeLong(this.duration);
+            dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
+            dest.writeInt(this.position);
+            dest.writeInt(this.number);
+            dest.writeInt(this.width);
+            dest.writeInt(this.height);
+            dest.writeLong(this.size);
+            dest.writeDouble(this.latitude);
+            dest.writeDouble(this.longitude);
+            dest.writeByte(this.isUploaded ? (byte) 1 : (byte) 0);
+            dest.writeString(this.onlinePath);
+            dest.writeString(this.onlineThumbnailPath);
+            dest.writeByte(this.isCompressed ? (byte) 1 : (byte) 0);
+            dest.writeString(this.compressPath);
+            dest.writeString(this.cutPath);
+            dest.writeInt(this.cropOffsetX);
+            dest.writeInt(this.cropOffsetY);
+            dest.writeInt(this.cropWidth);
+            dest.writeInt(this.cropHeight);
+            dest.writeFloat(this.cropAspectRatio);
+            dest.writeByte(this.isCut ? (byte) 1 : (byte) 0);
+            dest.writeString(this.editPath);
+        }
+
+        protected Builder(Parcel in) {
+            this.fileType = in.readInt();
+            this.mimeType = in.readString();
+            this.mediaName = in.readString();
+            this.createTime = in.readLong();
+            this.localPath = in.readString();
+            this.localThumbnailPath = in.readString();
+            this.duration = in.readLong();
+            this.isChecked = in.readByte() != 0;
+            this.position = in.readInt();
+            this.number = in.readInt();
+            this.width = in.readInt();
+            this.height = in.readInt();
+            this.size = in.readLong();
+            this.latitude = in.readDouble();
+            this.longitude = in.readDouble();
+            this.isUploaded = in.readByte() != 0;
+            this.onlinePath = in.readString();
+            this.onlineThumbnailPath = in.readString();
+            this.isCompressed = in.readByte() != 0;
+            this.compressPath = in.readString();
+            this.cutPath = in.readString();
+            this.cropOffsetX = in.readInt();
+            this.cropOffsetY = in.readInt();
+            this.cropWidth = in.readInt();
+            this.cropHeight = in.readInt();
+            this.cropAspectRatio = in.readFloat();
+            this.isCut = in.readByte() != 0;
+            this.editPath = in.readString();
+        }
+
+        public static final Creator<Builder> CREATOR = new Creator<Builder>() {
+            @Override
+            public Builder createFromParcel(Parcel source) {
+                return new Builder(source);
+            }
+
+            @Override
+            public Builder[] newArray(int size) {
+                return new Builder[size];
+            }
+        };
     }
 
     @Override
@@ -565,8 +661,9 @@ public class MediaEntity implements Serializable, Parcelable {
         dest.writeInt(this.number);
         dest.writeInt(this.width);
         dest.writeInt(this.height);
-        dest.writeString(this.latitude);
-        dest.writeString(this.longitude);
+        dest.writeLong(this.size);
+        dest.writeDouble(this.latitude);
+        dest.writeDouble(this.longitude);
         dest.writeByte(this.isUploaded ? (byte) 1 : (byte) 0);
         dest.writeString(this.onlinePath);
         dest.writeString(this.onlineThumbnailPath);
@@ -595,8 +692,9 @@ public class MediaEntity implements Serializable, Parcelable {
         this.number = in.readInt();
         this.width = in.readInt();
         this.height = in.readInt();
-        this.latitude = in.readString();
-        this.longitude = in.readString();
+        this.size = in.readLong();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
         this.isUploaded = in.readByte() != 0;
         this.onlinePath = in.readString();
         this.onlineThumbnailPath = in.readString();

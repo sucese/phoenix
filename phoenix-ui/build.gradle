@@ -1,9 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.github.dcendents.android-maven'
-
-group='com.github.guoxiaoxing'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -30,12 +28,20 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.github.bumptech.glide:glide:4.0.0-RC1'
     compile 'com.google.code.gson:gson:2.8.1'
     compile "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.ext.supportLibraryVersion"
     compile "com.android.support:support-annotations:$rootProject.ext.supportLibraryVersion"
 
-//    compile "com.github.guoxiaoxing.phoenix:phoenix-core:$rootProject.ext.phoenixCoreVersion"
-    compile project(':phoenix-core')
+    compile "com.github.guoxiaoxing:phoenix-core:$rootProject.ext.phoenixCoreVersion"
+//    compile project(':phoenix-core')
+}
+
+publish {
+    userOrg = 'guoxiaoxing'
+    groupId = 'com.github.guoxiaoxing'
+    artifactId = 'phoenix'
+    publishVersion = "$rootProject.ext.phoenixVerson"
+    desc = 'The one-stop solution for image/video selection, editing and compression on the Android platform.'
+    website = 'https://github.com/guoxiaoxing/phoenix'
 }

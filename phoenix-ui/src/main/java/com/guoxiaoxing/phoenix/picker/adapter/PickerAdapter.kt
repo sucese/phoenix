@@ -14,15 +14,12 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.Toast
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
-import com.bumptech.glide.request.RequestOptions
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
+import com.guoxiaoxing.phoenix.picker.Phoenix
 import com.guoxiaoxing.phoenix.picker.util.*
 import kotlinx.android.synthetic.main.item_camera.view.*
 import kotlinx.android.synthetic.main.item_grid_media.view.*
@@ -141,20 +138,9 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             if (mimeType == MimeType.ofAudio()) {
                 contentHolder.itemView.iv_picture.setImageResource(R.drawable.phoenix_audio_placeholder)
             } else {
-                val options = RequestOptions()
-                if (overrideWidth <= 0 && overrideHeight <= 0) {
-                    options.sizeMultiplier(1F)
-                } else {
-                    options.override(overrideWidth, overrideHeight)
-                }
-                options.diskCacheStrategy(DiskCacheStrategy.ALL)
-                options.centerCrop()
-                Glide.with(context)
-                        .asBitmap()
-                        .load(path)
-                        .apply(options)
-                        .transition(BitmapTransitionOptions().crossFade(500))
-                        .into(contentHolder.itemView.iv_picture)
+                Phoenix.config()
+                        .imageLoader
+                        .loadImage(context, contentHolder.itemView.iv_picture, path, PhoenixConstant.IMAGE_PROCESS_TYPE_DEFAULT)
             }
             if (enablePreview) {
                 contentHolder.itemView.ll_check.setOnClickListener { changeCheckboxState(contentHolder, image) }
