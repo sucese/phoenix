@@ -175,6 +175,10 @@ open class BaseFragment : Fragment() {
         enableCompress = option.isEnableCompress
         previewEggs = option.isPreviewEggs
         savePath = option.savePath
+
+        if (Phoenix.config().imageLoader == null) {
+            throw IllegalArgumentException("The image loader should be set in application")
+        }
     }
 
     /**
@@ -190,5 +194,4 @@ open class BaseFragment : Fragment() {
         activity.setResult(Activity.RESULT_OK, intent)
         closeActivity()
     }
-
 }

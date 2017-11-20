@@ -19,6 +19,7 @@
 - 高度的UI定制性，内置四种配色方案，开发者也可以通过简单的style文件的简单配置来定制自己的UI。
 - 调用的便利性，开启某个功能只需要调用enableXXX(true)方法，结果统一在MediaEntity里获取。
 - RxJava良好的支持性，每个功能都提供了同步与异步两种实现，便于开发者利用RxJava进行功能的组合与嵌套。
+- ImageLoader可配置，定制项目需要的图片加载方案。
 - 良好的版本兼容性，运行时权限等内容都做了兼容性处理。
 
 <p align="center">
@@ -74,6 +75,28 @@ compile 'com.github.guoxiaoxing:phoenix-compress-video-hard:1.0.1'
 ```
 
 ### 调用功能
+
+初始化
+
+```java
+public class App extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        Phoenix.config()
+                .imageLoader(new ImageLoader() {
+                    @Override
+                    public void loadImage(Context context, ImageView imageView, String imagePath, int type) {
+                        Glide.with(context)
+                                .load(imagePath)
+                                .into(imageView);
+                    }
+                });
+    }
+}
+```
 
 开启功能
 

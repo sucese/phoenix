@@ -409,5 +409,9 @@ open class BaseActivity : FragmentActivity() {
         enableCompress = option.isEnableCompress
         previewEggs = option.isPreviewEggs
         savePath = option.savePath
+
+        if (Phoenix.config().imageLoader == null) {
+            throw IllegalArgumentException("The image loader should be set in application")
+        }
     }
 }

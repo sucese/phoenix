@@ -21,12 +21,6 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
 
         Phoenix.config()
                 .imageLoader(new ImageLoader() {
@@ -37,5 +31,11 @@ public class App extends MultiDexApplication {
                                 .into(imageView);
                     }
                 });
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }
