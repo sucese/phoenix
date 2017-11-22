@@ -86,7 +86,6 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
-        //少于8张，显示继续添加的图标
         if (getItemViewType(position) == TYPE_ADD) {
             viewHolder.ivPicture.setImageResource(R.drawable.ic_add_media);
             viewHolder.ivPicture.setOnClickListener(new View.OnClickListener() {
@@ -111,52 +110,24 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
                 }
             });
             MediaEntity mediaEntity = mMediaList.get(position);
-            int mimeType = mediaEntity.getFileType();
-            String path = "";
-            if (mediaEntity.isCut() && !mediaEntity.isCompressed()) {
-                // 裁剪过
-                path = mediaEntity.getCutPath();
-            } else if (mediaEntity.isCompressed() || (mediaEntity.isCut() && mediaEntity.isCompressed())) {
-                // 压缩过,或者裁剪同时压缩过,以最终压缩过图片为准
-                path = mediaEntity.getCompressPath();
-            } else {
-                // 原图
-                path = mediaEntity.getLocalPath();
-            }
-            // 图片
-            if (mediaEntity.isCompressed()) {
-                Log.i("压缩地址::", mediaEntity.getCompressPath());
-            }
-
-            Log.i("原图地址::", mediaEntity.getLocalPath());
-            int pictureType = MimeType.getFileType(mediaEntity.getMimeType());
-            if (mediaEntity.isCut()) {
-                Log.i("裁剪地址::", mediaEntity.getCutPath());
-            }
+            String path = mediaEntity.getFinalPath();
+            int fileType = MimeType.getFileType(mediaEntity.getMimeType());
             long duration = mediaEntity.getDuration();
-            viewHolder.tvDuration.setVisibility(pictureType == PhoenixConstant.TYPE_VIDEO
+            viewHolder.tvDuration.setVisibility(fileType == PhoenixConstant.TYPE_VIDEO
                     ? View.VISIBLE : View.GONE);
-            if (mimeType == MimeType.ofAudio()) {
-                viewHolder.tvDuration.setVisibility(View.VISIBLE);
-                Drawable drawable = ContextCompat.getDrawable(viewHolder.ivPicture.getContext(), R.drawable.phoenix_audio);
-                StringUtils.INSTANCE.modifyTextViewDrawable(viewHolder.tvDuration, drawable, 0);
-            } else {
+            if(fileType == MimeType.ofVideo()){
                 Drawable drawable = ContextCompat.getDrawable(viewHolder.ivPicture.getContext(), R.drawable.phoenix_video_icon);
                 StringUtils.INSTANCE.modifyTextViewDrawable(viewHolder.tvDuration, drawable, 0);
+                viewHolder.tvDuration.setText(DateUtils.INSTANCE.timeParse(duration));
             }
-            viewHolder.tvDuration.setText(DateUtils.INSTANCE.timeParse(duration));
-            if (mimeType == MimeType.ofAudio()) {
-                viewHolder.ivPicture.setImageResource(R.drawable.phoenix_audio_placeholder);
-            } else {
-                RequestOptions options = new RequestOptions()
-                        .centerCrop()
-                        .placeholder(R.color.color_f6)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL);
-                Glide.with(viewHolder.itemView.getContext())
-                        .load(path)
-                        .apply(options)
-                        .into(viewHolder.ivPicture);
-            }
+            RequestOptions options = new RequestOptions()
+                    .centerCrop()
+                    .placeholder(R.color.color_f6)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            Glide.with(viewHolder.itemView.getContext())
+                    .load(path)
+                    .apply(options)
+                    .into(viewHolder.ivPicture);
             //itemView 的点击事件
             if (mItemClickListener != null) {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

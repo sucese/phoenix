@@ -35,7 +35,7 @@ public class VideoCompressProcessor implements Processor {
 
         final File compressFile;
         try {
-            File compressCachePath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "outputs");
+            File compressCachePath = new File(context.getCacheDir(), "outputs");
             compressCachePath.mkdir();
             compressFile = File.createTempFile("compress", ".mp4", compressCachePath);
         } catch (IOException e) {
