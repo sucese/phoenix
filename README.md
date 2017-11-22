@@ -89,7 +89,8 @@ public class App extends Application {
         Phoenix.config()
                 .imageLoader(new ImageLoader() {
                     @Override
-                    public void loadImage(Context context, ImageView imageView, String imagePath, int type) {
+                    public void loadImage(Context context, ImageView imageView
+                                                , String imagePath, int type) {
                         Glide.with(context)
                                 .load(imagePath)
                                 .into(imageView);
