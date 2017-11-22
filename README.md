@@ -225,14 +225,9 @@ try {
 
 可以看到对于60s的视频，压缩时间控制在了18s~22s之间，性能好的手机用时短一些，另外，压缩提供了480p、720p等多种规格的压缩参数。
 
-
 ## 更新日志
 
-扫描二维码下载Demo，或用手机浏览器输入这个网址:  https://fir.im/phoenix
-
-注：fir.im下载次数如果满了可以去[仓库](https://github.com/guoxiaoxing/phoenix/raw/master/art/Phoenix.apk)下载
-
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/apk.png"/>
+[点击下载Demo](https://github.com/guoxiaoxing/phoenix/raw/master/art/Phoenix.apk)
 
 ## 贡献代码
 
