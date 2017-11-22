@@ -138,6 +138,39 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 另外，Phoenix内置了图片压缩库与视频压缩库，这两个功能都可以单独调用。
 
+图片压缩
+
+```java
+String path;
+if(!TextUtils.isEmpty(mediaEntity.getEditPath())){
+    path = mediaEntity.getEditPath();
+}else {
+    path = mediaEntity.getLocalPath();
+}
+
+File file = new File(path);
+PictureCompresser.with(context)
+        .load(file)
+        .setCompressListener(new OnCompressListener() {
+            @Override
+            public void onStart() {
+                Log.d(TAG, "Picture compress onStart");
+            }
+
+            @Override
+            public void onSuccess(File file) {
+                Log.d(TAG, "Picture compress onSuccess");
+                mediaEntity.setCompressed(true);
+                mediaEntity.setCompressPath(file.getAbsolutePath());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "Picture compress onError : " + e.getMessage());
+            }
+        }).launch();
+```
+
 视频压缩
 
 ```java
@@ -155,14 +188,13 @@ try {
 MediaTranscoder.Listener listener = new MediaTranscoder.Listener() {
     @Override
     public void onTranscodeProgress(double progress) {
-        onProcessorListener.onProgress((int) progress);
+        
     }
 
     @Override
     public void onTranscodeCompleted() {
         result.setCompressed(true);
         result.setCompressPath(compressFile.getAbsolutePath());
-        onProcessorListener.onSuccess(result);
     }
 
     @Override
@@ -172,7 +204,6 @@ MediaTranscoder.Listener listener = new MediaTranscoder.Listener() {
 
     @Override
     public void onTranscodeFailed(Exception exception) {
-        onProcessorListener.onFailed(exception.getMessage());
     }
 };
 try {
