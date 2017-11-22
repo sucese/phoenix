@@ -66,13 +66,13 @@
 
 ```
 //图片/视频选择、预览、编辑与拍照
-compile 'com.github.guoxiaoxing:phoenix:1.0.1'
+compile 'com.github.guoxiaoxing:phoenix:1.0.2'
 
 //选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.1'
+compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.2'
 
 //选填 - 视频压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing:phoenix-compress-video-hard:1.0.1'
+compile 'com.github.guoxiaoxing:phoenix-compress-video:1.0.2'
 ```
 
 ### 调用功能
@@ -137,6 +137,51 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 另外，Phoenix内置了图片压缩库与视频压缩库，这两个功能都可以单独调用。
+
+视频压缩
+
+```java
+final MediaEntity result = mediaEntity;
+
+final File compressFile;
+try {
+    File compressCachePath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "phoenix");
+    compressCachePath.mkdir();
+    compressFile = File.createTempFile("compress", ".mp4", compressCachePath);
+} catch (IOException e) {
+    Toast.makeText(context, "Failed to create temporary file.", Toast.LENGTH_LONG).show();
+    return;
+}
+MediaTranscoder.Listener listener = new MediaTranscoder.Listener() {
+    @Override
+    public void onTranscodeProgress(double progress) {
+        onProcessorListener.onProgress((int) progress);
+    }
+
+    @Override
+    public void onTranscodeCompleted() {
+        result.setCompressed(true);
+        result.setCompressPath(compressFile.getAbsolutePath());
+        onProcessorListener.onSuccess(result);
+    }
+
+    @Override
+    public void onTranscodeCanceled() {
+
+    }
+
+    @Override
+    public void onTranscodeFailed(Exception exception) {
+        onProcessorListener.onFailed(exception.getMessage());
+    }
+};
+try {
+    MediaTranscoder.getInstance().asyncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
+            MediaFormatStrategyPresets.createAndroid480pFormatStrategy(), listener);
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
 
 我们来重点看看视频压缩的测试数据
 

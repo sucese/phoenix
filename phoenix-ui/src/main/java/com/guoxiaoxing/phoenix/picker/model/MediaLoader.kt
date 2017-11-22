@@ -211,7 +211,7 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                 MediaStore.Images.Media.DATE_ADDED,
                 MediaStore.Images.Media.MIME_TYPE,
                 MediaStore.Images.Media.SIZE,
-                MediaStore.Video.Media.DURATION,
+                DURATION,
                 MediaStore.Images.Media.WIDTH,
                 MediaStore.Images.Media.HEIGHT,
                 MediaStore.Images.Media.LATITUDE,
