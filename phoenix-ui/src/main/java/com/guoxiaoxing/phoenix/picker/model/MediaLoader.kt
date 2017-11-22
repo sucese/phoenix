@@ -33,38 +33,33 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                             PhoenixConstant.TYPE_ALL -> CursorLoader(
                                     activity,
                                     QUERY_URI,
-                                    PROJECTION,
+                                    PROJECTION_ALL,
                                     SELECTION_ALL,
                                     null,
                                     MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
                             PhoenixConstant.TYPE_IMAGE -> CursorLoader(
                                     activity,
                                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                    PROJECTION, if (isGif) CONDITION_GIF else CONDITION,
-                                    if (isGif) SELECT_GIF else SELECT,
-                                    PROJECTION[0] + " DESC")
+                                    PROJECTION_ALL, if (isGif) CONDITION_GIF else IMAGE_SELECTION,
+                                    if (isGif) SELECT_GIF else IMAGE_SELECTION_ARGS,
+                                    MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
                             PhoenixConstant.TYPE_VIDEO -> CursorLoader(
                                     activity,
                                     MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                                    PROJECTION, if (videoS > 0)
-                                DURATION + " <= ? and "
-                                        + DURATION + "> 0"
-                            else
-                                DURATION + "> 0", if (videoS > 0)
-                                arrayOf(videoS.toString())
-                            else
-                                null, PROJECTION[0] + " DESC")
+                                    PROJECTION_ALL,
+                                    VIDEO_SELECTION,
+                                    VIDEO_SELECTION_ARGS, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
                             else ->
                                 CursorLoader(
                                         activity, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                                        PROJECTION, if (videoS > 0)
+                                        PROJECTION_ALL, if (videoS > 0)
                                     DURATION + " <= ? and "
                                             + DURATION + ">" + AUDIO_DURATION
                                 else
                                     DURATION + "> " + AUDIO_DURATION, if (videoS > 0)
                                     arrayOf(videoS.toString())
                                 else
-                                    null, PROJECTION[0] + " DESC")
+                                    null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
 
                         }
                         return cursorLoader
@@ -85,13 +80,13 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                             if (count > 0) {
                                 data.moveToFirst()
                                 do {
-                                    val path = data.getString(data.getColumnIndexOrThrow(PROJECTION[1]))
+                                    val path = data.getString(data.getColumnIndexOrThrow(PROJECTION_ALL[1]))
                                     // 如原图路径不存在或者路径存在但文件不存在,就结束当前循环
                                     if (TextUtils.isEmpty(path) || !File(path).exists()) {
                                         continue
                                     }
-                                    val mimeType = data.getString(data.getColumnIndexOrThrow(PROJECTION[4]))
-                                    val duration = data.getLong(data.getColumnIndexOrThrow(PROJECTION[6]))
+                                    val mimeType = data.getString(data.getColumnIndexOrThrow(PROJECTION_ALL[4]))
+                                    val duration = data.getLong(data.getColumnIndexOrThrow(PROJECTION_ALL[6]))
                                     var fileType = 0
                                     if (mimeType.startsWith(PhoenixConstant.AUDIO)) {
                                         fileType = MimeType.ofAudio()
@@ -100,11 +95,11 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                                     } else if (mimeType.startsWith(PhoenixConstant.VIDEO)) {
                                         fileType = MimeType.ofVideo()
                                     }
-                                    val size = data.getLong(data.getColumnIndexOrThrow(PROJECTION[5]))
-                                    val width = data.getInt(data.getColumnIndexOrThrow(PROJECTION[7]))
-                                    val height = data.getInt(data.getColumnIndexOrThrow(PROJECTION[8]))
-                                    val latitude = data.getDouble(data.getColumnIndexOrThrow(PROJECTION[9]))
-                                    val longitude = data.getDouble(data.getColumnIndexOrThrow(PROJECTION[10]))
+                                    val size = data.getLong(data.getColumnIndexOrThrow(PROJECTION_ALL[5]))
+                                    val width = data.getInt(data.getColumnIndexOrThrow(PROJECTION_ALL[7]))
+                                    val height = data.getInt(data.getColumnIndexOrThrow(PROJECTION_ALL[8]))
+                                    val latitude = data.getDouble(data.getColumnIndexOrThrow(PROJECTION_ALL[9]))
+                                    val longitude = data.getDouble(data.getColumnIndexOrThrow(PROJECTION_ALL[10]))
                                     val image = MediaEntity.newBuilder()
                                             .localPath(path)
                                             .duration(duration)
@@ -210,7 +205,7 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
         private val SELECTION_ALL_ARGS = arrayOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString(),
                 MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString())
 
-        private val PROJECTION = arrayOf(MediaStore.Images.Media._ID,
+        private val PROJECTION_ALL = arrayOf(MediaStore.Images.Media._ID,
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.DATE_ADDED,
@@ -236,16 +231,31 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
         private val SELECT_GIF = arrayOf("image/jpeg", "image/png", "image/gif", "image/webp")
 
         /**
-         * 获取全部图片，但过滤掉gif
+         * 获取全部图片
          */
-        private val CONDITION =
+        private val IMAGE_SELECTION =
                 "(" + MediaStore.Images.Media.MIME_TYPE + "=? or " +
                         MediaStore.Images.Media.MIME_TYPE + "=?" + " or " +
                         MediaStore.Images.Media.MIME_TYPE + "=?)" + " AND " +
                         MediaStore.MediaColumns.WIDTH +
                         ">0"
+        /**
+         * 获取全部图片
+         */
+        private val IMAGE_SELECTION_ARGS = arrayOf("image/jpeg", "image/png", "image/webp")
 
-        private val SELECT = arrayOf("image/jpeg", "image/png", "image/webp")
+        /**
+         * 获取全部视频
+         */
+        private val VIDEO_SELECTION =
+                "(" + MediaStore.Images.Media.MIME_TYPE + "=?)" + " AND " +
+                        MediaStore.MediaColumns.WIDTH +
+                        ">0"
+        /**
+         * 获取全部视频
+         */
+        private val VIDEO_SELECTION_ARGS = arrayOf("video/mp4")
+
 
         /**
          * 获取全部图片和视频，但过滤掉gif图片

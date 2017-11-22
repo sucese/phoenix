@@ -1,14 +1,5 @@
 package com.guoxiaoxing.phoenix.core.common;
 
-import android.support.annotation.IntDef;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 public final class PhoenixConstant {
 
     public static final String PHOENIX_RESULT = "PHOENIX_RESULT";
@@ -86,35 +77,4 @@ public final class PhoenixConstant {
     public static final int MAX_COMPRESS_SIZE = 102400;
     public static final int TYPE_CAMERA = 1;
     public static final int TYPE_PICTURE = 2;
-
-    public final static int SINGLE = 1;
-    public final static int MULTIPLE = 2;
-
-    public final static int LUBAN_COMPRESS_MODE = 1;
-    public final static int SYSTEM_COMPRESS_MODE = 2;
-
-    public final static int CHOOSE_REQUEST = 188;
-    public final static int REQUEST_CAMERA = 909;
-    public final static int READ_EXTERNAL_STORAGE = 0x01;
-    public final static int CAMERA = 0x02;
-
-    //车辆图片裁剪
-    public static final String ALIYUN_RESOLUTION = "@225w_170h_1e_1c_2o";
-    public static final String ALIYUN_PREVIEW = "@1000h_1e_1c_2o";
-    public static final String DOMAIN = "http://souche.oss-cn-hangzhou.aliyuncs.com/";
-    public static final String IMAGE_REPLY_URL = "http://img.souche.com/";
-
-    //compress
-    public static final int FIRST_GEAR = 1; // 一档
-    public static final int THIRD_GEAR = 3; // 三档
-    public static final int CUSTOM_GEAR = 4;// 四档
-
-    @IntDef({FIRST_GEAR, THIRD_GEAR, CUSTOM_GEAR})
-    @Target(ElementType.PARAMETER)
-    @Retention(RetentionPolicy.SOURCE)
-    @Documented
-    @Inherited
-    @interface GEAR {
-
-    }
 }

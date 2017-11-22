@@ -25,7 +25,7 @@ public class ReflectUtils {
     /**
      * 视频压缩
      */
-    public static final String VideoCompressProcessor = "com.guoxiaoxing.phoenix.compress.video.soft.VideoCompressProcessor";
+    public static final String VideoCompressProcessor = "com.guoxiaoxing.phoenix.compress.video.VideoCompressProcessor";
 
     /**
      * 图片/视频选择

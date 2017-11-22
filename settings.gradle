@@ -1,1 +1,1 @@
-include ':phoenix-ui', ':phoenix-core', ':demo', ':phoenix-compress-picture', ':phoenix-compress-video-hard', ':phoenix-compress-video-soft'
+include ':phoenix-ui', ':phoenix-core', ':demo', ':phoenix-compress-picture', ':phoenix-compress-video'

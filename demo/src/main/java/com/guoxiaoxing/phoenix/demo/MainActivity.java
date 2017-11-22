@@ -2,46 +2,22 @@ package com.guoxiaoxing.phoenix.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.guoxiaoxing.phoenix.compress.video.soft.MediaRecorderActivity;
-import com.guoxiaoxing.phoenix.compress.video.soft.SCCamera;
-import com.guoxiaoxing.phoenix.compress.video.soft.model.MediaRecorderConfig;
-import com.guoxiaoxing.phoenix.compress.video.soft.util.DeviceUtils;
 import com.guoxiaoxing.phoenix.core.PhoenixOption;
 import com.guoxiaoxing.phoenix.core.model.MediaEntity;
 import com.guoxiaoxing.phoenix.core.model.MimeType;
 import com.guoxiaoxing.phoenix.picker.Phoenix;
 
-import java.io.File;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAddMediaListener {
 
     private MediaAdapter mMediaAdapter;
 
-    static {
-        // 设置拍摄视频缓存路径
-        File dcim = Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        if (DeviceUtils.isZte()) {
-            if (dcim.exists()) {
-                SCCamera.setVideoCachePath(dcim + "/souche/");
-            } else {
-                SCCamera.setVideoCachePath(dcim.getPath().replace("/sdcard/",
-                        "/sdcard-ext/")
-                        + "/souche/");
-            }
-        } else {
-            SCCamera.setVideoCachePath(dcim + "/souche/");
-        }
-        // 初始化拍摄
-        SCCamera.initialize(false, null);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,23 +36,6 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
                             .pickedMediaList(mMediaAdapter.getData())
                             .start(MainActivity.this, PhoenixOption.TYPE_BROWSER_PICTURE, 0);
                 }
-            }
-        });
-
-        findViewById(R.id.tv_video).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MediaRecorderConfig config = new MediaRecorderConfig.Buidler()
-                        .fullScreen(true)
-//                        .smallVideoWidth(needFull?0:Integer.valueOf(width))
-//                        .smallVideoHeight(Integer.valueOf(height))
-//                        .recordTimeMax(Integer.valueOf(maxTime))
-//                        .recordTimeMin(Integer.valueOf(minTime))
-//                        .maxFrameRate(Integer.valueOf(maxFramerate))
-//                        .videoBitrate(Integer.valueOf(bitrate))
-                        .captureThumbnailsTime(1)
-                        .build();
-                MediaRecorderActivity.goSmallVideoRecorder(MainActivity.this, MainActivity.class.getName(), config);
             }
         });
     }
