@@ -25,7 +25,10 @@ import com.guoxiaoxing.phoenix.picker.rx.bus.ThreadMode
 import com.guoxiaoxing.phoenix.picker.ui.BaseFragment
 import com.guoxiaoxing.phoenix.picker.ui.camera.OnPictureEditListener
 import com.guoxiaoxing.phoenix.picker.ui.editor.PictureEditFragment
-import com.guoxiaoxing.phoenix.picker.util.*
+import com.guoxiaoxing.phoenix.picker.util.LightStatusBarUtils
+import com.guoxiaoxing.phoenix.picker.util.ScreenUtil
+import com.guoxiaoxing.phoenix.picker.util.ToolbarUtil
+import com.guoxiaoxing.phoenix.picker.util.VoiceUtils
 import com.guoxiaoxing.phoenix.picker.widget.photoview.PhotoView
 import com.guoxiaoxing.phoenix.picker.widget.videoview.PhoenixVideoView
 import kotlinx.android.synthetic.main.fragment_preview.*
@@ -400,7 +403,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
             val pictureEditFragment = PictureEditFragment.newInstance()
             val bundle = Bundle()
             bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
-            val path = allMediaList[preview_pager.currentItem].localPath
+            val path = allMediaList[preview_pager.currentItem].finalPath
             if (path != null) {
                 bundle.putString(PhoenixConstant.KEY_FILE_PATH, path)
                 pictureEditFragment.setArguments(bundle)
@@ -415,6 +418,11 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         super.onActivityResult(requestCode, resultCode, data)
         val editPath = data?.getStringExtra(PhoenixConstant.KEY_FILE_PATH)
         allMediaList.get(position).editPath = editPath
+
+        pickMediaList
+                .filter { TextUtils.equals(it.localPath, allMediaList.get(position).localPath) }
+                .forEach { it.editPath = editPath }
+
         adapter.notifyDataSetChanged()
         updatePickerActivity(true)
     }

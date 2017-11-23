@@ -66,13 +66,13 @@
 
 ```
 //图片/视频选择、预览、编辑与拍照
-compile 'com.github.guoxiaoxing:phoenix:1.0.2'
+compile 'com.github.guoxiaoxing:phoenix:1.0.3'
 
 //选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.2'
+compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.3'
 
 //选填 - 视频压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing:phoenix-compress-video:1.0.2'
+compile 'com.github.guoxiaoxing:phoenix-compress-video:1.0.3'
 ```
 
 ### 调用功能
