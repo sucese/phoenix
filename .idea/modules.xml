@@ -10,8 +10,9 @@
       <module fileurl="file://$PROJECT_DIR$/phoenix-ui/media-ui.iml" filepath="$PROJECT_DIR$/phoenix-ui/media-ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix.iml" filepath="$PROJECT_DIR$/phoenix.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-compress-picture/phoenix-compress-picture.iml" filepath="$PROJECT_DIR$/phoenix-compress-picture/phoenix-compress-picture.iml" />
-      <module fileurl="file://$PROJECT_DIR$/phoenix-compress-video/phoenix-compress-video-hard.iml" filepath="$PROJECT_DIR$/phoenix-compress-video/phoenix-compress-video-hard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phoenix-compress-video/phoenix-compress-video.iml" filepath="$PROJECT_DIR$/phoenix-compress-video/phoenix-compress-video.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-compress-video-hard/phoenix-compress-video.iml" filepath="$PROJECT_DIR$/phoenix-compress-video-hard/phoenix-compress-video.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phoenix-compress-video/phoenix-compress-video-hard.iml" filepath="$PROJECT_DIR$/phoenix-compress-video/phoenix-compress-video-hard.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-core/phoenix-core.iml" filepath="$PROJECT_DIR$/phoenix-core/phoenix-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-ui/phoenix-picker.iml" filepath="$PROJECT_DIR$/phoenix-ui/phoenix-picker.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-ui/phoenix-ui.iml" filepath="$PROJECT_DIR$/phoenix-ui/phoenix-ui.iml" />

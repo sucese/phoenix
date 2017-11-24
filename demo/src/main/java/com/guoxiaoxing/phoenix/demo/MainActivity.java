@@ -10,19 +10,26 @@ import android.view.View;
 import com.guoxiaoxing.phoenix.core.PhoenixOption;
 import com.guoxiaoxing.phoenix.core.model.MediaEntity;
 import com.guoxiaoxing.phoenix.core.model.MimeType;
+import com.guoxiaoxing.phoenix.demo.picture.PictureActivity;
+import com.guoxiaoxing.phoenix.demo.video.VideoActivity;
 import com.guoxiaoxing.phoenix.picker.Phoenix;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAddMediaListener {
+public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAddMediaListener
+        , View.OnClickListener {
 
+    private int REQUEST_CODE = 0x000111;
     private MediaAdapter mMediaAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phoenix_demo);
+
+        findViewById(R.id.btn_compress_picture).setOnClickListener(this);
+        findViewById(R.id.btn_compress_video).setOnClickListener(this);
+
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 4, GridLayoutManager.VERTICAL, false));
         mMediaAdapter = new MediaAdapter(this);
@@ -39,8 +46,6 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
             }
         });
     }
-
-    private int REQUEST_CODE = 0x000111;
 
     @Override
     public void onaddMedia() {
@@ -71,6 +76,18 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
             //返回的数据
             List<MediaEntity> result = Phoenix.result(data);
             mMediaAdapter.setData(result);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_compress_picture:
+                startActivity(new Intent(MainActivity.this, PictureActivity.class));
+                break;
+            case R.id.btn_compress_video:
+                startActivity(new Intent(MainActivity.this, VideoActivity.class));
+                break;
         }
     }
 }

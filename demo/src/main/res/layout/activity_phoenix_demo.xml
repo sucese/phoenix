@@ -14,14 +14,25 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:text="已选择图片"
+        android:text="图片/视频选择"
         android:textSize="15sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_height="300dp"
         android:layout_marginTop="5dp"
         android:overScrollMode="never" />
+
+    <Button
+        android:id="@+id/btn_compress_picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="图片压缩演示" />
+
+    <Button
+        android:id="@+id/btn_compress_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="视频压缩演示" />
 </LinearLayout>
