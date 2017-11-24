@@ -26,9 +26,8 @@
 
 另外提一点Bitmap计算大小的方法。
 
-```
-Bitamp 占用内存大小 = 宽度像素 x （inTargetDensity / inDensity） x 高度像素 x （inTargetDensity / inDensity）x 一个像素所占的内存
-```
+>Bitamp 占用内存大小 = 宽度像素 x （inTargetDensity / inDensity） x 高度像素 x （inTargetDensity / inDensity）x 一个像素所占的内存
+
 在Bitmap里有两个获取内存占用大小的方法。
 
 - getByteCount()：API12 加入，代表存储 Bitmap 的像素需要的最少内存。
