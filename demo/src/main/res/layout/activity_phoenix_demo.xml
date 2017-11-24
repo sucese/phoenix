@@ -20,19 +20,21 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:layout_marginTop="5dp"
         android:overScrollMode="never" />
 
     <Button
         android:id="@+id/btn_compress_picture"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:text="图片压缩演示" />
 
     <Button
         android:id="@+id/btn_compress_video"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:text="视频压缩演示" />
 </LinearLayout>
