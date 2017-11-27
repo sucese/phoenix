@@ -13,10 +13,12 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.guoxiaoxing.phoenix.R
+import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.PhoenixOption.THEME_DEFAULT
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
+import com.guoxiaoxing.phoenix.picker.Phoenix
 import com.guoxiaoxing.phoenix.picker.adapter.PickerAdapter
 import com.guoxiaoxing.phoenix.picker.adapter.PickerAlbumAdapter
 import com.guoxiaoxing.phoenix.picker.model.EventEntity
@@ -409,8 +411,9 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     }
 
     private fun startCamera() {
-        val intent = Intent(this, CameraActivity::class.java)
-        startActivity(intent)
+        val bundle = Bundle()
+        bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
+        startActivity(CameraActivity::class.java, bundle)
         overridePendingTransition(R.anim.phoenix_activity_in, 0)
     }
 }

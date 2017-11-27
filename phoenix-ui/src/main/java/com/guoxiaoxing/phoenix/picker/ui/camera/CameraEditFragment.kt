@@ -86,6 +86,7 @@ class CameraEditFragment : BaseFragment(), View.OnClickListener, OnPictureEditLi
             //            String path = getPath(false);
             //            if (path != null) {
             //                bundle.putString(PhoenixConstant.KEY_FILE_PATH, path);
+//            bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
             //                rotateFragment.setArguments(bundle);
             //                getActivity().getSupportFragmentManager().beginTransaction()
             //                        .replace(R.id.fragment_root, rotateFragment).addToBackStack(null).commitAllowingStateLoss();

@@ -9,8 +9,6 @@
 
 >Android平台上图片/视频选择，编辑和压缩的一站式解决方案。
 
-- [English Document](https://github.com/guoxiaoxing/phoenix/blob/master/README_EN.md)
-
 图片/视频的选择，编辑和压缩是日常开发中的常见需求，Phoenix完整的实现了这些功能，并提供了优雅的调用方式。Phoenix的核心功能基于Kotlin实现，外层接口基于Java实现，方便Kotlin与Java双方的调用。
 
 **特点**
@@ -66,13 +64,13 @@
 
 ```
 //图片/视频选择、预览、编辑与拍照
-compile 'com.github.guoxiaoxing:phoenix:1.0.3'
+compile 'com.github.guoxiaoxing:phoenix:1.0.4'
 
 //选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.3'
+compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.4'
 
 //选填 - 视频压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing:phoenix-compress-video:1.0.3'
+compile 'com.github.guoxiaoxing:phoenix-compress-video:1.0.4'
 ```
 
 ### 调用功能

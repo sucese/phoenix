@@ -12,7 +12,6 @@ import android.widget.Toast
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
-import com.guoxiaoxing.phoenix.core.listener.OnPickerListener
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
 import com.guoxiaoxing.phoenix.core.util.ReflectUtils
@@ -63,7 +62,8 @@ open class BaseFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mContext = context
-        option = arguments.getParcelable(PhoenixConstant.PHOENIX_OPTION)
+        option = if (arguments.getParcelable<PhoenixOption>(PhoenixConstant.PHOENIX_OPTION) == null) PhoenixOption()
+        else arguments.getParcelable(PhoenixConstant.PHOENIX_OPTION)
         setupConfig()
     }
 

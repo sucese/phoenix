@@ -54,10 +54,6 @@ class CameraActivity : BaseActivity() {
                 })
     }
 
-    override fun onRestart() {
-        super.onRestart()
-    }
-
     fun setupFragment() {
         val fragment = CameraFragment.newInstance()
         val bundle = Bundle()

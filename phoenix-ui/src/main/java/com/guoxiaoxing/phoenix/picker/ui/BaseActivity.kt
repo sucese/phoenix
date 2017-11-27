@@ -60,9 +60,10 @@ open class BaseActivity : FragmentActivity() {
     protected lateinit var mediaList: MutableList<MediaEntity>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        option = intent.getParcelableExtra(PhoenixConstant.PHOENIX_OPTION)
         super.onCreate(savedInstanceState)
         mContext = this
+        option = if (intent.getParcelableExtra<PhoenixOption>(PhoenixConstant.PHOENIX_OPTION) == null) PhoenixOption()
+        else intent.getParcelableExtra(PhoenixConstant.PHOENIX_OPTION)
         setupConfig()
     }
 
@@ -269,7 +270,6 @@ open class BaseActivity : FragmentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        dismissLoadingDialog()
         dismissLoadingDialog()
     }
 
