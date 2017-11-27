@@ -42,7 +42,8 @@ public class PictureActivity extends AppCompatActivity implements OnClickListene
     }
 
     private void qualityCompress() {
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "timo_compress_quality_100.jpg");
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+                "timo_compress_quality_100.jpg");
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -73,7 +74,8 @@ public class PictureActivity extends AppCompatActivity implements OnClickListene
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 1;
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blue_red, options);
-        String savePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/timo_BitmapFactory_1.png";
+        String savePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath()
+                + "/timo_BitmapFactory_1.png";
         ImageUtils.save(bitmap, savePath, Bitmap.CompressFormat.PNG);
     }
 

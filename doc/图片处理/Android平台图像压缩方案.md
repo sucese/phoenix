@@ -61,8 +61,9 @@ compress(CompressFormat format, int quality, OutputStream stream)
                                        
 我们来写个例子验证一下。
                                        
-```
-File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "timo_compress_quality_100.jpg");
+```java
+File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                            , "timo_compress_quality_100.jpg");
 if (!file.exists()) {
     try {
         file.createNewFile();
@@ -264,9 +265,10 @@ PowerPC系统上的基准JPEG压缩和解压缩。 在这样的系统上，libjp
 
 ```java
 BitmapFactory.Options options = new BitmapFactory.Options();
-options.inSampleSize = 32;
-Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blue, options);
-String savePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/timo_BitmapFactory_2.png";
+options.inSampleSize = 1;
+Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blue_red, options);
+String savePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath()
+        + "/timo_BitmapFactory_1.png";
 ImageUtils.save(bitmap, savePath, Bitmap.CompressFormat.PNG);
 ```
 inSampleSize = 1
