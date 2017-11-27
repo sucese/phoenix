@@ -43,6 +43,12 @@
 在不复用 Bitmap 时，getByteCount() 和 getAllocationByteCount 返回的结果是一样的。在通过复用 Bitmap 来解码图片时，那么 getByteCount() 表示新解码图片占用内存的大
 小，getAllocationByteCount() 表示被复用 Bitmap真实占用的内存大小（即 mBuffer 的长度）。
 
+除了以上这些概念，我们再提一下Bitmap.java里的一些成员变量，这些变量大家在可能也经常遇到，要理解清楚。
+
+- private byte[] mBuffer：图像数组，用来存储图像，这个Java层的数组实际上是在C++层创建的，下面会说明这个问题。
+- private final boolean mIsMutable：图像是否是可变的，这么说有点抽象，它就像String与StringBuffer的关系一样，String是不可修改的，StringBuffer是可以修改的。
+- private boolean mRecycled：图像是否已经被回收，图像的回收也是在C++层完成的。
+
 了解完基本的概念，我们来分析压缩图像的方法。
 
 Android平台压缩图像的手段通常有两种：
