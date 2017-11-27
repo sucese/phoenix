@@ -92,13 +92,19 @@ try {
            
 quality = 100
 
+1823x1076 1.16m
+
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_compress_quality_100.jpg" width="500"/>
 
 quality = 50
 
+1823x1076 124.52k
+
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_compress_quality_50.jpg" width="500"/>
 
 quality = 0
+
+1823x1076 35.80k
 
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_compress_quality_0.jpg" width="500"/>
 
