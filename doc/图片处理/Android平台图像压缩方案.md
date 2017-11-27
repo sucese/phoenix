@@ -6,7 +6,14 @@
 
 **文章目录**
 
-本篇文章用来介绍Android平台的图像压缩方案以及图像编解码的通识性理解，事实上Android平台对图像的处理最终都交由底层实现，篇幅有限，我们这里不会去分析底层的细节实现细节，但是
+- 一 质量压缩
+    - 1.1 实现方法
+    - 1.2 实现原理
+- 二 尺寸压缩
+    - 2.1 邻近采样
+    - 2.2 双线性采样
+
+本篇文章用来介绍Android平台的图像压缩方案以及图像编解码的通识性理解，事实上Android平台对图像的处理最终都交由底层实现，篇幅有限，我们这里不会去过多的分析底层的细节实现细节，但是
 我们会提一下底层的实现方案概览，给向进一步扩展的同学提供一些思路。
 
 在介绍图像压缩方案之前，我们先要了解一下和压缩相关的图像的基本知识，这也可以帮助我们理解Bitmap.java里定义的一些变量的含义。
@@ -595,7 +602,88 @@ ImageUtils.save(bitmap, savePath, Bitmap.CompressFormat.PNG);
 - Matrix m：变换矩阵
 - boolean filter：是否开启过滤
 
-这个方法同样也调用了底层的native方法：
+我们来看看它的实现。
+
+```java
+  public static Bitmap createBitmap(Bitmap source, int x, int y, int width, int height,
+            Matrix m, boolean filter) {
+        
+        //参数校验
+        ...
+        
+        int neww = width;
+        int newh = height;
+        Canvas canvas = new Canvas();
+        Bitmap bitmap;
+        Paint paint;
+
+        Rect srcR = new Rect(x, y, x + width, y + height);
+        RectF dstR = new RectF(0, 0, width, height);
+
+        //选择图像的编码格式，和源图像保持一致
+        Config newConfig = Config.ARGB_8888;
+        final Config config = source.getConfig();
+        // GIF files generate null configs, assume ARGB_8888
+        if (config != null) {
+            switch (config) {
+                case RGB_565:
+                    newConfig = Config.RGB_565;
+                    break;
+                case ALPHA_8:
+                    newConfig = Config.ALPHA_8;
+                    break;
+                //noinspection deprecation
+                case ARGB_4444:
+                case ARGB_8888:
+                default:
+                    newConfig = Config.ARGB_8888;
+                    break;
+            }
+        }
+
+        if (m == null || m.isIdentity()) {
+            bitmap = createBitmap(neww, newh, newConfig, source.hasAlpha());
+            paint = null;   // not needed
+        } else {
+            final boolean transformed = !m.rectStaysRect();
+
+            //通过Matrix变换获取新的图像宽高
+            RectF deviceR = new RectF();
+            m.mapRect(deviceR, dstR);
+
+            neww = Math.round(deviceR.width());
+            newh = Math.round(deviceR.height());
+
+            //传入图像参数到底层，创建爱女Bitmap对象
+            bitmap = createBitmap(neww, newh, transformed ? Config.ARGB_8888 : newConfig,
+                    transformed || source.hasAlpha());
+
+            canvas.translate(-deviceR.left, -deviceR.top);
+            canvas.concat(m);
+
+            paint = new Paint();
+            paint.setFilterBitmap(filter);
+            if (transformed) {
+                paint.setAntiAlias(true);
+            }
+        }
+
+        // The new bitmap was created from a known bitmap source so assume that
+        // they use the same density
+        bitmap.mDensity = source.mDensity;
+        bitmap.setHasAlpha(source.hasAlpha());
+        bitmap.setPremultiplied(source.mRequestPremultiplied);
+
+        canvas.setBitmap(bitmap);
+        canvas.drawBitmap(source, srcR, dstR, paint);
+        canvas.setBitmap(null);
+
+        return bitmap;
+    }
+```
+
+可以看到这个方法又调用了它的同名方法createBitmap(neww, newh, transformed ? Config.ARGB_8888 : newConfig,transformed || source.hasAlpha())
+该方法当然也是借由底层的native方法实现Bitmap的创建。
 
 ```java
 private static native Bitmap nativeCreate(int[] colors, int offset,
@@ -670,3 +758,14 @@ jbyteArray GraphicsJNI::allocateJavaPixelRef(JNIEnv* env, SkBitmap* bitmap,
 ```
 
 创建完成图像数组后，就接着调用createBitmap()创建Java层的Bitmap对象，这个我们在上面已经说过，自此Bitmap.createBitmap()方法的实现流程我们也分析完了。
+
+以上便是Android原生支持的两种采样方式，如果这些并不能满足你的业务需求，可以考虑以下两种方式。
+
+- [双立方／双三次采样](https://zh.wikipedia.org/wiki/%E5%8F%8C%E4%B8%89%E6%AC%A1%E6%8F%92%E5%80%BC)：双立方／双三次采样使用的是双立方／双三次插值算法。邻近点插值算法的目标像素值由源图上单个像素决定，双线性內插值算法由源像素某点周围 2x2 个像素点按一定权重获得，而双立
+方／双三次插值算法更进一步参考了源像素某点周围 4x4 个像素。这个算法在 Android 中并没有原生支持，如果需要使用，可以通过手动编写算法或者引用第三方算法库，这个算法在 ffmpeg 中已经给到了支持，
+具体的实现在 libswscale/swscale.c 文件中：FFmpeg Scaler Documentation。
+- [Lanczos 采样](https://en.wikipedia.org/wiki/Lanczos_resampling)：Lanczos 采样和 Lanczos 过滤是 Lanczos 算法的两种常见应用，它可以用作低通滤波器或者用于平滑地在采样之间插入数字信号，Lanczos 采样一般用来增加数字信号的采样率，或者间隔
+采样来降低采样率。
+
+好了，以上就是关于Android平台处理图像压缩的全部内容，下一篇文章我们来分析视频压缩的实现方案。另外[phoenix](https://github.com/guoxiaoxing/phoenix)项目完整的实现了图片与视频的压缩，其中图片的压缩就是用的上文提到的
+Luban的算法实现，大家在做项目的时候可以做个参考。
