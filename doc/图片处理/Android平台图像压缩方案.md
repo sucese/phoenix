@@ -45,6 +45,8 @@ Android平台压缩图像的手段通常有两种：
 
 ## 一 质量压缩
 
+### 1.1 实现方法
+
 >质量压缩的关键在于Bitmap.compress()函数，该函数不会改变图像的大小，但是可以降低图像的质量，从而降低存储大小，进而达到压缩的目的。
 
 ```java
@@ -89,11 +91,49 @@ try {
            
 quality = 100
 
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_compress_quality_100.png" width="250"/>
+
 quality = 50
+
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_compress_quality_50.png" width="250"/>
 
 quality = 0
 
-可以看到随着quality的降低，图像质量发生了明显的变化，但是图像的尺寸没有发生变化。这个方法是在Java层是很简单的，我们来探究它的底层实现原理。
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_compress_quality_0.png" width="250"/>
+
+可以看到随着quality的降低，图像质量发生了明显的变化，但是图像的尺寸没有发生变化。
+
+### 1.2 实现原理
+
+Android图片的编码是由Skia库来完成的。
+
+>[Skia](https://skia.org/index_zh)是一个开源的二维图形库，提供各种常用的API，并可在多种软硬件平台上运行。谷歌Chrome浏览器、Chrome OS、安卓、火狐浏览器、火狐操作
+系统以及其它许多产品都使用它作为图形引擎。
+
+Skia在[external/skia](https://android.googlesource.com/platform/external/skia/+/master)包中，我们虽然在平时的开发中没有直接用到Skia，但它对我们太重要了，它
+是Android系统的重要组成部分，很多重要操作例如图像编解码，Canvas绘制在底层都是通过Skia来完成的。它同样被广泛用于Google的其他产品中。
+
+Skia在[src/images](https://android.googlesource.com/platform/external/skia/+/master/src/images/)包下定义了各种格式图片的编解码器。
+
+kImageEncoder.cpp
+
+- SkJpegEncoder.cpp：JPEG解码器
+- SkPngEncoder.cpp：PNG解码器
+- SkWebpEncoder.cpp：WEBP解码器
+
+Skia本身提供了基本的画图和编解码功能，它同时还挂载了其他第三方编解码库，例如：libpng.so、libjpeg.so、libgif.so、所以我们上面想要编码成jpeg图像最终是由libjpeg来完成的。
+上面也提到，我们做图像压缩，一般选择的JPEG，我们重点来看看JPEG的编解码。
+
+>[libjpeg](http://libjpeg.sourceforge.net/)是一个完全用C语言编写的处理JPEG图像数据格式的自由库。它包含一个JPEG编解码器的算法实现，以及用于处理JPEG数据的多种实用程序。
+
+Android并非采用原生的libjpeg，而是做了一些修改，具体说来：
+
+- 修改了内存管理的方式
+- 增加了把压缩数据输出到输出流的支持
+
+libjpeg源码在[external/jpeg](https://android.googlesource.com/platform/external/jpeg/+/master)包下，接下来我们具体看看JPEG压缩的实现。
+
+我们再来从上到下看看整个源码的实现流程。
 
 ```java
 public boolean compress(CompressFormat format, int quality, OutputStream stream) {
@@ -138,6 +178,7 @@ static bool Bitmap_compress(JNIEnv* env, jobject clazz, SkBitmap* bitmap,
         return false;
     }
 
+    //判断当前bitmap指针是否为空
     bool success = false;
     if (NULL != bitmap) {
         SkAutoLockPixels alp(*bitmap);
@@ -146,12 +187,13 @@ static bool Bitmap_compress(JNIEnv* env, jobject clazz, SkBitmap* bitmap,
             return false;
         }
 
+        //创建SkWStream，用于将压缩数据输出到输出流
         SkWStream* strm = CreateJavaOutputStreamAdaptor(env, jstream, jstorage);
         if (NULL == strm) {
             return false;
         }
 
-        //创建图像编码器
+        //根据编码类型，创建对应的编码器，对bitmap指针指向的图像数据进行压缩并输出到输出流
         SkImageEncoder* encoder = SkImageEncoder::Create(fm);
         if (NULL != encoder) {
             //调用encodeStream进行编码
@@ -163,20 +205,45 @@ static bool Bitmap_compress(JNIEnv* env, jobject clazz, SkBitmap* bitmap,
     return success;
 }
 ```
-可以看到该函数根据编码格式选择SkImageEncoder，从而创建对应的图像编码器，最后调用encodeStream(strm, *bitmap, quality)方法来完成编码。通过名字我们就可以
-看出这是Google的Skia图形库。
+可以看到该函数根据编码格式选择[SkImageEncoder](https://android.googlesource.com/platform/external/skia/+/master/src/images/SkJpegEncoder.cpp)，从而创建对应的图像编码器，最后
+调用encodeStream(strm, *bitmap, quality)方法来完成编码。通
 
->[Skia](https://skia.org/index_zh)是一个开源的二维图形库，提供各种常用的API，并可在多种软硬件平台上运行。谷歌Chrome浏览器、Chrome OS、安卓、火狐浏览器、火狐操作
-系统以及其它许多产品都使用它作为图形引擎。
+上面的代码创建了SkJpegEncoder，并最终调用了它里面的make()方法，如下所示：
 
-我们虽然在平时的开发中没有直接用到Skia，但它对我们太重要了，它是Android系统的重要组成部分，很多重要操作例如图像编解码，Canvas绘制在底层都是通过Skia来完成的。它同样被
-广泛用于Google的其他产品中。
-
-Skia本身提供了基本的画图和编解码功能，它同时还挂载了其他第三方编解码库，例如：libpng.so、libjpeg.so、libgif.so、所以我们上面想要编码成jpeg图像最终是由libjpeg来完成的。
-
->[libjpeg](http://libjpeg.sourceforge.net/)是一个完全用C语言编写的处理JPEG图像数据格式的自由库。它包含一个JPEG编解码器的算法实现，以及用于处理JPEG数据的多种实用程序。
-
-这里提到了JPEG编解码器的算法实现，它实际上指的是Huffman 算法。
+```c++
+std::unique_ptr<SkEncoder> SkJpegEncoder::Make(SkWStream* dst, const SkPixmap& src,
+                                               const Options& options) {
+    if (!SkPixmapIsValid(src, options.fBlendBehavior)) {
+        return nullptr;
+    }
+    std::unique_ptr<SkJpegEncoderMgr> encoderMgr = SkJpegEncoderMgr::Make(dst);
+    if (setjmp(encoderMgr->jmpBuf())) {
+        return nullptr;
+    }
+    if (!encoderMgr->setParams(src.info(), options)) {
+        return nullptr;
+    }
+    //设置压缩质量
+    jpeg_set_quality(encoderMgr->cinfo(), options.fQuality, TRUE);
+    //开始压缩
+    jpeg_start_compress(encoderMgr->cinfo(), TRUE);
+    sk_sp<SkData> icc = icc_from_color_space(src.info());
+    if (icc) {
+        // Create a contiguous block of memory with the icc signature followed by the profile.
+        sk_sp<SkData> markerData =
+                SkData::MakeUninitialized(kICCMarkerHeaderSize + icc->size());
+        uint8_t* ptr = (uint8_t*) markerData->writable_data();
+        memcpy(ptr, kICCSig, sizeof(kICCSig));
+        ptr += sizeof(kICCSig);
+        *ptr++ = 1; // This is the first marker.
+        *ptr++ = 1; // Out of one total markers.
+        memcpy(ptr, icc->data(), icc->size());
+        jpeg_write_marker(encoderMgr->cinfo(), kICCMarker, markerData->bytes(), markerData->size());
+    }
+    return std::unique_ptr<SkJpegEncoder>(new SkJpegEncoder(std::move(encoderMgr), src));
+}
+```
+上面就是整个图像压缩的流程。
 
 一般情况下，Android自带的libjpeg就可以满足日常的开发需求，如果业务对高质量和低存储的需求比较大，可以考虑一下以下两个库：
 
@@ -202,14 +269,13 @@ Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blue, op
 String savePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/timo_BitmapFactory_2.png";
 ImageUtils.save(bitmap, savePath, Bitmap.CompressFormat.PNG);
 ```
-
 inSampleSize = 1
 
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_BitmapFactory_1.png" width="250"/>
 
 inSampleSize = 32
 
-
-
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_BitmapFactory_32.png" width="250"/>
 
 可以看到这种方式的关键在于inSampleSize的选择，它决定了压缩后图像的大小。
 
@@ -217,6 +283,8 @@ inSampleSize = 32
 一般会选择2的指数，如果不是2的指数，内部计算的时候也会像2的指数靠近。
 
 关于inSampleSize的计算，[Luban](https://github.com/Curzibn/Luban)提供了很好的思路，作者也给出了算法思路。
+
+算法思路
 
 ```
 1. 判断图像比例值，是否处于以下区间内；
@@ -240,6 +308,42 @@ inSampleSize = 32
 6. 将前面求到的值压缩图像 width, height, size 传入压缩流程，压缩图像直到满足以上数值
 ```
 
+具体实现
+
+```java
+private int computeSize() {
+    int mSampleSize;
+
+    mSourceWidth = mSourceWidth % 2 == 1 ? mSourceWidth + 1 : mSourceWidth;
+    mSourceHeight = mSourceHeight % 2 == 1 ? mSourceHeight + 1 : mSourceHeight;
+
+    mSourceWidth = mSourceWidth > mSourceHeight ? mSourceHeight : mSourceWidth;
+    mSourceHeight = mSourceWidth > mSourceHeight ? mSourceWidth : mSourceHeight;
+
+    double scale = ((double) mSourceWidth / mSourceHeight);
+
+    if (scale <= 1 && scale > 0.5625) {
+      if (mSourceHeight < 1664) {
+        mSampleSize = 1;
+      } else if (mSourceHeight >= 1664 && mSourceHeight < 4990) {
+        mSampleSize = 2;
+      } else if (mSourceHeight >= 4990 && mSourceHeight < 10240) {
+        mSampleSize = 4;
+      } else {
+        mSampleSize = mSourceHeight / 1280 == 0 ? 1 : mSourceHeight / 1280;
+      }
+    } else if (scale <= 0.5625 && scale > 0.5) {
+      mSampleSize = mSourceHeight / 1280 == 0 ? 1 : mSourceHeight / 1280;
+    } else {
+      mSampleSize = (int) Math.ceil(mSourceHeight / (1280.0 / scale));
+    }
+
+    return mSampleSize;
+}
+```
+
+核心思想就是通过对原图宽高的比较计算出合适的采样值。
+
 同样的我们也来看看这种方式的底层实现原理，BitmapFactory里有很多decode方法，它们最终调用的是native方法。
 
 ```java
@@ -251,13 +355,212 @@ private static native Bitmap nativeDecodeAsset(long nativeAsset, Rect padding, O
 private static native Bitmap nativeDecodeByteArray(byte[] data, int offset,
         int length, Options opts);
 ```
-这些native方法在BitmapFactory.cpp里实现，这些方法最终调用的是doDecode()方法
+这些native方法在[BitmapFactory.cpp](https://android.googlesource.com/platform/frameworks/base/+/7b2f8b8/core/jni/android/graphics/BitmapFactory.cpp)里实现，这些方法最终调用的是doDecode()方法
 
 ```c++
-
+static jobject doDecode(JNIEnv* env, SkStream* stream, jobject padding,
+        jobject options, bool allowPurgeable, bool forcePurgeable = false,
+        bool applyScale = false, float scale = 1.0f) {
+    int sampleSize = 1;
+    //图像解码模式，这里是像素点模式
+    SkImageDecoder::Mode mode = SkImageDecoder::kDecodePixels_Mode;
+    //参数初始化
+    SkBitmap::Config prefConfig = SkBitmap::kARGB_8888_Config;
+    bool doDither = true;
+    bool isMutable = false;
+    bool willScale = applyScale && scale != 1.0f;
+    bool isPurgeable = !willScale &&
+            (forcePurgeable || (allowPurgeable && optionsPurgeable(env, options)));
+    bool preferQualityOverSpeed = false;
+    
+    //javaBitmap对象
+    jobject javaBitmap = NULL;
+    //对options里的参数进行初始化
+    if (options != NULL) {
+        sampleSize = env->GetIntField(options, gOptions_sampleSizeFieldID);
+        if (optionsJustBounds(env, options)) {
+            mode = SkImageDecoder::kDecodeBounds_Mode;
+        }
+        // initialize these, in case we fail later on
+        env->SetIntField(options, gOptions_widthFieldID, -1);
+        env->SetIntField(options, gOptions_heightFieldID, -1);
+        env->SetObjectField(options, gOptions_mimeFieldID, 0);
+        jobject jconfig = env->GetObjectField(options, gOptions_configFieldID);
+        prefConfig = GraphicsJNI::getNativeBitmapConfig(env, jconfig);
+        isMutable = env->GetBooleanField(options, gOptions_mutableFieldID);
+        doDither = env->GetBooleanField(options, gOptions_ditherFieldID);
+        preferQualityOverSpeed = env->GetBooleanField(options,
+                gOptions_preferQualityOverSpeedFieldID);
+        javaBitmap = env->GetObjectField(options, gOptions_bitmapFieldID);
+    }
+    if (willScale && javaBitmap != NULL) {
+        return nullObjectReturn("Cannot pre-scale a reused bitmap");
+    }
+    
+    //创建图像解码器，并设置从Java层传递过来的参数，例如sampleSize、doDither等
+    SkImageDecoder* decoder = SkImageDecoder::Factory(stream);
+    if (decoder == NULL) {
+        return nullObjectReturn("SkImageDecoder::Factory returned null");
+    }
+    decoder->setSampleSize(sampleSize);
+    decoder->setDitherImage(doDither);
+    decoder->setPreferQualityOverSpeed(preferQualityOverSpeed);
+    NinePatchPeeker peeker(decoder);
+    //Java的像素分配器
+    JavaPixelAllocator javaAllocator(env);
+    SkBitmap* bitmap;
+    if (javaBitmap == NULL) {
+        bitmap = new SkBitmap;
+    } else {
+        if (sampleSize != 1) {
+            return nullObjectReturn("SkImageDecoder: Cannot reuse bitmap with sampleSize != 1");
+        }
+        bitmap = (SkBitmap*) env->GetIntField(javaBitmap, gBitmap_nativeBitmapFieldID);
+        // config of supplied bitmap overrules config set in options
+        prefConfig = bitmap->getConfig();
+    }
+    SkAutoTDelete<SkImageDecoder> add(decoder);
+    SkAutoTDelete<SkBitmap> adb(bitmap, javaBitmap == NULL);
+    decoder->setPeeker(&peeker);
+    if (!isPurgeable) {
+        decoder->setAllocator(&javaAllocator);
+    }
+    AutoDecoderCancel adc(options, decoder);
+    // To fix the race condition in case "requestCancelDecode"
+    // happens earlier than AutoDecoderCancel object is added
+    // to the gAutoDecoderCancelMutex linked list.
+    if (options != NULL && env->GetBooleanField(options, gOptions_mCancelID)) {
+        return nullObjectReturn("gOptions_mCancelID");
+    }
+    SkImageDecoder::Mode decodeMode = mode;
+    if (isPurgeable) {
+        decodeMode = SkImageDecoder::kDecodeBounds_Mode;
+    }
+    
+    //解码
+    SkBitmap* decoded;
+    if (willScale) {
+        decoded = new SkBitmap;
+    } else {
+        decoded = bitmap;
+    }
+    SkAutoTDelete<SkBitmap> adb2(willScale ? decoded : NULL);
+    if (!decoder->decode(stream, decoded, prefConfig, decodeMode, javaBitmap != NULL)) {
+        return nullObjectReturn("decoder->decode returned false");
+    }
+    
+    //缩放操作
+    int scaledWidth = decoded->width();
+    int scaledHeight = decoded->height();
+    if (willScale && mode != SkImageDecoder::kDecodeBounds_Mode) {
+        scaledWidth = int(scaledWidth * scale + 0.5f);
+        scaledHeight = int(scaledHeight * scale + 0.5f);
+    }
+    // 更新选项参数
+    if (options != NULL) {
+        env->SetIntField(options, gOptions_widthFieldID, scaledWidth);
+        env->SetIntField(options, gOptions_heightFieldID, scaledHeight);
+        env->SetObjectField(options, gOptions_mimeFieldID,
+                getMimeTypeString(env, decoder->getFormat()));
+    }
+    
+    //处于justBounds模式，不再创建Bitmap对象，直接返回，这个很熟悉吧，对应了
+    //options.inJustDecodeBounds = true，直解析大小，不实际加载图像
+    if (mode == SkImageDecoder::kDecodeBounds_Mode) {
+        return NULL;
+    }
+    jbyteArray ninePatchChunk = NULL;
+    if (peeker.fPatchIsValid) {
+        if (willScale) {
+            scaleNinePatchChunk(peeker.fPatch, scale);
+        }
+        size_t ninePatchArraySize = peeker.fPatch->serializedSize();
+        ninePatchChunk = env->NewByteArray(ninePatchArraySize);
+        if (ninePatchChunk == NULL) {
+            return nullObjectReturn("ninePatchChunk == null");
+        }
+        jbyte* array = (jbyte*) env->GetPrimitiveArrayCritical(ninePatchChunk, NULL);
+        if (array == NULL) {
+            return nullObjectReturn("primitive array == null");
+        }
+        peeker.fPatch->serialize(array);
+        env->ReleasePrimitiveArrayCritical(ninePatchChunk, array, 0);
+    }
+    // detach bitmap from its autodeleter, since we want to own it now
+    adb.detach();
+    
+    //处理缩放
+    if (willScale) {
+        // This is weird so let me explain: we could use the scale parameter
+        // directly, but for historical reasons this is how the corresponding
+        // Dalvik code has always behaved. We simply recreate the behavior here.
+        // The result is slightly different from simply using scale because of
+        // the 0.5f rounding bias applied when computing the target image size
+        const float sx = scaledWidth / float(decoded->width());
+        const float sy = scaledHeight / float(decoded->height());
+        bitmap->setConfig(decoded->getConfig(), scaledWidth, scaledHeight);
+        bitmap->allocPixels(&javaAllocator, NULL);
+        bitmap->eraseColor(0);
+        SkPaint paint;
+        paint.setFilterBitmap(true);
+        SkCanvas canvas(*bitmap);
+        canvas.scale(sx, sy);
+        canvas.drawBitmap(*decoded, 0.0f, 0.0f, &paint);
+    }
+    
+    //处理图像的边距
+    if (padding) {
+        if (peeker.fPatchIsValid) {
+            GraphicsJNI::set_jrect(env, padding,
+                    peeker.fPatch->paddingLeft, peeker.fPatch->paddingTop,
+                    peeker.fPatch->paddingRight, peeker.fPatch->paddingBottom);
+        } else {
+            GraphicsJNI::set_jrect(env, padding, -1, -1, -1, -1);
+        }
+    }
+    SkPixelRef* pr;
+    if (isPurgeable) {
+        pr = installPixelRef(bitmap, stream, sampleSize, doDither);
+    } else {
+        // if we get here, we're in kDecodePixels_Mode and will therefore
+        // already have a pixelref installed.
+        pr = bitmap->pixelRef();
+    }
+    if (!isMutable) {
+        // promise we will never change our pixels (great for sharing and pictures)
+        pr->setImmutable();
+    }
+    if (javaBitmap != NULL) {
+        // If a java bitmap was passed in for reuse, pass it back
+        return javaBitmap;
+    }
+    // 创建Bitmap对象并返回
+    return GraphicsJNI::createBitmap(env, bitmap, javaAllocator.getStorageObj(),
+            isMutable, ninePatchChunk);
+}
 ```
 
-### 2.12 双线性采样
+我们发现在最后调用了createBitmap()方法来创建Bitmap对象，这个方法在[Graphics.cpp](https://android.googlesource.com/platform/frameworks/base/+/7b2f8b8/core/jni/android/graphics/Graphics.cpp)里定义的，我们来看看它是如何创建Bitmap的。
+
+```c++
+jobject GraphicsJNI::createBitmap(JNIEnv* env, SkBitmap* bitmap, jbyteArray buffer,
+                                  bool isMutable, jbyteArray ninepatch, int density)
+{
+    SkASSERT(bitmap);
+    SkASSERT(bitmap->pixelRef());
+    //调用Java方法，创建一个对象
+    jobject obj = env->NewObject(gBitmap_class, gBitmap_constructorMethodID,
+            static_cast<jint>(reinterpret_cast<uintptr_t>(bitmap)),
+            buffer, isMutable, ninepatch, density);
+    hasException(env); // For the side effect of logging.
+    //返回Bitmap对象
+    return obj;
+}
+```
+
+可以看到最终C++层调用JNI方法创建了Java层的Bitmap对象，至此，整个BitmapFactory的解码流程我们就分析完了。
+
+### 2.2 双线性采样
 
 >双线性采样采用双线性插值算法，相比邻近采样简单粗暴的选择一个像素点代替其他像素点，双线性采样参考源像素相应位置周围2x2个点的值，根据相对位置取对应的权重，经过计算得到目标图像。
 
@@ -292,4 +595,70 @@ private static native Bitmap nativeCreate(int[] colors, int offset,
                                               int nativeConfig, boolean mutable);
 ```
 
-该方法在Bitmap.cpp里实现。
+这个方法对应着[Bitmap.cpp](https://android.googlesource.com/platform/frameworks/base/+/7b2f8b8/core/jni/android/graphics/Bitmap.cpp)里的Bitmap_creator()方法。
+
+```c++
+static jobject Bitmap_creator(JNIEnv* env, jobject, jintArray jColors,
+                              int offset, int stride, int width, int height,
+                              SkBitmap::Config config, jboolean isMutable) {
+    if (NULL != jColors) {
+        size_t n = env->GetArrayLength(jColors);
+        if (n < SkAbs32(stride) * (size_t)height) {
+            doThrowAIOOBE(env);
+            return NULL;
+        }
+    }
+
+    //SkBitmap对象
+    SkBitmap bitmap;
+
+    //设置图像配置信息
+    bitmap.setConfig(config, width, height);
+
+    //创建图像数组，这里对应着Bitmap.java里的mBuffers
+    jbyteArray buff = GraphicsJNI::allocateJavaPixelRef(env, &bitmap, NULL);
+    if (NULL == buff) {
+        return NULL;
+    }
+
+    if (jColors != NULL) {
+        GraphicsJNI::SetPixels(env, jColors, offset, stride,
+                               0, 0, width, height, bitmap);
+    }
+
+    //创建Bitmap对象，并返回
+    return GraphicsJNI::createBitmap(env, new SkBitmap(bitmap), buff, isMutable, NULL);
+}
+```
+
+可以看到上面调用allocateJavaPixelRef()方法来创建图像数组，该方法在[Graphics.cpp](https://android.googlesource.com/platform/frameworks/base/+/7b2f8b8/core/jni/android/graphics/Graphics.cpp)里定义的。
+
+```c++
+jbyteArray GraphicsJNI::allocateJavaPixelRef(JNIEnv* env, SkBitmap* bitmap,
+                                             SkColorTable* ctable) {
+    Sk64 size64 = bitmap->getSize64();
+    if (size64.isNeg() || !size64.is32()) {
+        jniThrowException(env, "java/lang/IllegalArgumentException",
+                          "bitmap size exceeds 32bits");
+        return NULL;
+    }
+    size_t size = size64.get32();
+    //调用Java层的方法创建一个Java数组
+    jbyteArray arrayObj = env->NewByteArray(size);
+    if (arrayObj) {
+        // TODO: make this work without jniGetNonMovableArrayElements
+       //获取数组地址
+        jbyte* addr = jniGetNonMovableArrayElements(&env->functions, arrayObj);
+        if (addr) {
+            SkPixelRef* pr = new AndroidPixelRef(env, (void*) addr, size, arrayObj, ctable);
+            bitmap->setPixelRef(pr)->unref();
+            // since we're already allocated, we lockPixels right away
+            // HeapAllocator behaves this way too
+            bitmap->lockPixels();
+        }
+    }
+    return arrayObj;
+}
+```
+
+创建完成图像数组后，就接着调用createBitmap()创建Java层的Bitmap对象，这个我们在上面已经说过，自此Bitmap.createBitmap()方法的实现流程我们也分析完了。
