@@ -91,15 +91,15 @@ try {
            
 quality = 100
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_compress_quality_100.png" width="250"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_compress_quality_100.jpg" width="300"/>
 
 quality = 50
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_compress_quality_50.png" width="250"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_compress_quality_50.jpg" width="300"/>
 
 quality = 0
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_compress_quality_0.png" width="250"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_compress_quality_0.jpg" width="300"/>
 
 可以看到随着quality的降低，图像质量发生了明显的变化，但是图像的尺寸没有发生变化。
 
@@ -271,11 +271,11 @@ ImageUtils.save(bitmap, savePath, Bitmap.CompressFormat.PNG);
 ```
 inSampleSize = 1
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_BitmapFactory_1.png" width="250"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_BitmapFactory_1.png" width="300"/>
 
 inSampleSize = 32
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_BitmapFactory_32.png" width="250"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/timo_BitmapFactory_32.png" width="300"/>
 
 可以看到这种方式的关键在于inSampleSize的选择，它决定了压缩后图像的大小。
 
