@@ -11,6 +11,10 @@
 
 图片/视频的选择，编辑和压缩是日常开发中的常见需求，Phoenix完整的实现了这些功能，并提供了优雅的调用方式。Phoenix的核心功能基于Kotlin实现，外层接口基于Java实现，方便Kotlin与Java双方的调用。
 
+更多关于图像/视频编解码的文章
+
+- [Android平台图像压缩方案](https://github.com/guoxiaoxing/phoenix/blob/master/doc/图像处理/Android平台图像压缩方案.md)
+
 **特点**
 
 - 功能相互独立，各个功能的实现依赖于约定的接口，彼此互不依赖，开发者不必为了引入某一个功能而带入一堆依赖。
