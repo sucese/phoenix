@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
     public void onaddMedia() {
         Phoenix.with()
                 .theme(PhoenixOption.THEME_DEFAULT)// 主题
-                .fileType(MimeType.ofImage())//显示的文件类型图片、视频、图片和视频
+                .fileType(MimeType.ofAll())//显示的文件类型图片、视频、图片和视频
                 .maxPickNumber(10)// 最大选择数量
                 .minPickNumber(0)// 最小选择数量
                 .spanCount(4)// 每行显示个数

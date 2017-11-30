@@ -138,6 +138,14 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         adapter = SimpleFragmentAdapter()
         preview_pager.adapter = adapter
         preview_pager.currentItem = position
+
+        val mediaEntity = allMediaList[preview_pager.currentItem]
+        if (mediaEntity.fileType == MimeType.ofImage()) {
+            ll_picture_edit.visibility = View.VISIBLE
+        } else {
+            ll_picture_edit.visibility = View.GONE
+        }
+
         preview_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 isPreviewEggs(previewEggs, position, positionOffsetPixels)
