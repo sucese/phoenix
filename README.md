@@ -238,10 +238,8 @@ VideoCompressor.Listener listener = new VideoCompressor.Listener() {
     }
 };
 try {
-    VideoCompressor.getInstance().asyncTranscodeVideo(mediaEntity.getLocalPath()
-                ,compressFile.getAbsolutePath() 
-                ,MediaFormatStrategyPresets.createAndroid480pFormatStrategy()
-                ,listener);
+    VideoCompressor.getInstance().asyncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
+            MediaFormatStrategyPresets.createAndroid480pFormatStrategy(), listener);
 } catch (IOException e) {
     e.printStackTrace();
 }
