@@ -20,33 +20,33 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class MediaTranscoder {
-    private static final String TAG = "MediaTranscoder";
+public class VideoCompressor {
+    private static final String TAG = "VideoCompressor";
     private static final int MAXIMUM_THREAD = 1; // TODO
-    private static volatile MediaTranscoder sMediaTranscoder;
+    private static volatile VideoCompressor sVideoCompressor;
     private ThreadPoolExecutor mExecutor;
 
-    private MediaTranscoder() {
+    private VideoCompressor() {
         mExecutor = new ThreadPoolExecutor(
                 0, MAXIMUM_THREAD, 60, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<Runnable>(),
                 new ThreadFactory() {
                     @Override
                     public Thread newThread(Runnable r) {
-                        return new Thread(r, "MediaTranscoder-Worker");
+                        return new Thread(r, "VideoCompressor-Worker");
                     }
                 });
     }
 
-    public static MediaTranscoder getInstance() {
-        if (sMediaTranscoder == null) {
-            synchronized (MediaTranscoder.class) {
-                if (sMediaTranscoder == null) {
-                    sMediaTranscoder = new MediaTranscoder();
+    public static VideoCompressor getInstance() {
+        if (sVideoCompressor == null) {
+            synchronized (VideoCompressor.class) {
+                if (sVideoCompressor == null) {
+                    sVideoCompressor = new VideoCompressor();
                 }
             }
         }
-        return sMediaTranscoder;
+        return sVideoCompressor;
     }
 
     /**

@@ -44,7 +44,7 @@ public class VideoCompressProcessor implements Processor {
         }
 
         try {
-           String compressPath =  MediaTranscoder.getInstance().syncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
+           String compressPath =  VideoCompressor.getInstance().syncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
                     MediaFormatStrategyPresets.createAndroid480pFormatStrategy());
             result.setCompressed(true);
             result.setCompressPath(compressPath);
@@ -77,7 +77,7 @@ public class VideoCompressProcessor implements Processor {
             Toast.makeText(context, "Failed to create temporary file.", Toast.LENGTH_LONG).show();
             return;
         }
-        MediaTranscoder.Listener listener = new MediaTranscoder.Listener() {
+        VideoCompressor.Listener listener = new VideoCompressor.Listener() {
             @Override
             public void onTranscodeProgress(double progress) {
                 onProcessorListener.onProgress((int) progress);
@@ -101,7 +101,7 @@ public class VideoCompressProcessor implements Processor {
             }
         };
         try {
-            MediaTranscoder.getInstance().asyncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
+            VideoCompressor.getInstance().asyncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
                     MediaFormatStrategyPresets.createAndroid480pFormatStrategy(), listener);
         } catch (IOException e) {
             e.printStackTrace();

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.guoxiaoxing.phoenix.compress.picture.internal.PictureCompresser;
+import com.guoxiaoxing.phoenix.compress.picture.internal.PictureCompressor;
 import com.guoxiaoxing.phoenix.compress.picture.listener.OnCompressListener;
 import com.guoxiaoxing.phoenix.core.PhoenixOption;
 import com.guoxiaoxing.phoenix.core.listener.OnProcessorListener;
@@ -49,7 +49,7 @@ public final class PictureCompressProcessor implements Processor {
         }
         File file = new File(path);
         try {
-            File compressFIle = PictureCompresser.with(context)
+            File compressFIle = PictureCompressor.with(context)
                     .savePath(context.getCacheDir().getAbsolutePath())
                     .load(file)
                     .get();
@@ -94,7 +94,7 @@ public final class PictureCompressProcessor implements Processor {
         }
 
         File file = new File(path);
-        PictureCompresser.with(context)
+        PictureCompressor.with(context)
                 .load(file)
                 .setCompressListener(new OnCompressListener() {
                     @Override

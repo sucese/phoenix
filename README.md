@@ -79,7 +79,7 @@ compile 'com.github.guoxiaoxing:phoenix-compress-video:1.0.5'
 
 ### 调用功能
 
-初始化
+#### 初始化
 
 ```java
 public class App extends Application {
@@ -102,7 +102,7 @@ public class App extends Application {
 }
 ```
 
-开启功能
+#### 开启功能
 
 ```java
 Phoenix.with()
@@ -125,7 +125,7 @@ Phoenix.with()
         .start(MainActivity.this, PhoenixOption.TYPE_PICK_MEDIA, REQUEST_CODE);
 ```
 
-获取结果
+#### 获取结果
 
 ```java
 @Override
@@ -141,18 +141,30 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 另外，Phoenix内置了图片压缩库与视频压缩库，这两个功能都可以单独调用。
 
-图片压缩
+#### 图片压缩
+
+同步方法
 
 ```java
-String path;
-if(!TextUtils.isEmpty(mediaEntity.getEditPath())){
-    path = mediaEntity.getEditPath();
-}else {
-    path = mediaEntity.getLocalPath();
+File file = new File(localPath);
+try {
+    File compressFIle = PictureCompressor.with(context)
+            .savePath(context.getCacheDir().getAbsolutePath())
+            .load(file)
+            .get();
+    if (compressFIle != null) {
+        String compressPath = compressFIle.getAbsolutePath();
+    }
+} catch (IOException e) {
+    e.printStackTrace();
 }
+```
 
-File file = new File(path);
-PictureCompresser.with(context)
+异步方法
+
+```java
+File file = new File(localPath);
+PictureCompressor.with(context)
         .load(file)
         .setCompressListener(new OnCompressListener() {
             @Override
@@ -163,8 +175,7 @@ PictureCompresser.with(context)
             @Override
             public void onSuccess(File file) {
                 Log.d(TAG, "Picture compress onSuccess");
-                mediaEntity.setCompressed(true);
-                mediaEntity.setCompressPath(file.getAbsolutePath());
+                String compressPath = file.getAbsolutePath();
             }
 
             @Override
@@ -174,11 +185,35 @@ PictureCompresser.with(context)
         }).launch();
 ```
 
-视频压缩
+#### 视频压缩
+
+同步方法
 
 ```java
-final MediaEntity result = mediaEntity;
+final File compressFile;
+try {
+    File compressCachePath = new File(context.getCacheDir(), "outputs");
+    compressCachePath.mkdir();
+    compressFile = File.createTempFile("compress", ".mp4", compressCachePath);
+} catch (IOException e) {
+    Toast.makeText(context, "Failed to create temporary file.", Toast.LENGTH_LONG).show();
+    return null;
+}
 
+try {
+   String compressPath =  VideoCompressor.getInstance().syncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
+            MediaFormatStrategyPresets.createAndroid480pFormatStrategy());
+    result.setCompressed(true);
+    result.setCompressPath(compressPath);
+    return mediaEntity;
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+异步方法
+
+```java
 final File compressFile;
 try {
     File compressCachePath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "phoenix");
@@ -188,16 +223,14 @@ try {
     Toast.makeText(context, "Failed to create temporary file.", Toast.LENGTH_LONG).show();
     return;
 }
-MediaTranscoder.Listener listener = new MediaTranscoder.Listener() {
+VideoCompressor.Listener listener = new VideoCompressor.Listener() {
     @Override
     public void onTranscodeProgress(double progress) {
-        
     }
 
     @Override
     public void onTranscodeCompleted() {
-        result.setCompressed(true);
-        result.setCompressPath(compressFile.getAbsolutePath());
+        String compressPath = compressFile.getAbsolutePath();
     }
 
     @Override
@@ -207,17 +240,17 @@ MediaTranscoder.Listener listener = new MediaTranscoder.Listener() {
 
     @Override
     public void onTranscodeFailed(Exception exception) {
+        
     }
 };
 try {
-    MediaTranscoder.getInstance().asyncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
+    VideoCompressor.getInstance().asyncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
             MediaFormatStrategyPresets.createAndroid480pFormatStrategy(), listener);
 } catch (IOException e) {
     e.printStackTrace();
 }
 ```
-
-我们来重点看看视频压缩的测试数据
+视频压缩的测试数据
 
 |手机型号|源视频时长|源视频大小|压缩视频大小|压缩耗时|
 |:------|:--------|:--------|:---------|:------|

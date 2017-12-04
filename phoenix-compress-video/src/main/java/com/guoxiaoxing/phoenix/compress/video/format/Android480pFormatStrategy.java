@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2014 Yuya Tanaka
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.guoxiaoxing.phoenix.compress.video.format;
 
 import android.media.MediaCodecInfo;
@@ -22,7 +7,7 @@ import android.util.Log;
 class Android480pFormatStrategy implements MediaFormatStrategy {
     public static final int AUDIO_BITRATE_AS_IS = -1;
     public static final int AUDIO_CHANNELS_AS_IS = -1;
-    private static final String TAG = "720pFormatStrategy";
+    private static final String TAG = "420pFormatStrategy";
     private static final int LONGER_LENGTH = 640;
     private static final int SHORTER_LENGTH = 480;
     private static final int DEFAULT_VIDEO_BITRATE = 700 * 1000; // From Nexus 4 Camera in 480p
@@ -64,11 +49,11 @@ class Android480pFormatStrategy implements MediaFormatStrategy {
             throw new OutputFormatUnavailableException("This video is not 16:9, and is not able to transcode. (" + width + "x" + height + ")");
         }
         if (shorter <= SHORTER_LENGTH) {
-            Log.d(TAG, "This video is less or equal to 720p, pass-through. (" + width + "x" + height + ")");
+            Log.d(TAG, "This video is less or equal to 480p, pass-through. (" + width + "x" + height + ")");
             return null;
         }
         MediaFormat format = MediaFormat.createVideoFormat("video/avc", outWidth, outHeight);
-        // From Nexus 4 Camera in 720p
+        // From Nexus 4 Camera in 480p
         format.setInteger(MediaFormat.KEY_BIT_RATE, mVideoBitrate);
         format.setInteger(MediaFormat.KEY_FRAME_RATE, 30);
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 3);

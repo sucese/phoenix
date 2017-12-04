@@ -1,7 +1,6 @@
 package com.guoxiaoxing.phoenix.compress.picture.internal;
 
 import android.content.Context;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -14,9 +13,9 @@ import com.guoxiaoxing.phoenix.compress.picture.listener.OnCompressListener;
 import java.io.File;
 import java.io.IOException;
 
-public class PictureCompresser implements Handler.Callback {
+public class PictureCompressor implements Handler.Callback {
 
-    private static final String TAG = "PictureCompresser";
+    private static final String TAG = "PictureCompressor";
     private static final String DEFAULT_DISK_CACHE_DIR = "cache";
 
     private static final int MSG_COMPRESS_SUCCESS = 0;
@@ -29,7 +28,7 @@ public class PictureCompresser implements Handler.Callback {
     private OnCompressListener onCompressListener;
     private Handler mHandler;
 
-    private PictureCompresser(Builder builder) {
+    private PictureCompressor(Builder builder) {
         this.mFile = builder.file;
         this.mSavePath = builder.savePath;
         this.mFilterSize = builder.filterSize;
@@ -146,8 +145,8 @@ public class PictureCompresser implements Handler.Callback {
             this.context = context;
         }
 
-        private PictureCompresser build() {
-            return new PictureCompresser(this);
+        private PictureCompressor build() {
+            return new PictureCompressor(this);
         }
 
         public Builder load(File file) {
