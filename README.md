@@ -203,9 +203,6 @@ try {
 try {
    String compressPath =  VideoCompressor.getInstance().syncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
             MediaFormatStrategyPresets.createAndroid480pFormatStrategy());
-    result.setCompressed(true);
-    result.setCompressPath(compressPath);
-    return mediaEntity;
 } catch (IOException e) {
     e.printStackTrace();
 }
