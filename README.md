@@ -169,18 +169,15 @@ PictureCompressor.with(context)
         .setCompressListener(new OnCompressListener() {
             @Override
             public void onStart() {
-                Log.d(TAG, "Picture compress onStart");
             }
 
             @Override
             public void onSuccess(File file) {
-                Log.d(TAG, "Picture compress onSuccess");
                 String compressPath = file.getAbsolutePath();
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d(TAG, "Picture compress onError : " + e.getMessage());
             }
         }).launch();
 ```
