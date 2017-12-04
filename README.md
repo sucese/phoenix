@@ -68,13 +68,13 @@
 
 ```
 //图片/视频选择、预览、编辑与拍照
-compile 'com.github.guoxiaoxing:phoenix:1.0.6'
+compile 'com.github.guoxiaoxing:phoenix:1.0.7'
 
 //选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.6'
+compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.7'
 
 //选填 - 视频压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing:phoenix-compress-video:1.0.6'
+compile 'com.github.guoxiaoxing:phoenix-compress-video:1.0.7'
 ```
 
 ### 调用功能
@@ -198,7 +198,7 @@ try {
 }
 
 try {
-   String compressPath =  VideoCompressor.getInstance().syncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
+   String compressPath =  VideoCompressor.with().syncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
             MediaFormatStrategyPresets.createAndroid480pFormatStrategy());
 } catch (IOException e) {
     e.printStackTrace();
@@ -238,7 +238,7 @@ VideoCompressor.Listener listener = new VideoCompressor.Listener() {
     }
 };
 try {
-    VideoCompressor.getInstance().asyncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
+    VideoCompressor.with().asyncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
             MediaFormatStrategyPresets.createAndroid480pFormatStrategy(), listener);
 } catch (IOException e) {
     e.printStackTrace();

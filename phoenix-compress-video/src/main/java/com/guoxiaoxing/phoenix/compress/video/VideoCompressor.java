@@ -38,7 +38,7 @@ public class VideoCompressor {
                 });
     }
 
-    public static VideoCompressor getInstance() {
+    public static VideoCompressor with() {
         if (sVideoCompressor == null) {
             synchronized (VideoCompressor.class) {
                 if (sVideoCompressor == null) {

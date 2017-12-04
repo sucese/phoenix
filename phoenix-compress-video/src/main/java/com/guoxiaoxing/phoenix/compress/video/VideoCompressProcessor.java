@@ -44,7 +44,7 @@ public class VideoCompressProcessor implements Processor {
         }
 
         try {
-           String compressPath =  VideoCompressor.getInstance().syncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
+           String compressPath =  VideoCompressor.with().syncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
                     MediaFormatStrategyPresets.createAndroid480pFormatStrategy());
             result.setCompressed(true);
             result.setCompressPath(compressPath);
@@ -101,7 +101,7 @@ public class VideoCompressProcessor implements Processor {
             }
         };
         try {
-            VideoCompressor.getInstance().asyncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
+            VideoCompressor.with().asyncTranscodeVideo(mediaEntity.getLocalPath(), compressFile.getAbsolutePath(),
                     MediaFormatStrategyPresets.createAndroid480pFormatStrategy(), listener);
         } catch (IOException e) {
             e.printStackTrace();
