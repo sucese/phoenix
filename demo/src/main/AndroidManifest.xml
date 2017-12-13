@@ -17,8 +17,9 @@
             </intent-filter>
         </activity>
         <activity android:name="com.guoxiaoxing.phoenix.compress.video.soft.MediaRecorderActivity" />
-        <activity android:name=".picture.PictureActivity" />
-        <activity android:name=".video.VideoActivity"></activity>
+        <activity android:name=".picture.PictureDemoActivity" />
+        <activity android:name=".video.VideoDemoActivity" />
+        <activity android:name=".camera.CameraDemoActivity"></activity>
     </application>
 
 </manifest>

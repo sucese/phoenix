@@ -16,7 +16,7 @@ between Kotlin and Java.
 **Feature**
 
 - The implementation of each function depends on the agreed interface，the functions are independent of each other.
-- Built-in four color schemes, developers can also customize their own UI through simple configuration of simple style files.
+- Built-in four color schemes, developers can also customize their own UI through simple cameraConfig of simple style files.
 - Use  the enableXXX(true) method to turn on a function and get the result from the MediaEntity.
 - Support for RxJava, each feature provides synchronous and asynchronous implementations for developers to make use of RxJava for functional composition and nesting.
 - Support for runtime permission.

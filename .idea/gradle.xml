@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/demo" />
+            <option value="$PROJECT_DIR$/phoenix-camera" />
             <option value="$PROJECT_DIR$/phoenix-compress-picture" />
             <option value="$PROJECT_DIR$/phoenix-compress-video" />
             <option value="$PROJECT_DIR$/phoenix-core" />

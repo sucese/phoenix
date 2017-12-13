@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/phoenix_dimen_16"
-    tools:context="com.guoxiaoxing.phoenix.demo.picture.PictureActivity">
+    tools:context="com.guoxiaoxing.phoenix.demo.picture.PictureDemoActivity">
 
     <Button
         android:id="@+id/btn_bitmap_compress"

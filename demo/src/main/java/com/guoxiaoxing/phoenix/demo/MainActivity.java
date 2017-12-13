@@ -6,12 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.WindowManager;
 
+import com.guoxiaoxing.phoenix.camera.CameraActivity;
 import com.guoxiaoxing.phoenix.core.PhoenixOption;
 import com.guoxiaoxing.phoenix.core.model.MediaEntity;
 import com.guoxiaoxing.phoenix.core.model.MimeType;
-import com.guoxiaoxing.phoenix.demo.picture.PictureActivity;
-import com.guoxiaoxing.phoenix.demo.video.VideoActivity;
+import com.guoxiaoxing.phoenix.demo.camera.CameraDemoActivity;
+import com.guoxiaoxing.phoenix.demo.picture.PictureDemoActivity;
+import com.guoxiaoxing.phoenix.demo.video.VideoDemoActivity;
 import com.guoxiaoxing.phoenix.picker.Phoenix;
 
 import java.util.List;
@@ -25,10 +28,13 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getWindow() != null){
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
         setContentView(R.layout.activity_phoenix_demo);
-
         findViewById(R.id.btn_compress_picture).setOnClickListener(this);
         findViewById(R.id.btn_compress_video).setOnClickListener(this);
+        findViewById(R.id.btn_take_picture).setOnClickListener(this);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 4, GridLayoutManager.VERTICAL, false));
@@ -83,10 +89,13 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_compress_picture:
-                startActivity(new Intent(MainActivity.this, PictureActivity.class));
+                startActivity(new Intent(MainActivity.this, PictureDemoActivity.class));
                 break;
             case R.id.btn_compress_video:
-                startActivity(new Intent(MainActivity.this, VideoActivity.class));
+                startActivity(new Intent(MainActivity.this, VideoDemoActivity.class));
+                break;
+            case R.id.btn_take_picture:
+                startActivity(new Intent(MainActivity.this, CameraActivity.class));
                 break;
         }
     }

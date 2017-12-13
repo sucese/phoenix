@@ -36,13 +36,14 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:4.0.0-RC1'
     compile 'com.github.guoxiaoxing:toolkit:1.0.0'
 
-    //图片/视频库
-    compile "com.github.guoxiaoxing:phoenix:$rootProject.ext.phoenixVerson"
-    compile "com.github.guoxiaoxing:phoenix-compress-picture:$rootProject.ext.phoenixVerson"
-    compile "com.github.guoxiaoxing:phoenix-compress-video:$rootProject.ext.phoenixVerson"
-
 //    //图片/视频库
-//    compile project(':phoenix-ui')
-//    compile project(':phoenix-compress-video')
-//    compile project(':phoenix-compress-picture')
+//    compile "com.github.guoxiaoxing:phoenix:$rootProject.ext.phoenixVerson"
+//    compile "com.github.guoxiaoxing:phoenix-compress-picture:$rootProject.ext.phoenixVerson"
+//    compile "com.github.guoxiaoxing:phoenix-compress-video:$rootProject.ext.phoenixVerson"
+
+    //图片/视频库
+    compile project(':phoenix-ui')
+    compile project(':phoenix-camera')
+    compile project(':phoenix-compress-video')
+    compile project(':phoenix-compress-picture')
 }
