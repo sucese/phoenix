@@ -96,7 +96,7 @@ Camera2 API中主要涉及以下几个关键类：
 
 Camera2拍照流程如下所示：
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/camera/camera2_structure.png" width="500"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/camera/camera2_structure.png" width="600"/>
 
 开发者通过创建CaptureRequest向摄像头发起Capture请求，这些请求会排成一个队列供摄像头处理，摄像头将结果包装在CaptureMetadata中返回给开发者。整个流程建立在一个CameraCaptureSession的会话中。
 
