@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
                 .thumbnailWidth(160)// 选择界面图片宽度
                 .enableClickSound(false)// 是否开启点击声音
                 .pickedMediaList(mMediaAdapter.getData())// 已选图片数据
-                .videoFilterTime(0)//显示多少秒以内的视频
+                .videoFilterTime(30)//显示多少秒以内的视频
                 .start(MainActivity.this, PhoenixOption.TYPE_PICK_MEDIA, REQUEST_CODE);
     }
 

@@ -27,7 +27,7 @@ task clean(type: Delete) {
 }
 
 ext {
-    phoenixVerson = '1.0.7'
+    phoenixVerson = '1.0.8'
     phoenixCoreVersion = '1.0.2'
 
     //android
