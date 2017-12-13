@@ -66,7 +66,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
 
     private SensorManager sensorManager;
     private AlertDialog settingsDialog;
-    private CameraController cameraController;
+    private CameraController mCameraController;
     private CameraConfigProvider cameraConfigProvider;
 
     @CameraConfig.MediaQuality
@@ -205,7 +205,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
 
             @Override
             public void onPhotoTaken(byte[] bytes, CameraResultListener callback) {
-                final String filePath = cameraController.getOutputFile().toString();
+                final String filePath = mCameraController.getOutputFile().toString();
                 if (cameraResultListener != null) {
                     cameraResultListener.onPhotoTaken(bytes, filePath);
                 }
@@ -216,7 +216,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
 
             @Override
             public void onVideoRecordStart(int width, int height) {
-                final File outputFile = cameraController.getOutputFile();
+                final File outputFile = mCameraController.getOutputFile();
                 onStartVideoRecord(outputFile);
             }
 
@@ -232,11 +232,11 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         };
 
         if (CameraHelper.hasCamera2(getContext())) {
-            cameraController = new Camera2Controller(getContext(), cameraView, cameraConfigProvider);
+            mCameraController = new Camera2Controller(getContext(), cameraView, cameraConfigProvider);
         } else {
-            cameraController = new Camera1Controller(getContext(), cameraView, cameraConfigProvider);
+            mCameraController = new Camera1Controller(getContext(), cameraView, cameraConfigProvider);
         }
-        cameraController.onCreate(savedInstanceState);
+        mCameraController.onCreate(savedInstanceState);
 
         //onProcessBundle
         currentMediaActionState = cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_VIDEO ?
@@ -310,7 +310,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
     public void onResume() {
         super.onResume();
 
-        cameraController.onResume();
+        mCameraController.onResume();
         sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 
         if (cameraControlListener != null) {
@@ -323,7 +323,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
     public void onPause() {
         super.onPause();
 
-        cameraController.onPause();
+        mCameraController.onPause();
         sensorManager.unregisterListener(sensorEventListener);
 
         if (cameraControlListener != null) {
@@ -336,7 +336,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
     public void onDestroy() {
         super.onDestroy();
 
-        cameraController.onDestroy();
+        mCameraController.onDestroy();
     }
 
     protected void setMaxVideoFileSize(long maxVideoFileSize) {
@@ -387,7 +387,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
                     if (cameraControlListener != null) {
                         cameraControlListener.lockControls();
                     }
-                    cameraController.switchQuality();
+                    mCameraController.switchQuality();
                 }
             }
         });
@@ -426,7 +426,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         }
 
         onCameraTypeFrontBackChanged();
-        this.cameraController.switchCamera(cameraFace);
+        this.mCameraController.switchCamera(cameraFace);
 
         if (cameraControlListener != null) {
             cameraControlListener.unLockControls();
@@ -445,7 +445,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
                 break;
         }
         onCameraTypeFrontBackChanged();
-        this.cameraController.switchCamera(cameraFace);
+        this.mCameraController.switchCamera(cameraFace);
 
     }
 
@@ -509,17 +509,17 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
             case Flash.FLASH_AUTO:
                 if (cameraStateListener != null) cameraStateListener.onFlashAuto();
                 cameraConfigProvider.setFlashMode(CameraConfig.FLASH_MODE_AUTO);
-                this.cameraController.setFlashMode(CameraConfig.FLASH_MODE_AUTO);
+                this.mCameraController.setFlashMode(CameraConfig.FLASH_MODE_AUTO);
                 break;
             case Flash.FLASH_ON:
                 if (cameraStateListener != null) cameraStateListener.onFlashOn();
                 cameraConfigProvider.setFlashMode(CameraConfig.FLASH_MODE_ON);
-                this.cameraController.setFlashMode(CameraConfig.FLASH_MODE_ON);
+                this.mCameraController.setFlashMode(CameraConfig.FLASH_MODE_ON);
                 break;
             case Flash.FLASH_OFF:
                 if (cameraStateListener != null) cameraStateListener.onFlashOff();
                 cameraConfigProvider.setFlashMode(CameraConfig.FLASH_MODE_OFF);
-                this.cameraController.setFlashMode(CameraConfig.FLASH_MODE_OFF);
+                this.mCameraController.setFlashMode(CameraConfig.FLASH_MODE_OFF);
                 break;
         }
     }
@@ -606,7 +606,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
             new MediaActionSound().play(MediaActionSound.SHUTTER_CLICK);
         }
         setRecordState(Record.TAKE_PHOTO_STATE);
-        this.cameraController.takePhoto(callback, directoryPath, fileName);
+        this.mCameraController.takePhoto(callback, directoryPath, fileName);
         if (cameraStateListener != null) {
             cameraStateListener.onRecordStatePhoto();
         }
@@ -618,7 +618,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         }
 
         setRecordState(Record.RECORD_IN_PROGRESS_STATE);
-        this.cameraController.startVideoRecord(directoryPath, fileName);
+        this.mCameraController.startVideoRecord(directoryPath, fileName);
 
         if (cameraStateListener != null) {
             cameraStateListener.onRecordStateVideoInProgress();
@@ -631,7 +631,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         }
 
         setRecordState(Record.READY_FOR_RECORD_STATE);
-        this.cameraController.stopVideoRecord(callback);
+        this.mCameraController.stopVideoRecord(callback);
 
         this.onStopVideoRecord(callback);
 
@@ -647,8 +647,8 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
 
     protected void setCameraPreview(View preview, Size previewSize) {
         //onCameraControllerReady()
-        videoQualities = cameraController.getVideoQualityOptions();
-        photoQualities = cameraController.getPhotoQualityOptions();
+        videoQualities = mCameraController.getVideoQualityOptions();
+        photoQualities = mCameraController.getPhotoQualityOptions();
 
         if (previewContainer == null || preview == null) return;
         previewContainer.removeAllViews();
@@ -730,7 +730,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
             }
         }
 
-        final String filePath = this.cameraController.getOutputFile().toString();
+        final String filePath = this.mCameraController.getOutputFile().toString();
         if (cameraResultListener != null) {
             cameraResultListener.onVideoRecorded(filePath);
         }

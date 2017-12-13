@@ -52,7 +52,7 @@ import java.util.Objects;
 
 
 /**
- * The camera manager for camera2
+ * The camera mCameraManager for camera2
  * <p>
  * For more information, you can visit https://github.com/guoxiaoxing or contact me by
  * guoxiaoxingse@163.com.
@@ -75,8 +75,8 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
     private File outputPath;
     @CameraPreviewState
     private int previewState = STATE_PREVIEW;
-    private CameraManager manager;
-    private CameraDevice cameraDevice;
+    private CameraManager mCameraManager;
+    private CameraDevice mCameraDevice;
     private CaptureRequest previewRequest;
     private CaptureRequest.Builder previewRequestBuilder;
     private CameraCaptureSession captureSession;
@@ -90,8 +90,8 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
 
     private CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override
-        public void onOpened(CameraDevice cameraDevice) {
-            Camera2Manager.this.cameraDevice = cameraDevice;
+        public void onOpened(@NonNull CameraDevice cameraDevice) {
+            Camera2Manager.this.mCameraDevice = cameraDevice;
             if (cameraOpenListener != null) {
                 uiHandler.post(new Runnable() {
                     @Override
@@ -104,10 +104,9 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
         }
 
         @Override
-        public void onDisconnected(CameraDevice cameraDevice) {
+        public void onDisconnected(@NonNull CameraDevice cameraDevice) {
             cameraDevice.close();
-            Camera2Manager.this.cameraDevice = null;
-
+            Camera2Manager.this.mCameraDevice = null;
             uiHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -117,10 +116,9 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
         }
 
         @Override
-        public void onError(CameraDevice cameraDevice, int error) {
+        public void onError(@NonNull CameraDevice cameraDevice, int error) {
             cameraDevice.close();
-            Camera2Manager.this.cameraDevice = null;
-
+            Camera2Manager.this.mCameraDevice = null;
             uiHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -153,20 +151,18 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
     @Override
     public void initializeCameraManager(CameraConfigProvider cameraConfigProvider, Context context) {
         super.initializeCameraManager(cameraConfigProvider, context);
-
-        this.manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
-
         final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         final Display display = windowManager.getDefaultDisplay();
         final Point size = new Point();
         display.getSize(size);
         windowSize = new Size(size.x, size.y);
 
+        mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
         try {
-            final String[] ids = manager.getCameraIdList();
+            final String[] ids = mCameraManager.getCameraIdList();
             numberOfCameras = ids.length;
             for (String id : ids) {
-                final CameraCharacteristics characteristics = manager.getCameraCharacteristics(id);
+                final CameraCharacteristics characteristics = mCameraManager.getCameraCharacteristics(id);
 
                 final int orientation = characteristics.get(CameraCharacteristics.LENS_FACING);
                 if (orientation == CameraCharacteristics.LENS_FACING_FRONT) {
@@ -180,7 +176,7 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error during camera init");
+            Log.e(TAG, "Error during camera initialize");
         }
     }
 
@@ -205,7 +201,7 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
                 }
                 prepareCameraOutputs();
                 try {
-                    manager.openCamera(currentCameraId, stateCallback, backgroundHandler);
+                    mCameraManager.openCamera(currentCameraId, stateCallback, backgroundHandler);
                 } catch (Exception e) {
                     Log.e(TAG, "openCamera: ", e);
                     if (cameraOpenListener != null) {
@@ -286,7 +282,7 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
                         texture.setDefaultBufferSize(videoSize.getWidth(), videoSize.getHeight());
 
                         try {
-                            previewRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+                            previewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
                             final List<Surface> surfaces = new ArrayList<>();
 
                             final Surface previewSurface = workingSurface;
@@ -297,7 +293,7 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
                             surfaces.add(workingSurface);
                             previewRequestBuilder.addTarget(workingSurface);
 
-                            cameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
+                            mCameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
                                 @Override
                                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                                     captureSession = cameraCaptureSession;
@@ -377,10 +373,10 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
             workingSurface = new Surface(texture);
 
             previewRequestBuilder
-                    = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+                    = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             previewRequestBuilder.addTarget(workingSurface);
 
-            cameraDevice.createCaptureSession(Arrays.asList(workingSurface, imageReader.getSurface()),
+            mCameraDevice.createCaptureSession(Arrays.asList(workingSurface, imageReader.getSurface()),
                     new CameraCaptureSession.StateCallback() {
                         @Override
                         public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
@@ -469,9 +465,9 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
     }
 
     private void closeCameraDevice() {
-        if (null != cameraDevice) {
-            cameraDevice.close();
-            cameraDevice = null;
+        if (null != mCameraDevice) {
+            mCameraDevice.close();
+            mCameraDevice = null;
         }
     }
 
@@ -584,7 +580,7 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
     }
 
     private void updatePreview(CameraCaptureSession cameraCaptureSession) {
-        if (null == cameraDevice) {
+        if (null == mCameraDevice) {
             return;
         }
         captureSession = cameraCaptureSession;
@@ -671,11 +667,11 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
 
     private void captureStillPicture() {
         try {
-            if (null == cameraDevice) {
+            if (null == mCameraDevice) {
                 return;
             }
             final CaptureRequest.Builder captureBuilder =
-                    cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                    mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(imageReader.getSurface());
 
             captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);

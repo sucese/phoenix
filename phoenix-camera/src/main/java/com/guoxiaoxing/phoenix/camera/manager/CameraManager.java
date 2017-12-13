@@ -52,6 +52,35 @@ public interface CameraManager<CameraId, SurfaceListener> {
     void closeCamera(CameraCloseListener<CameraId> cameraCloseListener);
 
     /**
+     * 拍照
+     *
+     * @param photoFile           photoFile
+     * @param cameraPhotoListener cameraPhotoListener
+     * @param callback            callback
+     */
+    void takePicture(File photoFile, CameraPhotoListener cameraPhotoListener, CameraResultListener callback);
+
+    /**
+     * 开始视频录制
+     *
+     * @param videoFile           videoFile
+     * @param cameraVideoListener cameraVideoListener
+     */
+    void startVideoRecord(File videoFile, CameraVideoListener cameraVideoListener);
+
+    /**
+     * 结束视频录制
+     *
+     * @param callback callback
+     */
+    void stopVideoRecord(CameraResultListener callback);
+
+    /**
+     * 视频是否处于录制状态
+     */
+    boolean isVideoRecording();
+
+    /**
      * 设置相机ID
      *
      * @param cameraId cameraId
@@ -112,33 +141,4 @@ public interface CameraManager<CameraId, SurfaceListener> {
      * 获取图像质量参数
      */
     CharSequence[] getVideoQualityOptions();
-
-    /**
-     * 拍照
-     *
-     * @param photoFile           photoFile
-     * @param cameraPhotoListener cameraPhotoListener
-     * @param callback            callback
-     */
-    void takePicture(File photoFile, CameraPhotoListener cameraPhotoListener, CameraResultListener callback);
-
-    /**
-     * 开始视频录制
-     *
-     * @param videoFile           videoFile
-     * @param cameraVideoListener cameraVideoListener
-     */
-    void startVideoRecord(File videoFile, CameraVideoListener cameraVideoListener);
-
-    /**
-     * 结束视频录制
-     *
-     * @param callback callback
-     */
-    void stopVideoRecord(CameraResultListener callback);
-
-    /**
-     * 视频是否处于录制状态
-     */
-    boolean isVideoRecording();
 }
