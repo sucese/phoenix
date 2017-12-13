@@ -17,7 +17,9 @@ Android系统提供了两种方式实现拍照/视频：
 - Camera
 - Camera2
 
-那我们在开发中应该使用哪一种呢？🤔事实上是两个都用的，Camera2是Android 5.0之后才推出的API，因此我们需要做向下兼容。Android 5.0以下使用Camera、Android 5.0以上使用Camera2。
+那我们在开发中应该使用哪一种呢？🤔事
+
+实上是两个都用的，Camera2是Android 5.0之后才推出的API，因此我们需要做向下兼容。Android 5.0以下使用Camera、Android 5.0以上使用Camera2。
 
 相机开发的一般流程是什么样的？
 
@@ -94,7 +96,7 @@ Camera2 API中主要涉及以下几个关键类：
 
 Camera2拍照流程如下所示：
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/camera/camera2_structure.png"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/camera/camera2_structure.png" width="800"/>
 
 开发者通过创建CaptureRequest向摄像头发起Capture请求，这些请求会排成一个队列供摄像头处理，摄像头将结果包装在CaptureMetadata中返回给开发者。整个流程建立在一个CameraCaptureSession的会话中。
 
@@ -307,39 +309,39 @@ try {
 我们定义了一个CameraCaptureSession.CaptureCallback来处理对焦请求返回的结果。
 
 ```java
-    private CameraCaptureSession.CaptureCallback captureCallback = new CameraCaptureSession.CaptureCallback() {
+private CameraCaptureSession.CaptureCallback captureCallback = new CameraCaptureSession.CaptureCallback() {
 
-        @Override
-        public void onCaptureProgressed(@NonNull CameraCaptureSession session,
-                                        @NonNull CaptureRequest request,
-                                        @NonNull CaptureResult partialResult) {
-        }
+    @Override
+    public void onCaptureProgressed(@NonNull CameraCaptureSession session,
+                                    @NonNull CaptureRequest request,
+                                    @NonNull CaptureResult partialResult) {
+    }
 
-        @Override
-        public void onCaptureCompleted(@NonNull CameraCaptureSession session,
-                                       @NonNull CaptureRequest request,
-                                       @NonNull TotalCaptureResult result) {
-                //等待对焦
-                final Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
-                if (afState == null) {
-                    //对焦失败，直接拍照
+    @Override
+    public void onCaptureCompleted(@NonNull CameraCaptureSession session,
+                                   @NonNull CaptureRequest request,
+                                   @NonNull TotalCaptureResult result) {
+            //等待对焦
+            final Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
+            if (afState == null) {
+                //对焦失败，直接拍照
+                captureStillPicture();
+            } else if (CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED == afState
+                    || CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState
+                    || CaptureResult.CONTROL_AF_STATE_INACTIVE == afState
+                    || CaptureResult.CONTROL_AF_STATE_PASSIVE_SCAN == afState) {
+                Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
+                if (aeState == null ||
+                        aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
+                    previewState = STATE_PICTURE_TAKEN;
+                    //对焦完成，进行拍照
                     captureStillPicture();
-                } else if (CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED == afState
-                        || CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState
-                        || CaptureResult.CONTROL_AF_STATE_INACTIVE == afState
-                        || CaptureResult.CONTROL_AF_STATE_PASSIVE_SCAN == afState) {
-                    Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
-                    if (aeState == null ||
-                            aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
-                        previewState = STATE_PICTURE_TAKEN;
-                        //对焦完成，进行拍照
-                        captureStillPicture();
-                    } else {
-                        runPreCaptureSequence();
-                    }
+                } else {
+                    runPreCaptureSequence();
                 }
-        }
-    };
+            }
+    }
+};
 ```
 
 2. 拍照
