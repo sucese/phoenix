@@ -10,7 +10,7 @@ public class CameraConfigProviderImpl implements CameraConfigProvider {
     protected int mediaAction = CameraConfig.MEDIA_ACTION_UNSPECIFIED;
 
     @CameraConfig.MediaQuality
-    protected int mediaQuality = CameraConfig.MEDIA_QUALITY_MEDIUM;
+    protected int mediaQuality = CameraConfig.MEDIA_QUALITY_HIGH;
 
     @CameraConfig.MediaQuality
     protected int passedMediaQuality = CameraConfig.MEDIA_QUALITY_MEDIUM;

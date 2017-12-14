@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.guoxiaoxing.phoenix.R;
+import com.guoxiaoxing.phoenix.camera.CameraActivity;
 import com.guoxiaoxing.phoenix.core.PhoenixConfig;
 import com.guoxiaoxing.phoenix.core.PhoenixOption;
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant;
 import com.guoxiaoxing.phoenix.core.listener.Starter;
 import com.guoxiaoxing.phoenix.core.model.MediaEntity;
-import com.guoxiaoxing.phoenix.picker.ui.camera.CameraActivity;
 import com.guoxiaoxing.phoenix.picker.ui.picker.PickerActivity;
 import com.guoxiaoxing.phoenix.picker.ui.picker.PreviewActivity;
 import com.guoxiaoxing.phoenix.picker.util.DoubleUtils;

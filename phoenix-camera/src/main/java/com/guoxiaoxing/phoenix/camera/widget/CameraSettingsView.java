@@ -36,8 +36,8 @@ public class CameraSettingsView extends AppCompatImageButton {
     }
 
     private void init() {
-        setBackgroundResource(R.drawable.circle_frame_background_dark);
-        setImageResource(R.drawable.ic_settings_white_24dp);
+//        setBackgroundResource(R.drawable.phoenix_circle_frame_background_dark);
+        setImageResource(R.drawable.phoenix_settings_white);
         setScaleType(ScaleType.CENTER);
     }
 }

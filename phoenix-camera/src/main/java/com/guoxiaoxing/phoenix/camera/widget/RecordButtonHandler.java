@@ -4,14 +4,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-public class TouchTimeHandler extends Handler {
+public class RecordButtonHandler extends Handler {
     public static final int WHAT_233=0;
     private long delayTimeInMils;
     private boolean freeNow;
     private Task task;
     private boolean shouldContinue;
 
-    public TouchTimeHandler(Looper looper, Task task) {
+    public RecordButtonHandler(Looper looper, Task task) {
         super(looper);
         this.task = task;
         freeNow=true;

@@ -32,7 +32,7 @@ import com.guoxiaoxing.phoenix.camera.config.CameraConfig;
 import com.guoxiaoxing.phoenix.camera.config.CameraConfigProvider;
 import com.guoxiaoxing.phoenix.camera.config.PictureQualityOption;
 import com.guoxiaoxing.phoenix.camera.config.VideoQualityOption;
-import com.guoxiaoxing.phoenix.camera.listener.CameraResultListener;
+import com.guoxiaoxing.phoenix.camera.listener.OnCameraResultListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraCloseListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraOpenListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraPictureListener;
@@ -145,7 +145,7 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
 
     };
 
-    private CameraResultListener callback;
+    private OnCameraResultListener callback;
 
     @Override
     public void initializeCameraManager(CameraConfigProvider cameraConfigProvider, Context context) {
@@ -240,7 +240,7 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
     }
 
     @Override
-    public void takePicture(File photoFile, CameraPictureListener cameraPictureListener, CameraResultListener callback) {
+    public void takePicture(File photoFile, CameraPictureListener cameraPictureListener, OnCameraResultListener callback) {
         this.outputPath = photoFile;
         this.cameraPictureListener = cameraPictureListener;
         this.callback = callback;
@@ -333,7 +333,7 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
     }
 
     @Override
-    public void stopVideoRecord(final CameraResultListener callback) {
+    public void stopVideoRecord(final OnCameraResultListener callback) {
         if (isVideoRecording)
             backgroundHandler.post(new Runnable() {
                 @Override

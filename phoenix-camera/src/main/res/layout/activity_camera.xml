@@ -30,12 +30,14 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
+                android:visibility="gone"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp" />
 
             <com.guoxiaoxing.phoenix.camera.widget.FlashSwitchView
                 android:id="@+id/flash_switch_view"
                 android:layout_width="40dp"
+                android:visibility="gone"
                 android:layout_height="40dp"
                 android:layout_centerInParent="true" />
 

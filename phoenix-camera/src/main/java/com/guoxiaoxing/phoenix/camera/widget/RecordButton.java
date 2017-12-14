@@ -18,15 +18,21 @@ import com.guoxiaoxing.phoenix.camera.util.Utils;
 public class RecordButton extends View {
 
     private static final String TAG = "RecordButton";
+
     public static final long TIME_TO_START_RECORD = 500L;
     public static final float TIME_LIMIT_IN_MILS = 10000.0F;
     public static final float PROGRESS_LIM_TO_FINISH_STARTING_ANIM = 0.1F;
-    private int BOUNDING_BOX_SIZE;
-    private int OUT_CIRCLE_WIDTH;
-    private int OUTER_CIRCLE_WIDTH_INC;
-    private float INNER_CIRCLE_RADIUS;
 
-    private TouchTimeHandler touchTimeHandler;
+    public static final int RECORD_NOT_STARTED = 0;
+    public static final int RECORD_STARTED = 1;
+    public static final int RECORD_ENDED = 2;
+
+    private int boundingBoxSize;
+    private int outerCycleWidth;
+    private int outerCycleWidthInc;
+    private float innerCycleRadius;
+
+    private RecordButtonHandler recordButtonHandler;
     private boolean touchable;
     private boolean recordable;
 
@@ -58,13 +64,10 @@ public class RecordButton extends View {
     private float innerCircleRadiusWhenRecord;
     private long btnPressTime;
     private int outBlackCircleRadiusInc;
-    private OnRecordButtonListener onRecordButtonListener;
     private int recordState;
-    public static final int RECORD_NOT_STARTED = 0;
-    public static final int RECORD_STARTED = 1;
-    public static final int RECORD_ENDED = 2;
+    private OnRecordButtonListener onRecordButtonListener;
 
-    private TouchTimeHandler.Task updateUITask = new TouchTimeHandler.Task() {
+    private RecordButtonHandler.Task updateUITask = new RecordButtonHandler.Task() {
         public void run() {
             long timeLapse = System.currentTimeMillis() - btnPressTime;
             float percent = (float) (timeLapse - TIME_TO_START_RECORD) / TIME_LIMIT_IN_MILS;
@@ -85,7 +88,7 @@ public class RecordButton extends View {
                     if (percent <= PROGRESS_LIM_TO_FINISH_STARTING_ANIM) {
                         float calPercent = percent / PROGRESS_LIM_TO_FINISH_STARTING_ANIM;
                         float outIncDis = outBlackCircleRadiusInc * calPercent;
-                        float curOutCircleWidth = OUT_CIRCLE_WIDTH + OUTER_CIRCLE_WIDTH_INC * calPercent;
+                        float curOutCircleWidth = outerCycleWidth + outerCycleWidthInc * calPercent;
                         processBarPaint.setStrokeWidth(curOutCircleWidth);
                         outMostWhiteCirclePaint.setStrokeWidth(curOutCircleWidth);
                         outBlackCircleRadius = (outMostCircleRadius + outIncDis - curOutCircleWidth / 2.0F);
@@ -122,10 +125,10 @@ public class RecordButton extends View {
 
     void setup() {
         touchable = recordable = true;
-        BOUNDING_BOX_SIZE = Utils.getRefLength(mContext, 100.0F);
-        OUT_CIRCLE_WIDTH = Utils.getRefLength(mContext, 2.3F);
-        OUTER_CIRCLE_WIDTH_INC = Utils.getRefLength(mContext, 4.3F);
-        INNER_CIRCLE_RADIUS = Utils.getRefLength(mContext, 32.0F);
+        boundingBoxSize = Utils.getRefLength(mContext, 100.0F);
+        outerCycleWidth = Utils.getRefLength(mContext, 2.3F);
+        outerCycleWidthInc = Utils.getRefLength(mContext, 3.0F);
+        innerCycleRadius = Utils.getRefLength(mContext, 32.0F);
         colorRecord = getResources().getColor(R.color.button_background);
         colorWhite = getResources().getColor(R.color.white);
         colorWhiteP60 = getResources().getColor(R.color.white_sixty_percent);
@@ -135,13 +138,13 @@ public class RecordButton extends View {
         processBarPaint = new Paint();
         processBarPaint.setColor(colorRecord);
         processBarPaint.setAntiAlias(true);
-        processBarPaint.setStrokeWidth(OUT_CIRCLE_WIDTH);
+        processBarPaint.setStrokeWidth(outerCycleWidth);
         processBarPaint.setStyle(Style.STROKE);
         processBarPaint.setStrokeCap(Cap.ROUND);
         outMostWhiteCirclePaint = new Paint();
         outMostWhiteCirclePaint.setColor(colorWhite);
         outMostWhiteCirclePaint.setAntiAlias(true);
-        outMostWhiteCirclePaint.setStrokeWidth(OUT_CIRCLE_WIDTH);
+        outMostWhiteCirclePaint.setStrokeWidth(outerCycleWidth);
         outMostWhiteCirclePaint.setStyle(Style.STROKE);
         centerCirclePaint = new Paint();
         centerCirclePaint.setColor(colorWhiteP60);
@@ -161,18 +164,18 @@ public class RecordButton extends View {
         translucentPaint.setColor(colorTranslucent);
         translucentPaint.setAntiAlias(true);
         translucentPaint.setStyle(Style.FILL_AND_STROKE);
-        centerX = (BOUNDING_BOX_SIZE / 2);
-        centerY = (BOUNDING_BOX_SIZE / 2);
+        centerX = (boundingBoxSize / 2);
+        centerY = (boundingBoxSize / 2);
         outMostCircleRadius = Utils.getRefLength(mContext, 37.0F);
         outBlackCircleRadiusInc = Utils.getRefLength(mContext, 7.0F);
         innerCircleRadiusWhenRecord = Utils.getRefLength(mContext, 35.0F);
-        innerCircleRadiusToDraw = INNER_CIRCLE_RADIUS;
-        outBlackCircleRadius = (outMostCircleRadius - OUT_CIRCLE_WIDTH / 2.0F);
-        outMostBlackCircleRadius = (outMostCircleRadius + OUT_CIRCLE_WIDTH / 2.0F);
+        innerCircleRadiusToDraw = innerCycleRadius;
+        outBlackCircleRadius = (outMostCircleRadius - outerCycleWidth / 2.0F);
+        outMostBlackCircleRadius = (outMostCircleRadius + outerCycleWidth / 2.0F);
         startAngle270 = 270.0F;
         percentInDegree = 0.0F;
         outMostCircleRect = new RectF(centerX - outMostCircleRadius, centerY - outMostCircleRadius, centerX + outMostCircleRadius, centerY + outMostCircleRadius);
-        touchTimeHandler = new TouchTimeHandler(Looper.getMainLooper(), updateUITask);
+        recordButtonHandler = new RecordButtonHandler(Looper.getMainLooper(), updateUITask);
     }
 
     protected void onDraw(Canvas canvas) {
@@ -193,7 +196,7 @@ public class RecordButton extends View {
     }
 
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(BOUNDING_BOX_SIZE, BOUNDING_BOX_SIZE);
+        setMeasuredDimension(boundingBoxSize, boundingBoxSize);
     }
 
     public boolean onTouchEvent(MotionEvent e) {
@@ -231,17 +234,17 @@ public class RecordButton extends View {
                     onRecordButtonListener.onClick();
             }
         }
-        touchTimeHandler.clearMsg();
+        recordButtonHandler.clearMsg();
         percentInDegree = 0.0F;
         centerCirclePaint.setColor(colorWhiteP60);
         outMostWhiteCirclePaint.setColor(colorWhite);
-        innerCircleRadiusToDraw = INNER_CIRCLE_RADIUS;
+        innerCircleRadiusToDraw = innerCycleRadius;
         outMostCircleRect = new RectF(centerX - outMostCircleRadius, centerY - outMostCircleRadius, centerX + outMostCircleRadius, centerY + outMostCircleRadius);
         translucentCircleRadius = 0;
-        processBarPaint.setStrokeWidth(OUT_CIRCLE_WIDTH);
-        outMostWhiteCirclePaint.setStrokeWidth(OUT_CIRCLE_WIDTH);
-        outBlackCircleRadius = (outMostCircleRadius - OUT_CIRCLE_WIDTH / 2.0F);
-        outMostBlackCircleRadius = (outMostCircleRadius + OUT_CIRCLE_WIDTH / 2.0F);
+        processBarPaint.setStrokeWidth(outerCycleWidth);
+        outMostWhiteCirclePaint.setStrokeWidth(outerCycleWidth);
+        outBlackCircleRadius = (outMostCircleRadius - outerCycleWidth / 2.0F);
+        outMostBlackCircleRadius = (outMostCircleRadius + outerCycleWidth / 2.0F);
         invalidate();
     }
 
@@ -267,7 +270,7 @@ public class RecordButton extends View {
                 recordState = RECORD_NOT_STARTED;
         }
         btnPressTime = System.currentTimeMillis();
-        touchTimeHandler.sendLoopMsg(0L, 16L);
+        recordButtonHandler.sendLoopMsg(0L, 16L);
     }
 
     public void setOnRecordButtonListener(OnRecordButtonListener onRecordButtonListener) {

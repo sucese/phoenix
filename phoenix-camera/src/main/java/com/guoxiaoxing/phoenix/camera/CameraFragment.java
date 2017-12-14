@@ -36,9 +36,9 @@ import com.guoxiaoxing.phoenix.camera.controller.impl.Camera1Controller;
 import com.guoxiaoxing.phoenix.camera.controller.impl.Camera2Controller;
 import com.guoxiaoxing.phoenix.camera.controller.view.CameraView;
 import com.guoxiaoxing.phoenix.camera.listener.CameraControlListener;
-import com.guoxiaoxing.phoenix.camera.listener.CameraResultListener;
 import com.guoxiaoxing.phoenix.camera.listener.CameraStateListener;
 import com.guoxiaoxing.phoenix.camera.listener.CameraVideoRecordTextListener;
+import com.guoxiaoxing.phoenix.camera.listener.OnCameraResultListener;
 import com.guoxiaoxing.phoenix.camera.util.CameraHelper;
 import com.guoxiaoxing.phoenix.camera.util.Size;
 import com.guoxiaoxing.phoenix.camera.util.Utils;
@@ -74,7 +74,7 @@ public class CameraFragment<CameraId> extends Fragment implements ICameraFragmen
     private CharSequence[] mPhotoQualities;
     private CharSequence[] mVideoQualities;
     private CameraConfigProvider mCameraConfigProvider;
-    private CameraResultListener mCameraResultListener;
+    private OnCameraResultListener mOnCameraResultListener;
 
     @Flash.FlashMode
     private int mFlashMode = Flash.FLASH_AUTO;
@@ -202,10 +202,10 @@ public class CameraFragment<CameraId> extends Fragment implements ICameraFragmen
             }
 
             @Override
-            public void onPictureTaken(byte[] bytes, CameraResultListener callback) {
+            public void onPictureTaken(byte[] bytes, OnCameraResultListener callback) {
                 final String filePath = mCameraController.getOutputFile().toString();
-                if (mCameraResultListener != null) {
-                    mCameraResultListener.onPhotoTaken(bytes, filePath);
+                if (mOnCameraResultListener != null) {
+                    mOnCameraResultListener.onPhotoTaken(bytes, filePath);
                 }
                 if (callback != null) {
                     callback.onPhotoTaken(bytes, filePath);
@@ -219,7 +219,7 @@ public class CameraFragment<CameraId> extends Fragment implements ICameraFragmen
             }
 
             @Override
-            public void onVideoRecordStop(@Nullable CameraResultListener callback) {
+            public void onVideoRecordStop(@Nullable OnCameraResultListener callback) {
                 //CameraFragment.this.onStopVideoRecord(callback);
             }
 
@@ -319,7 +319,7 @@ public class CameraFragment<CameraId> extends Fragment implements ICameraFragmen
     }
 
     @Override
-    public void takePicture(CameraResultListener callback, @Nullable String directoryPath, @Nullable String fileName) {
+    public void takePicture(@Nullable String directoryPath, @Nullable String fileName, OnCameraResultListener callback) {
         if (Build.VERSION.SDK_INT > MIN_VERSION_ICECREAM) {
             new MediaActionSound().play(MediaActionSound.SHUTTER_CLICK);
         }
@@ -345,7 +345,7 @@ public class CameraFragment<CameraId> extends Fragment implements ICameraFragmen
     }
 
     @Override
-    public void stopRecordingVideo(CameraResultListener callback) {
+    public void stopRecordingVideo(OnCameraResultListener callback) {
         if (Build.VERSION.SDK_INT > MIN_VERSION_ICECREAM) {
             new MediaActionSound().play(MediaActionSound.STOP_VIDEO_RECORDING);
         }
@@ -681,7 +681,7 @@ public class CameraFragment<CameraId> extends Fragment implements ICameraFragmen
         }
     }
 
-    protected void onStopVideoRecord(@Nullable CameraResultListener callback) {
+    protected void onStopVideoRecord(@Nullable OnCameraResultListener callback) {
         if (mCameraControlListener != null) {
             mCameraControlListener.allowRecord(false);
         }
@@ -707,8 +707,8 @@ public class CameraFragment<CameraId> extends Fragment implements ICameraFragmen
         }
 
         final String filePath = this.mCameraController.getOutputFile().toString();
-        if (mCameraResultListener != null) {
-            mCameraResultListener.onVideoRecorded(filePath);
+        if (mOnCameraResultListener != null) {
+            mOnCameraResultListener.onVideoRecorded(filePath);
         }
 
         if (callback != null) {
@@ -732,7 +732,7 @@ public class CameraFragment<CameraId> extends Fragment implements ICameraFragmen
     }
 
     @Override
-    public void setResultListener(CameraResultListener cameraResultListener) {
-        this.mCameraResultListener = cameraResultListener;
+    public void setResultListener(OnCameraResultListener onCameraResultListener) {
+        this.mOnCameraResultListener = onCameraResultListener;
     }
 }

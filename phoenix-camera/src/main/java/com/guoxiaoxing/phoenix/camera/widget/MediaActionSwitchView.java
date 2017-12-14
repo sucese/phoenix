@@ -42,16 +42,16 @@ public class MediaActionSwitchView extends ImageButton {
     private void initializeView() {
         Context context = getContext();
 
-        photoDrawable = ContextCompat.getDrawable(context, R.drawable.ic_photo_camera_white_24dp);
+        photoDrawable = ContextCompat.getDrawable(context, R.drawable.phoenix_photo_camera_white);
         photoDrawable = DrawableCompat.wrap(photoDrawable);
-        DrawableCompat.setTintList(photoDrawable.mutate(), ContextCompat.getColorStateList(context, R.drawable.switch_camera_mode_selector));
+        DrawableCompat.setTintList(photoDrawable.mutate(), ContextCompat.getColorStateList(context, R.drawable.phoenix_selector_switch_camera_mode));
 
-        videoDrawable = ContextCompat.getDrawable(context, R.drawable.ic_videocam_white_24dp);
+        videoDrawable = ContextCompat.getDrawable(context, R.drawable.phoenix_videocam_white);
         videoDrawable = DrawableCompat.wrap(videoDrawable);
-        DrawableCompat.setTintList(videoDrawable.mutate(), ContextCompat.getColorStateList(context, R.drawable.switch_camera_mode_selector));
+        DrawableCompat.setTintList(videoDrawable.mutate(), ContextCompat.getColorStateList(context, R.drawable.phoenix_selector_switch_camera_mode));
 
-        setBackgroundResource(R.drawable.circle_frame_background_dark);
-//        setBackgroundResource(R.drawable.circle_frame_background);
+        setBackgroundResource(R.drawable.phoenix_circle_frame_background_dark);
+//        setBackgroundResource(R.drawable.phoenix_circle_frame_background);
 
         setOnClickListener(new OnClickListener() {
             @Override

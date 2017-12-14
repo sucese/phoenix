@@ -18,12 +18,12 @@ import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
 import com.guoxiaoxing.phoenix.picker.Phoenix
+import com.guoxiaoxing.phoenix.picker.listener.OnPictureEditListener
 import com.guoxiaoxing.phoenix.picker.model.EventEntity
 import com.guoxiaoxing.phoenix.picker.rx.bus.RxBus
 import com.guoxiaoxing.phoenix.picker.rx.bus.Subscribe
 import com.guoxiaoxing.phoenix.picker.rx.bus.ThreadMode
 import com.guoxiaoxing.phoenix.picker.ui.BaseFragment
-import com.guoxiaoxing.phoenix.picker.ui.camera.OnPictureEditListener
 import com.guoxiaoxing.phoenix.picker.ui.editor.PictureEditFragment
 import com.guoxiaoxing.phoenix.picker.util.LightStatusBarUtils
 import com.guoxiaoxing.phoenix.picker.util.ScreenUtil

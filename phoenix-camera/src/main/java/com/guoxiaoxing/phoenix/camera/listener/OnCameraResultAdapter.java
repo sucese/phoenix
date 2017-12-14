@@ -1,10 +1,11 @@
 package com.guoxiaoxing.phoenix.camera.listener;
 
 /**
- * Convenience implementation of {@link CameraResultListener}. Derive from this and only override what you need.
+ * Convenience implementation of {@link OnCameraResultListener}. Derive from this and only override what you need.
  * @author Skala
  */
-public class CameraResultAdapter implements CameraResultListener {
+public class OnCameraResultAdapter implements OnCameraResultListener {
+
     @Override
     public void onVideoRecorded(String filePath) {
 

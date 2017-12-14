@@ -17,7 +17,7 @@ import com.guoxiaoxing.phoenix.camera.config.CameraConfig;
 import com.guoxiaoxing.phoenix.camera.config.CameraConfigProvider;
 import com.guoxiaoxing.phoenix.camera.config.PictureQualityOption;
 import com.guoxiaoxing.phoenix.camera.config.VideoQualityOption;
-import com.guoxiaoxing.phoenix.camera.listener.CameraResultListener;
+import com.guoxiaoxing.phoenix.camera.listener.OnCameraResultListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraCloseListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraOpenListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraPictureListener;
@@ -162,7 +162,7 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
     }
 
     @Override
-    public void takePicture(File photoFile, CameraPictureListener cameraPictureListener, final CameraResultListener callback) {
+    public void takePicture(File photoFile, CameraPictureListener cameraPictureListener, final OnCameraResultListener callback) {
         this.outputPath = photoFile;
         this.photoListener = cameraPictureListener;
         backgroundHandler.post(new Runnable() {
@@ -208,7 +208,7 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
     }
 
     @Override
-    public void stopVideoRecord(@Nullable final CameraResultListener callback) {
+    public void stopVideoRecord(@Nullable final OnCameraResultListener callback) {
         if (isVideoRecording)
             backgroundHandler.post(new Runnable() {
                 @Override
@@ -560,7 +560,7 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
         return rotate;
     }
 
-    protected void onPictureTaken(final byte[] bytes, Camera camera, final CameraResultListener callback) {
+    protected void onPictureTaken(final byte[] bytes, Camera camera, final OnCameraResultListener callback) {
         final File pictureFile = outputPath;
         if (pictureFile == null) {
             Log.d(TAG, "Error creating media file, check storage permissions.");

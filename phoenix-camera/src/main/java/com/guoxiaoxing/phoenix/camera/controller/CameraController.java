@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.guoxiaoxing.phoenix.camera.config.CameraConfig;
-import com.guoxiaoxing.phoenix.camera.listener.CameraResultListener;
+import com.guoxiaoxing.phoenix.camera.listener.OnCameraResultListener;
 import com.guoxiaoxing.phoenix.camera.manager.CameraManager;
 
 import java.io.File;
@@ -27,15 +27,15 @@ public interface CameraController<CameraId> {
 
     void onDestroy();
 
-    void takePhoto(CameraResultListener resultListener);
+    void takePhoto(OnCameraResultListener resultListener);
 
-    void takePhoto(CameraResultListener callback, @Nullable String direcoryPath, @Nullable String fileName);
+    void takePhoto(OnCameraResultListener callback, @Nullable String direcoryPath, @Nullable String fileName);
 
     void startVideoRecord();
 
     void startVideoRecord(@Nullable String direcoryPath, @Nullable String fileName);
 
-    void stopVideoRecord(CameraResultListener callback);
+    void stopVideoRecord(OnCameraResultListener callback);
 
     boolean isVideoRecording();
 

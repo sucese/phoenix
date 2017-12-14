@@ -3,17 +3,17 @@ package com.guoxiaoxing.phoenix.camera;
 import android.support.annotation.Nullable;
 
 import com.guoxiaoxing.phoenix.camera.listener.CameraControlListener;
-import com.guoxiaoxing.phoenix.camera.listener.CameraResultListener;
+import com.guoxiaoxing.phoenix.camera.listener.OnCameraResultListener;
 import com.guoxiaoxing.phoenix.camera.listener.CameraStateListener;
 import com.guoxiaoxing.phoenix.camera.listener.CameraVideoRecordTextListener;
 
 public interface ICameraFragment {
 
-    void takePicture(CameraResultListener resultListener, @Nullable String directoryPath, @Nullable String fileName);
+    void takePicture(@Nullable String directoryPath, @Nullable String fileName, OnCameraResultListener resultListener);
 
     void startRecordingVideo(@Nullable String directoryPath, @Nullable String fileName);
 
-    void stopRecordingVideo(CameraResultListener callback);
+    void stopRecordingVideo(OnCameraResultListener callback);
 
     void openSettingDialog();
 
@@ -29,5 +29,5 @@ public interface ICameraFragment {
 
     void setControlsListener(CameraControlListener cameraControlListener);
 
-    void setResultListener(CameraResultListener cameraResultListener);
+    void setResultListener(OnCameraResultListener onCameraResultListener);
 }

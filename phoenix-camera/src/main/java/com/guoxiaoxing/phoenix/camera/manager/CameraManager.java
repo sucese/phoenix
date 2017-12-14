@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.guoxiaoxing.phoenix.camera.config.CameraConfig;
 import com.guoxiaoxing.phoenix.camera.config.CameraConfigProvider;
-import com.guoxiaoxing.phoenix.camera.listener.CameraResultListener;
+import com.guoxiaoxing.phoenix.camera.listener.OnCameraResultListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraCloseListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraOpenListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraPictureListener;
@@ -31,11 +31,11 @@ public interface CameraManager<CameraId, SurfaceListener> {
 
     void closeCamera(CameraCloseListener<CameraId> cameraCloseListener);
 
-    void takePicture(File photoFile, CameraPictureListener cameraPictureListener, CameraResultListener callback);
+    void takePicture(File photoFile, CameraPictureListener cameraPictureListener, OnCameraResultListener callback);
 
     void startVideoRecord(File videoFile, CameraVideoListener cameraVideoListener);
 
-    void stopVideoRecord(CameraResultListener callback);
+    void stopVideoRecord(OnCameraResultListener callback);
 
     boolean isVideoRecording();
 

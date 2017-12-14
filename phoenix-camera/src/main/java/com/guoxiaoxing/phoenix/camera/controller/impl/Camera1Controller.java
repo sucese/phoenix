@@ -10,7 +10,7 @@ import com.guoxiaoxing.phoenix.camera.config.CameraConfig;
 import com.guoxiaoxing.phoenix.camera.config.CameraConfigProvider;
 import com.guoxiaoxing.phoenix.camera.controller.CameraController;
 import com.guoxiaoxing.phoenix.camera.controller.view.CameraView;
-import com.guoxiaoxing.phoenix.camera.listener.CameraResultListener;
+import com.guoxiaoxing.phoenix.camera.listener.OnCameraResultListener;
 import com.guoxiaoxing.phoenix.camera.manager.CameraManager;
 import com.guoxiaoxing.phoenix.camera.manager.impl.Camera1Manager;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraCloseListener;
@@ -78,12 +78,12 @@ public class Camera1Controller implements CameraController<Integer>, CameraOpenL
     }
 
     @Override
-    public void takePhoto(CameraResultListener callback) {
+    public void takePhoto(OnCameraResultListener callback) {
         takePhoto(callback, null, null);
     }
 
     @Override
-    public void takePhoto(CameraResultListener callback, @Nullable String direcoryPath, @Nullable String fileName) {
+    public void takePhoto(OnCameraResultListener callback, @Nullable String direcoryPath, @Nullable String fileName) {
         mOutputFile = CameraHelper.getOutputMediaFile(mContext, CameraConfig.MEDIA_ACTION_PHOTO, direcoryPath, fileName);
         mCameraManager.takePicture(mOutputFile, this, callback);
     }
@@ -100,7 +100,7 @@ public class Camera1Controller implements CameraController<Integer>, CameraOpenL
     }
 
     @Override
-    public void stopVideoRecord(CameraResultListener callback) {
+    public void stopVideoRecord(OnCameraResultListener callback) {
         mCameraManager.stopVideoRecord(callback);
     }
 
@@ -174,7 +174,7 @@ public class Camera1Controller implements CameraController<Integer>, CameraOpenL
     }
 
     @Override
-    public void onPictureTaken(byte[] bytes, File photoFile, CameraResultListener callback) {
+    public void onPictureTaken(byte[] bytes, File photoFile, OnCameraResultListener callback) {
         mCameraView.onPictureTaken(bytes, callback);
     }
 
@@ -188,7 +188,7 @@ public class Camera1Controller implements CameraController<Integer>, CameraOpenL
     }
 
     @Override
-    public void onVideoRecordStopped(File videoFile, @Nullable CameraResultListener callback) {
+    public void onVideoRecordStopped(File videoFile, @Nullable OnCameraResultListener callback) {
         mCameraView.onVideoRecordStop(callback);
     }
 

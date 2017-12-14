@@ -13,12 +13,11 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.guoxiaoxing.phoenix.R
-import com.guoxiaoxing.phoenix.core.PhoenixOption
+import com.guoxiaoxing.phoenix.camera.CameraActivity
 import com.guoxiaoxing.phoenix.core.PhoenixOption.THEME_DEFAULT
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
-import com.guoxiaoxing.phoenix.picker.Phoenix
 import com.guoxiaoxing.phoenix.picker.adapter.PickerAdapter
 import com.guoxiaoxing.phoenix.picker.adapter.PickerAlbumAdapter
 import com.guoxiaoxing.phoenix.picker.model.EventEntity
@@ -30,7 +29,6 @@ import com.guoxiaoxing.phoenix.picker.rx.bus.Subscribe
 import com.guoxiaoxing.phoenix.picker.rx.bus.ThreadMode
 import com.guoxiaoxing.phoenix.picker.rx.permission.RxPermissions
 import com.guoxiaoxing.phoenix.picker.ui.BaseActivity
-import com.guoxiaoxing.phoenix.picker.ui.camera.CameraActivity
 import com.guoxiaoxing.phoenix.picker.util.*
 import com.guoxiaoxing.phoenix.picker.widget.FolderPopWindow
 import com.guoxiaoxing.phoenix.picker.widget.GridSpacingItemDecoration

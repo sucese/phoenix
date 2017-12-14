@@ -1,6 +1,6 @@
 package com.guoxiaoxing.phoenix.camera.listener;
 
-public interface CameraResultListener {
+public interface OnCameraResultListener {
 
     //Called when the video record is finished and saved
     void onVideoRecorded(String filePath);

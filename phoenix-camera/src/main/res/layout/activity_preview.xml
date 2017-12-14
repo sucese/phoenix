@@ -36,30 +36,30 @@
         <TextView
             android:id="@+id/cancel_media_action"
             style="@style/PreviewButtonsStyle"
-            android:drawableTop="@drawable/ic_clear_white_24dp"
+            android:drawableTop="@drawable/phoenix_clear_white"
             android:text="@string/preview_controls_cancel" />
 
         <TextView
             android:id="@+id/crop_image"
             style="@style/PreviewButtonsStyle"
-            android:drawableTop="@drawable/ic_crop_white_24dp"
+            android:drawableTop="@drawable/phoenix_crop_white"
             android:text="@string/preview_controls_crop" />
 
         <TextView
             android:id="@+id/ratio_image"
             style="@style/PreviewButtonsStyle"
-            android:drawableTop="@drawable/ic_image_aspect_ratio_white_24dp" />
+            android:drawableTop="@drawable/phoenix_image_aspect_ratio_white" />
 
         <TextView
             android:id="@+id/re_take_media"
             style="@style/PreviewButtonsStyle"
-            android:drawableTop="@drawable/ic_replay_white_24dp"
+            android:drawableTop="@drawable/phoenix_replay_white_24dp"
             android:text="@string/preview_controls_retake" />
 
         <TextView
             android:id="@+id/confirm_media_result"
             style="@style/PreviewButtonsStyle"
-            android:drawableTop="@drawable/ic_done_white_24dp"
+            android:drawableTop="@drawable/phoenix_done_white"
             android:text="@string/preview_controls_confirm" />
 
     </LinearLayout>

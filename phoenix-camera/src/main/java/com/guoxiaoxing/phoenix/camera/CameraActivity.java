@@ -18,9 +18,9 @@ import android.widget.Toast;
 import com.guoxiaoxing.phoenix.camera.common.MediaAction;
 import com.guoxiaoxing.phoenix.camera.config.CameraConfig;
 import com.guoxiaoxing.phoenix.camera.listener.CameraControlAdapter;
-import com.guoxiaoxing.phoenix.camera.listener.CameraResultAdapter;
 import com.guoxiaoxing.phoenix.camera.listener.CameraStateAdapter;
 import com.guoxiaoxing.phoenix.camera.listener.CameraVideoRecordTextAdapter;
+import com.guoxiaoxing.phoenix.camera.listener.OnCameraResultAdapter;
 import com.guoxiaoxing.phoenix.camera.widget.CameraSettingsView;
 import com.guoxiaoxing.phoenix.camera.widget.CameraSwitchView;
 import com.guoxiaoxing.phoenix.camera.widget.FlashSwitchView;
@@ -38,8 +38,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     private static final String DIRECTORY_NAME = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath()
             + "/Camera";
-
-    private static final String FILE_NAME = "VID_" + SystemClock.currentThreadTimeMillis();
 
     View mCameraLayout;
     RecordButton mRecordButton;
@@ -95,43 +93,34 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             public void onClick() {
                 final ICameraFragment cameraFragment = getCameraFragment();
                 cameraFragment.switchCaptureAction(MediaAction.ACTION_PHOTO);
-                cameraFragment.takePicture(new CameraResultAdapter() {
-                                                           @Override
-                                                           public void onVideoRecorded(String filePath) {
-                                                               Toast.makeText(getBaseContext(), "onVideoRecorded " + filePath, Toast.LENGTH_SHORT).show();
-                                                           }
-
-                                                           @Override
-                                                           public void onPhotoTaken(byte[] bytes, String filePath) {
-                                                               Toast.makeText(getBaseContext(), "onPictureTaken " + filePath, Toast.LENGTH_SHORT).show();
-                                                           }
-                                                       },
-                        DIRECTORY_NAME,
-                        FILE_NAME);
+                cameraFragment.takePicture(DIRECTORY_NAME, "IMG_" + System.currentTimeMillis(), new OnCameraResultAdapter() {
+                            @Override
+                            public void onPhotoTaken(byte[] bytes, String filePath) {
+                                Toast.makeText(getBaseContext(), "onPictureTaken "
+                                        + filePath, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                );
             }
 
             @Override
             public void onLongClickStart() {
                 final ICameraFragment cameraFragment = getCameraFragment();
                 cameraFragment.switchCaptureAction(MediaAction.ACTION_VIDEO);
-                cameraFragment.startRecordingVideo(DIRECTORY_NAME, FILE_NAME);
+                cameraFragment.startRecordingVideo(DIRECTORY_NAME, "VID_" + System.currentTimeMillis());
             }
 
             @Override
             public void onLongClickEnd() {
                 final ICameraFragment cameraFragment = getCameraFragment();
-                cameraFragment.switchCaptureAction(MediaAction.ACTION_VIDEO);
-                cameraFragment.stopRecordingVideo(new CameraResultAdapter() {
+                cameraFragment.stopRecordingVideo(new OnCameraResultAdapter() {
                     @Override
                     public void onVideoRecorded(String filePath) {
-                        Toast.makeText(getBaseContext(), "onVideoRecorded " + filePath, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onPhotoTaken(byte[] bytes, String filePath) {
-                        Toast.makeText(getBaseContext(), "onPictureTaken " + filePath, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), "onVideoRecorded "
+                                + filePath, Toast.LENGTH_SHORT).show();
                     }
                 });
+                cameraFragment.switchCaptureAction(MediaAction.ACTION_PHOTO);
             }
         });
     }
@@ -151,7 +140,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
             if (!permissionsToRequest.isEmpty()) {
-                ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[permissionsToRequest.size()]), REQUEST_CODE_CAMERA_PERMISSIONS);
+                ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(
+                        new String[permissionsToRequest.size()]), REQUEST_CODE_CAMERA_PERMISSIONS);
             } else addCameraFragment();
         } else {
             addCameraFragment();
@@ -178,7 +168,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 .commitAllowingStateLoss();
 
         if (cameraFragment != null) {
-            //cameraFragmentApi.setResultListener(new CameraResultListener() {
+            //cameraFragmentApi.setResultListener(new OnCameraResultListener() {
             //    @Override
             //    public void onVideoRecorded(String filePath) {
             //        Intent intent = PreviewActivity.newIntentVideo(CameraFragmentMainActivity.this, filePath);
@@ -221,14 +211,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                 @Override
                 public void onCameraSetupForPhoto() {
-//                    mRecordButton.displayPhotoState();
-                    mFlashSwitchView.setVisibility(View.VISIBLE);
+//                    mFlashSwitchView.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onCameraSetupForVideo() {
-//                    mRecordButton.displayVideoRecordStateReady();
-                    mFlashSwitchView.setVisibility(View.GONE);
+//                    mFlashSwitchView.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -241,24 +229,20 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                 @Override
                 public void onRecordStateVideoReadyForRecord() {
-//                    mRecordButton.displayVideoRecordStateReady();
                 }
 
                 @Override
                 public void onRecordStateVideoInProgress() {
-//                    mRecordButton.displayVideoRecordStateInProgress();
                 }
 
                 @Override
                 public void onRecordStatePhoto() {
-//                    mRecordButton.displayPhotoState();
                 }
 
                 @Override
                 public void onStopVideoRecord() {
                     mRecordSizeText.setVisibility(View.GONE);
-                    //mCameraSwitchView.setVisibility(View.VISIBLE);
-                    mSettingsView.setVisibility(View.VISIBLE);
+//                    mSettingsView.setVisibility(View.VISIBLE);
                 }
 
                 @Override

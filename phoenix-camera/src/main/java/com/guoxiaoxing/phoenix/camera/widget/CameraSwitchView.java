@@ -32,15 +32,15 @@ public class CameraSwitchView extends AppCompatImageButton {
 
     private void initializeView() {
         Context context = getContext();
-        frontCameraDrawable = ContextCompat.getDrawable(context, R.drawable.ic_camera_front_white_24dp);
+        frontCameraDrawable = ContextCompat.getDrawable(context, R.drawable.phoenix_camera_alt_white);
         frontCameraDrawable = DrawableCompat.wrap(frontCameraDrawable);
-        DrawableCompat.setTintList(frontCameraDrawable.mutate(), ContextCompat.getColorStateList(context, R.drawable.switch_camera_mode_selector));
+        DrawableCompat.setTintList(frontCameraDrawable.mutate(), ContextCompat.getColorStateList(context, R.drawable.phoenix_selector_switch_camera_mode));
 
-        rearCameraDrawable = ContextCompat.getDrawable(context, R.drawable.ic_camera_rear_white_24dp);
+        rearCameraDrawable = ContextCompat.getDrawable(context, R.drawable.phoenix_camera_alt_white);
         rearCameraDrawable = DrawableCompat.wrap(rearCameraDrawable);
-        DrawableCompat.setTintList(rearCameraDrawable.mutate(), ContextCompat.getColorStateList(context, R.drawable.switch_camera_mode_selector));
+        DrawableCompat.setTintList(rearCameraDrawable.mutate(), ContextCompat.getColorStateList(context, R.drawable.phoenix_selector_switch_camera_mode));
 
-        setBackgroundResource(R.drawable.circle_frame_background_dark);
+        setBackgroundResource(android.R.color.transparent);
         displayBackCamera();
 
         padding = Utils.convertDipToPixels(context, padding);
