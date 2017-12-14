@@ -50,7 +50,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-
 /**
  * The camera mCameraManager for camera2
  * <p>
@@ -289,7 +288,7 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
                             surfaces.add(previewSurface);
                             previewRequestBuilder.addTarget(previewSurface);
 
-                            workingSurface = videoRecorder.getSurface();
+                            workingSurface = mediaRecorder.getSurface();
                             surfaces.add(workingSurface);
                             previewRequestBuilder.addTarget(workingSurface);
 
@@ -305,9 +304,9 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
                                     }
 
                                     try {
-                                        videoRecorder.start();
+                                        mediaRecorder.start();
                                     } catch (Exception ignore) {
-                                        Log.e(TAG, "videoRecorder.start(): ", ignore);
+                                        Log.e(TAG, "mediaRecorder.start(): ", ignore);
                                     }
 
                                     isVideoRecording = true;
@@ -341,9 +340,9 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
                 public void run() {
                     closePreviewSession();
 
-                    if (videoRecorder != null) {
+                    if (mediaRecorder != null) {
                         try {
-                            videoRecorder.stop();
+                            mediaRecorder.stop();
                         } catch (Exception ignore) {
                         }
                     }
@@ -534,37 +533,37 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
 
     @Override
     protected boolean prepareVideoRecorder() {
-        videoRecorder = new MediaRecorder();
+        mediaRecorder = new MediaRecorder();
         try {
-            videoRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
-            videoRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+            mediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
 
-            videoRecorder.setOutputFormat(camcorderProfile.fileFormat);
-            videoRecorder.setVideoFrameRate(camcorderProfile.videoFrameRate);
-            videoRecorder.setVideoSize(videoSize.getWidth(), videoSize.getHeight());
-            videoRecorder.setVideoEncodingBitRate(camcorderProfile.videoBitRate);
-            videoRecorder.setVideoEncoder(camcorderProfile.videoCodec);
+            mediaRecorder.setOutputFormat(camcorderProfile.fileFormat);
+            mediaRecorder.setVideoFrameRate(camcorderProfile.videoFrameRate);
+            mediaRecorder.setVideoSize(videoSize.getWidth(), videoSize.getHeight());
+            mediaRecorder.setVideoEncodingBitRate(camcorderProfile.videoBitRate);
+            mediaRecorder.setVideoEncoder(camcorderProfile.videoCodec);
 
-            videoRecorder.setAudioEncodingBitRate(camcorderProfile.audioBitRate);
-            videoRecorder.setAudioChannels(camcorderProfile.audioChannels);
-            videoRecorder.setAudioSamplingRate(camcorderProfile.audioSampleRate);
-            videoRecorder.setAudioEncoder(camcorderProfile.audioCodec);
+            mediaRecorder.setAudioEncodingBitRate(camcorderProfile.audioBitRate);
+            mediaRecorder.setAudioChannels(camcorderProfile.audioChannels);
+            mediaRecorder.setAudioSamplingRate(camcorderProfile.audioSampleRate);
+            mediaRecorder.setAudioEncoder(camcorderProfile.audioCodec);
 
             File outputFile = outputPath;
             String outputFilePath = outputFile.toString();
-            videoRecorder.setOutputFile(outputFilePath);
+            mediaRecorder.setOutputFile(outputFilePath);
 
             if (cameraConfigProvider.getVideoFileSize() > 0) {
-                videoRecorder.setMaxFileSize(cameraConfigProvider.getVideoFileSize());
-                videoRecorder.setOnInfoListener(this);
+                mediaRecorder.setMaxFileSize(cameraConfigProvider.getVideoFileSize());
+                mediaRecorder.setOnInfoListener(this);
             }
             if (cameraConfigProvider.getVideoDuration() > 0) {
-                videoRecorder.setMaxDuration(cameraConfigProvider.getVideoDuration());
-                videoRecorder.setOnInfoListener(this);
+                mediaRecorder.setMaxDuration(cameraConfigProvider.getVideoDuration());
+                mediaRecorder.setOnInfoListener(this);
             }
-            videoRecorder.setOrientationHint(getVideoOrientation(cameraConfigProvider.getSensorPosition()));
+            mediaRecorder.setOrientationHint(getVideoOrientation(cameraConfigProvider.getSensorPosition()));
 
-            videoRecorder.prepare();
+            mediaRecorder.prepare();
 
             return true;
         } catch (IllegalStateException error) {

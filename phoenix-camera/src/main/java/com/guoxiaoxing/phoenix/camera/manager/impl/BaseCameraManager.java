@@ -31,7 +31,7 @@ abstract class BaseCameraManager<CameraId, SurfaceListener> implements CameraMan
     protected Context context;
     CameraConfigProvider cameraConfigProvider;
 
-    MediaRecorder videoRecorder;
+    MediaRecorder mediaRecorder;
     boolean isVideoRecording = false;
 
     CameraId currentCameraId = null;
@@ -78,14 +78,14 @@ abstract class BaseCameraManager<CameraId, SurfaceListener> implements CameraMan
 
     protected void releaseVideoRecorder() {
         try {
-            if (videoRecorder != null) {
-                videoRecorder.reset();
-                videoRecorder.release();
+            if (mediaRecorder != null) {
+                mediaRecorder.reset();
+                mediaRecorder.release();
             }
         } catch (Exception ignore) {
 
         } finally {
-            videoRecorder = null;
+            mediaRecorder = null;
         }
     }
 

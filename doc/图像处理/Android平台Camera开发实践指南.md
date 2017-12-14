@@ -6,20 +6,8 @@
 
 **文章目录**
 
-
-Android系统提供了两种方式实现拍照/视频：
-
-- 通过Intent调用系统组件，优点是快速方便，适合于直接获取图片的场景。
-- 通过相机API自定义相机，优点是定制性强，适合于需要定制相机界面或者特殊相机功能的场景（例如：滤镜、贴纸）。
-
-另外在Android系统中存在着两套相机API：
-
-- Camera
-- Camera2
-
-那我们在开发中应该使用哪一种呢？🤔事
-
-实上是两个都用的，Camera2是Android 5.0之后才推出的API，因此我们需要做向下兼容。Android 5.0以下使用Camera、Android 5.0以上使用Camera2。
+Android Camera 相关API也是Android生态碎片化最为严重的一块，首先Android本身就有两套API，Android 5.0以下的Camera和Android 5.0以上的Camera2，而且
+更为严重的时，各家手机厂商都Camera2的支持程度也各不相同，这就导致我们在相机开发中要花费很大精力来处理兼容性问题。
 
 相机开发的一般流程是什么样的？
 
@@ -33,9 +21,27 @@ Android系统提供了两种方式实现拍照/视频：
 
 1. 版本兼容性问题，Android 5.0以上使用Camera2，Android 5.0要做Camera兼容。Android 6.0以上要做相机等运行时权限兼容。
 2. 设备兼容性问题，Camera/Camera2里的各种特性在有些手机厂商的设备实现方式和支持程度是不一样的，这个需要做兼容性测试，一点点踩坑。
+3. 各种场景下的生命周期变化问题，最常见的是后台场景和锁屏场景，这两种场景下的相机资源的申请与释放，Surface的创建与销毁会带来一些问题，这个我们
+后面会仔细分析。
 
-那么如何处理兼容性问题呢，一个比较好的思路就是利用多态的思想，利用接口定义统一的功能，针对不同版本提供不同的实现，使用的时候也是根据不同的版本
-来创建不同的实例。
+要解决这种兼容性问题，就要两套并用，那是不是根据版本来选择呢？Android 5.0 以下用Camera，Android 5.0以上用Camera2，这样是不可欺的。前面也说到不同手机
+厂商对Camera2的支持程度各不相同，即便是Android 5.0 以上的手机，也存在对Camera2支持非常差的情况，这个时候就要降级使用Camera，如何判断对Camera的支持
+程度我们下面会说。
+
+另外关于预览界面也有两套方案Android 4.0以前的SurfaceView和Android 4.0之后的TextureView，关于这两个View的区别这里也简单说一下：
+
+- SurfaceView是一个有自己Surface的View。界面渲染可以放在单独线程而不是主线程中。它更像是一个Window，自身不能做变形和动画。
+- TextureView同样也有自己的Surface。但是它只能在拥有硬件加速层层的Window中绘制，它更像是一个普通View，可以做变形和动画。
+
+更多关于SurfaceView与TextureView区别的内容可以参考这篇文章[Android 5.0(Lollipop)中的SurfaceTexture，TextureView, SurfaceView和GLSurfaceView](http://blog.csdn.net/jinzhuojun/article/details/44062175).
+
+那么如何针对版本进行方案的选择尼？🤔
+
+官方的开源库[cameraview](https://github.com/google/cameraview)给了方案：
+
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/camera/camera2_structure.png"/>
+
+既然要两套并用，就要定义统一的接口，针对不同场景提供不同的实现，使用的时候也是根据不同的场景来创建不同的实例。
 
 我们不难发现，这个接口一般要定义以下功能：
 
@@ -72,12 +78,316 @@ SurfaceHolder.Callback接口里定义了三个函数：
 - surfaceDestroyed(SurfaceHolder holder); 当Surface被销毁的时候调用，可以在这个方法里调用camera.stopPreview()，camera.release()等方法来实现结束预览以及释放
 
 ### 1.1 打开相机
+
+打开相机之前我们需要先获取系统相机的相关信息。
+
+```java
+//有多少个摄像头
+numberOfCameras = Camera.getNumberOfCameras();
+
+for (int i = 0; i < numberOfCameras; ++i) {
+    final Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+
+    Camera.getCameraInfo(i, cameraInfo);
+    //后置摄像头
+    if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+        faceBackCameraId = i;
+        faceBackCameraOrientation = cameraInfo.orientation;
+    } 
+    //前置摄像头
+    else if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+        faceFrontCameraId = i;
+        faceFrontCameraOrientation = cameraInfo.orientation;
+    }
+}
+```
+
+知道了相机相关信息，就可以通过相机ID打开相机了。
+
+```java
+camera = Camera.open(cameraId);
+```
+
+另外，打开相机以后你会获得一个Camera对象，从这个对象里可以获取和设置相机的各种参数信息。
+
+```java
+
+//获取相机参数
+camera.getParameters();
+//设置相机参数
+camera.getParameters();
+```
+
+常见的参数有以下几种。
+
+闪光灯配置参数，可以通过Parameters.getFlashMode()接口获取。
+
+- Camera.Parameters.FLASH_MODE_AUTO 自动模式，当光线较暗时自动打开闪光灯；
+- Camera.Parameters.FLASH_MODE_OFF 关闭闪光灯；
+- Camera.Parameters.FLASH_MODE_ON 拍照时闪光灯；
+- Camera.Parameters.FLASH_MODE_RED_EYE 闪光灯参数，防红眼模式。
+
+对焦模式配置参数，可以通过Parameters.getFocusMode()接口获取。
+
+- Camera.Parameters.FOCUS_MODE_AUTO 自动对焦模式，摄影小白专用模式；
+- Camera.Parameters.FOCUS_MODE_FIXED 固定焦距模式，拍摄老司机模式；
+- Camera.Parameters.FOCUS_MODE_EDOF 景深模式，文艺女青年最喜欢的模式；
+- Camera.Parameters.FOCUS_MODE_INFINITY 远景模式，拍风景大场面的模式；
+- Camera.Parameters.FOCUS_MODE_MACRO 微焦模式，拍摄小花小草小蚂蚁专用模式；
+
+场景模式配置参数，可以通过Parameters.getSceneMode()接口获取。
+
+- Camera.Parameters.SCENE_MODE_BARCODE 扫描条码场景，NextQRCode项目会判断并设置为这个场景；
+- Camera.Parameters.SCENE_MODE_ACTION 动作场景，就是抓拍跑得飞快的运动员、汽车等场景用的；
+- Camera.Parameters.SCENE_MODE_AUTO 自动选择场景；
+- Camera.Parameters.SCENE_MODE_HDR 高动态对比度场景，通常用于拍摄晚霞等明暗分明的照片；
+- Camera.Parameters.SCENE_MODE_NIGHT 夜间场景；
+
+
 ### 1.2 关闭相机
+
+关闭相机很简单，只需要把相机释放掉就可以了。
+
+```java
+camera.release();
+```
+
 ### 1.3 开启预览
+
+Camera的预览时通过SurfaceView的SurfaceHolder进行的，先通过，具体说来：
+
+```java
+private void startPreview(SurfaceHolder surfaceHolder) {
+    try {
+        final Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        Camera.getCameraInfo(currentCameraId, cameraInfo);
+        int cameraRotationOffset = cameraInfo.orientation;
+
+        //获取相机参数
+        final Camera.Parameters parameters = camera.getParameters();
+        //设置对焦模式
+        setAutoFocus(camera, parameters);
+        //设置闪光模式
+        setFlashMode(cameraConfigProvider.getFlashMode());
+
+        if (cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_PHOTO
+                || cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_UNSPECIFIED)
+            turnPhotoCameraFeaturesOn(camera, parameters);
+        else if (cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_PHOTO)
+            turnVideoCameraFeaturesOn(camera, parameters);
+
+        final int rotation = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break; // Natural orientation
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break; // Landscape left
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;// Upside down
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;// Landscape right
+        }
+
+        //根据前置与后置摄像头的不同，设置预览方向，否则会发生预览图像倒过来的情况。
+        if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            displayRotation = (cameraRotationOffset + degrees) % 360;
+            displayRotation = (360 - displayRotation) % 360; // compensate
+        } else {
+            displayRotation = (cameraRotationOffset - degrees + 360) % 360;
+        }
+        this.camera.setDisplayOrientation(displayRotation);
+
+        if (Build.VERSION.SDK_INT > 13
+                && (cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_VIDEO
+                || cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_UNSPECIFIED)) {
+//                parameters.setRecordingHint(true);
+        }
+
+        if (Build.VERSION.SDK_INT > 14
+                && parameters.isVideoStabilizationSupported()
+                && (cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_VIDEO
+                || cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_UNSPECIFIED)) {
+            parameters.setVideoStabilization(true);
+        }
+
+        //设置预览大小
+        parameters.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
+        parameters.setPictureSize(photoSize.getWidth(), photoSize.getHeight());
+
+        //设置相机参数
+        camera.setParameters(parameters);
+        //设置surfaceHolder
+        camera.setPreviewDisplay(surfaceHolder);
+        //开启预览
+        camera.startPreview();
+
+    } catch (IOException error) {
+        Log.d(TAG, "Error setting camera preview: " + error.getMessage());
+    } catch (Exception ignore) {
+        Log.d(TAG, "Error starting camera preview: " + ignore.getMessage());
+    }
+}
+```
+
 ### 1.4 关闭预览
+
+关闭预览很简单，直接调用camera.stopPreview()即可。
+
+```java
+camera.stopPreview();
+```
+
 ### 1.5 拍照
+
+拍照时通过调用Camera的takePicture()方法来完成的，
+
+```java
+takePicture(ShutterCallback shutter, PictureCallback raw, PictureCallback postview, PictureCallback jpeg)
+```
+
+该方法有三个参数：
+
+- ShutterCallback shutter：在拍照的瞬间被回调，这里通常可以播放"咔嚓"这样的拍照音效。
+- PictureCallback raw：返回未经压缩的图像数据。
+- PictureCallback postview：返回postview类型的图像数据
+- PictureCallback jpeg：返回经过JPEG压缩的图像数据。
+
+我们一般用的就是最后一个，实现最后一个PictureCallback即可。
+
+```java
+camera.takePicture(null, null, new Camera.PictureCallback() {
+        @Override
+        public void onPictureTaken(byte[] bytes, Camera camera) {
+            //存储返回的图像数据
+            final File pictureFile = outputPath;
+            if (pictureFile == null) {
+                Log.d(TAG, "Error creating media file, check storage permissions.");
+                return;
+            }
+            try {
+                FileOutputStream fileOutputStream = new FileOutputStream(pictureFile);
+                fileOutputStream.write(bytes);
+                fileOutputStream.close();
+            } catch (FileNotFoundException error) {
+                Log.e(TAG, "File not found: " + error.getMessage());
+            } catch (IOException error) {
+                Log.e(TAG, "Error accessing file: " + error.getMessage());
+            } catch (Throwable error) {
+                Log.e(TAG, "Error saving file: " + error.getMessage());
+            }
+        }
+ });
+```
+
 ### 1.6 开始视频录制
+
+视频的录制时通过MediaRecorder来完成的。
+
+```java
+if (prepareVideoRecorder()) {
+            mediaRecorder.start();
+            isVideoRecording = true;
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    videoListener.onVideoRecordStarted(videoSize);
+                }
+            });
+}
+```
+MediaRecorder主要用来录制音频和视频，在使用之前要进行初始化和相关参数的设置，如下所示：
+
+```java
+protected boolean preparemediaRecorder() {
+    mediaRecorder = new MediaRecorder();
+    try {
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+        mediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+        
+        //输出格式
+        mediaRecorder.setOutputFormat(camcorderProfile.fileFormat);
+        //视频帧率
+        mediaRecorder.setVideoFrameRate(camcorderProfile.videoFrameRate);
+        //视频大小
+        mediaRecorder.setVideoSize(videoSize.getWidth(), videoSize.getHeight());
+        //视频比特率
+        mediaRecorder.setVideoEncodingBitRate(camcorderProfile.videoBitRate);
+        //视频编码器
+        mediaRecorder.setVideoEncoder(camcorderProfile.videoCodec);
+        
+        //音频编码率
+        mediaRecorder.setAudioEncodingBitRate(camcorderProfile.audioBitRate);
+        //音频声道
+        mediaRecorder.setAudioChannels(camcorderProfile.audioChannels);
+        //音频采样率
+        mediaRecorder.setAudioSamplingRate(camcorderProfile.audioSampleRate);
+        //音频编码器
+        mediaRecorder.setAudioEncoder(camcorderProfile.audioCodec);
+        
+        File outputFile = outputPath;
+        String outputFilePath = outputFile.toString();
+        //输出路径
+        mediaRecorder.setOutputFile(outputFilePath);
+        
+        //设置视频输出的最大尺寸
+        if (cameraConfigProvider.getVideoFileSize() > 0) {
+            mediaRecorder.setMaxFileSize(cameraConfigProvider.getVideoFileSize());
+            mediaRecorder.setOnInfoListener(this);
+        }
+        
+        //设置视频输出的最大时长
+        if (cameraConfigProvider.getVideoDuration() > 0) {
+            mediaRecorder.setMaxDuration(cameraConfigProvider.getVideoDuration());
+            mediaRecorder.setOnInfoListener(this);
+        }
+        mediaRecorder.setOrientationHint(getVideoOrientation(cameraConfigProvider.getSensorPosition()));
+        
+        //准备
+        mediaRecorder.prepare();
+
+        return true;
+    } catch (IllegalStateException error) {
+        Log.e(TAG, "IllegalStateException preparing MediaRecorder: " + error.getMessage());
+    } catch (IOException error) {
+        Log.e(TAG, "IOException preparing MediaRecorder: " + error.getMessage());
+    } catch (Throwable error) {
+        Log.e(TAG, "Error during preparing MediaRecorder: " + error.getMessage());
+    }
+    releasemediaRecorder();
+    return false;
+}
+```
+
+值得一提的是，日常的业务中经常对拍摄视频的时长或者大小有要求，这个可以通过mediaRecorder.setOnInfoListener()来处理，OnInfoListener会监听正在录制的视频，然后我们
+可以在它的回调方法里处理。
+
+```java
+   @Override
+public void onInfo(MediaRecorder mediaRecorder, int what, int extra) {
+    if (MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED == what) {
+        //到达最大时长
+    } else if (MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED == what) {
+        //到达最大尺寸
+    }
+}
+```
+更多关于MediaRecorder的介绍可以参考[MediaRecorder官方文档](https://developer.android.com/reference/android/media/MediaRecorder.html)。
+
 ### 1.7 结束视频录制
+
+结束视频录制也很简单，只需要调用mediaRecorder.stop()方法即可。
+
+```java
+mediaRecorder.stop();
+```
+此外，如果不再使用相机，也要注意释放相机资源。
+
+以上便是Camera的全部内容，还是比较简单的，下面我们接着来讲Camera2的相关内容，注意体会两者的区别。
 
 ## 二 Camera2实践指南
 
@@ -144,6 +454,41 @@ Camera2与Camera一样也有cameraId的概念，我们通过mCameraManager.getCa
 - INFO_SUPPORTED_HARDWARE_LEVEL_FULL：全方位的硬件支持，允许手动控制全高清的摄像、支持连拍模式以及其他新特性。              
 - INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED：有限支持，这个需要单独查询。
 - INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY：所有设备都会支持，也就是和过时的Camera API支持的特性是一致的。
+
+利用这个INFO_SUPPORTED_HARDWARE_LEVEL参数，我们可以来判断是使用Camera还是使用Camera2，具体方法如下：
+
+```java
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+public static boolean hasCamera2(Context context) {
+    if (context == null) return false;
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return false;
+    try {
+        CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+        String[] idList = manager.getCameraIdList();
+        boolean notFull = true;
+        if (idList.length == 0) {
+            notFull = false;
+        } else {
+            for (final String str : idList) {
+                if (str == null || str.trim().isEmpty()) {
+                    notFull = false;
+                    break;
+                }
+                final CameraCharacteristics characteristics = manager.getCameraCharacteristics(str);
+
+                final int supportLevel = characteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
+                if (supportLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY) {
+                    notFull = false;
+                    break;
+                }
+            }
+        }
+        return notFull;
+    } catch (Throwable ignore) {
+        return false;
+    }
+}
+```
 
 更多ameraCharacteristics参数，可以参见[CameraCharacteristics官方文档](https://developer.android.com/reference/android/hardware/camera2/CameraCharacteristics.html)。
 
@@ -406,113 +751,72 @@ try {
 ### 2.6 开始视频录制
 
 ```java
-//构建视频录制aptureRequest
-previewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
-final List<Surface> surfaces = new ArrayList<>();
 
-final Surface previewSurface = workingSurface;
-surfaces.add(previewSurface);
-//设置视频录制预览Surface
-previewRequestBuilder.addTarget(previewSurface);
+//先关闭预览，因为需要添加一个预览输出的Surface，也就是mediaRecorder.getSurface()
+closePreviewSession();
 
-//这里跟上面的图像一样创建了一个MediaRecorder来读取录制额数据
-workingSurface = videoRecorder.getSurface();
-surfaces.add(workingSurface);
-//设置视频录制预览Surface
-previewRequestBuilder.addTarget(workingSurface);
+//初始化MediaRecorder，设置相关参数
+if (preparemediaRecorder()) {
 
-//构建视频录制CaptureSession
-mCameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
-    @Override
-    public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-        captureSession = cameraCaptureSession;
+    final SurfaceTexture texture = Camera2Manager.this.texture;
+    texture.setDefaultBufferSize(videoSize.getWidth(), videoSize.getHeight());
 
-        previewRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
-        try {
-            //持续进行视频录制
-            captureSession.setRepeatingRequest(previewRequestBuilder.build(), null, backgroundHandler);
-        } catch (Exception e) {
-        }
+    try {
+        //构建视频录制aptureRequest
+        previewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+        final List<Surface> surfaces = new ArrayList<>();
 
-        try {
-            //开启videoRecorder，准备接收录制数据
-            videoRecorder.start();
-        } catch (Exception ignore) {
-            Log.e(TAG, "videoRecorder.start(): ", ignore);
-        }
-    }
+        //设置预览Surface
+        final Surface previewSurface = workingSurface;
+        surfaces.add(previewSurface);
+        previewRequestBuilder.addTarget(previewSurface);
 
-    @Override
-    public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-        Log.d(TAG, "onConfigureFailed");
-    }
-}, backgroundHandler);
-```
+        //设置预览输出Surface
+        workingSurface = mediaRecorder.getSurface();
+        surfaces.add(workingSurface);
+        previewRequestBuilder.addTarget(workingSurface);
 
-这里面有个VideoRecorder，它实际上是个MediaRecorder，MediaRecorder和上面的ImageReader一样都是用来接收摄像头传来的数据的。MediaRecorder在录制之前
-进行初始化，具体说来：
+        mCameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
+            @Override
+            public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
+                captureSession = cameraCaptureSession;
 
-```java
-videoRecorder = new MediaRecorder();
-videoRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
-videoRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+                previewRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+                try {
+                    //持续发送Capture请求，实现实时预览。
+                    captureSession.setRepeatingRequest(previewRequestBuilder.build(), null, backgroundHandler);
+                } catch (Exception e) {
+                }
 
-//输出格式
-videoRecorder.setOutputFormat(camcorderProfile.fileFormat);
-//视频帧率
-videoRecorder.setVideoFrameRate(camcorderProfile.videoFrameRate);
-//视频大小
-videoRecorder.setVideoSize(videoSize.getWidth(), videoSize.getHeight());
-//视频比特率
-videoRecorder.setVideoEncodingBitRate(camcorderProfile.videoBitRate);
-//视频编码器
-videoRecorder.setVideoEncoder(camcorderProfile.videoCodec);
+                try {
+                    //开始录像
+                    mediaRecorder.start();
+                } catch (Exception ignore) {
+                    Log.e(TAG, "mediaRecorder.start(): ", ignore);
+                }
 
-//音频编码率
-videoRecorder.setAudioEncodingBitRate(camcorderProfile.audioBitRate);
-//音频声道
-videoRecorder.setAudioChannels(camcorderProfile.audioChannels);
-//音频采样率
-videoRecorder.setAudioSamplingRate(camcorderProfile.audioSampleRate);
-//音频编码器
-videoRecorder.setAudioEncoder(camcorderProfile.audioCodec);
+                isVideoRecording = true;
 
-File outputFile = outputPath;
-String outputFilePath = outputFile.toString();
-//输出路径
-videoRecorder.setOutputFile(outputFilePath);
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        cameraVideoListener.onVideoRecordStarted(videoSize);
+                    }
+                });
+            }
 
-//设置视频输出的最大尺寸
-if (cameraConfigProvider.getVideoFileSize() > 0) {
-    videoRecorder.setMaxFileSize(cameraConfigProvider.getVideoFileSize());
-    videoRecorder.setOnInfoListener(this);
-}
-
-//设置视频输出的最大时长
-if (cameraConfigProvider.getVideoDuration() > 0) {
-    videoRecorder.setMaxDuration(cameraConfigProvider.getVideoDuration());
-    videoRecorder.setOnInfoListener(this);
-}
-videoRecorder.setOrientationHint(getVideoOrientation(cameraConfigProvider.getSensorPosition()));
-
-//准备
-videoRecorder.prepare();
-```
-
-值得一提的是，日常的业务中经常对拍摄视频的时长或者大小有要求，这个可以通过videoRecorder.setOnInfoListener()来处理，OnInfoListener会监听正在录制的视频，然后我们
-可以在它的回调方法里处理。
-
-
-```java
-   @Override
-public void onInfo(MediaRecorder mediaRecorder, int what, int extra) {
-    if (MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED == what) {
-        //到达最大时长
-    } else if (MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED == what) {
-        //到达最大尺寸
+            @Override
+            public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
+                Log.d(TAG, "onConfigureFailed");
+            }
+        }, backgroundHandler);
+    } catch (Exception e) {
+        Log.e(TAG, "startVideoRecord: ", e);
     }
 }
 ```
+关于MediaRecorder上面讲Camera的时候我们就已经说过，这里不再赘述。
+
 以上便是视频录制的全部内容，就是简单的API使用，还是比较简单的。
 
 ### 2.7 结束视频录制
@@ -520,8 +824,8 @@ public void onInfo(MediaRecorder mediaRecorder, int what, int extra) {
 结束视频录制主要也是关闭会话以及释放一些资源，具体说来：
 
 1. 关闭预览会话
-2. 停止VideoRecorder
-3. 释放VideoRecorder
+2. 停止mediaRecorder
+3. 释放mediaRecorder
 
 ```java
 //关闭预览会话
@@ -535,24 +839,24 @@ if (captureSession != null) {
     }
 }
 
-//停止VideoRecorder
-if (videoRecorder != null) {
+//停止mediaRecorder
+if (mediaRecorder != null) {
     try {
-        videoRecorder.stop();
+        mediaRecorder.stop();
     } catch (Exception ignore) {
     }
 }
 
-//释放VideoRecorder
+//释放mediaRecorder
 try {
-    if (videoRecorder != null) {
-        videoRecorder.reset();
-        videoRecorder.release();
+    if (mediaRecorder != null) {
+        mediaRecorder.reset();
+        mediaRecorder.release();
     }
 } catch (Exception ignore) {
 
 } finally {
-    videoRecorder = null;
+    mediaRecorder = null;
 }
 ```
 
@@ -560,6 +864,14 @@ try {
 
 
 ### 关于一些常见的坑
+
+#### SurfaceView预览图像颠倒问题
+
+#### SurfaceView预览图像拉伸问题
+
+#### 前置摄像头的镜像问题
+
+#### 锁屏/后台场景下相机资源的释放问题
 
 ### 关于权限问题的处理
 

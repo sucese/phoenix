@@ -194,7 +194,7 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
                     if (context == null) return;
 
                     if (prepareVideoRecorder()) {
-                        videoRecorder.start();
+                        mediaRecorder.start();
                         isVideoRecording = true;
                         uiHandler.post(new Runnable() {
                             @Override
@@ -215,7 +215,7 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
                 public void run() {
 
                     try {
-                        if (videoRecorder != null) videoRecorder.stop();
+                        if (mediaRecorder != null) mediaRecorder.stop();
                     } catch (Exception ignore) {
                         // ignore illegal state.
                         // appear in case time or file size reach limit and stop already called.
@@ -303,43 +303,43 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
 
     @Override
     protected boolean prepareVideoRecorder() {
-        videoRecorder = new MediaRecorder();
+        mediaRecorder = new MediaRecorder();
         try {
             camera.lock();
             camera.unlock();
-            videoRecorder.setCamera(camera);
+            mediaRecorder.setCamera(camera);
 
-            videoRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-            videoRecorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+            mediaRecorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
 
-            videoRecorder.setOutputFormat(camcorderProfile.fileFormat);
-            videoRecorder.setVideoFrameRate(camcorderProfile.videoFrameRate);
-            videoRecorder.setVideoSize(videoSize.getWidth(), videoSize.getHeight());
-            videoRecorder.setVideoEncodingBitRate(camcorderProfile.videoBitRate);
-            videoRecorder.setVideoEncoder(camcorderProfile.videoCodec);
+            mediaRecorder.setOutputFormat(camcorderProfile.fileFormat);
+            mediaRecorder.setVideoFrameRate(camcorderProfile.videoFrameRate);
+            mediaRecorder.setVideoSize(videoSize.getWidth(), videoSize.getHeight());
+            mediaRecorder.setVideoEncodingBitRate(camcorderProfile.videoBitRate);
+            mediaRecorder.setVideoEncoder(camcorderProfile.videoCodec);
 
-            videoRecorder.setAudioEncodingBitRate(camcorderProfile.audioBitRate);
-            videoRecorder.setAudioChannels(camcorderProfile.audioChannels);
-            videoRecorder.setAudioSamplingRate(camcorderProfile.audioSampleRate);
-            videoRecorder.setAudioEncoder(camcorderProfile.audioCodec);
+            mediaRecorder.setAudioEncodingBitRate(camcorderProfile.audioBitRate);
+            mediaRecorder.setAudioChannels(camcorderProfile.audioChannels);
+            mediaRecorder.setAudioSamplingRate(camcorderProfile.audioSampleRate);
+            mediaRecorder.setAudioEncoder(camcorderProfile.audioCodec);
 
-            videoRecorder.setOutputFile(outputPath.toString());
+            mediaRecorder.setOutputFile(outputPath.toString());
 
             if (cameraConfigProvider.getVideoFileSize() > 0) {
-                videoRecorder.setMaxFileSize(cameraConfigProvider.getVideoFileSize());
+                mediaRecorder.setMaxFileSize(cameraConfigProvider.getVideoFileSize());
 
-                videoRecorder.setOnInfoListener(this);
+                mediaRecorder.setOnInfoListener(this);
             }
             if (cameraConfigProvider.getVideoDuration() > 0) {
-                videoRecorder.setMaxDuration(cameraConfigProvider.getVideoDuration());
+                mediaRecorder.setMaxDuration(cameraConfigProvider.getVideoDuration());
 
-                videoRecorder.setOnInfoListener(this);
+                mediaRecorder.setOnInfoListener(this);
             }
 
-            videoRecorder.setOrientationHint(getVideoOrientation(cameraConfigProvider.getSensorPosition()));
-            videoRecorder.setPreviewDisplay(surface);
+            mediaRecorder.setOrientationHint(getVideoOrientation(cameraConfigProvider.getSensorPosition()));
+            mediaRecorder.setPreviewDisplay(surface);
 
-            videoRecorder.prepare();
+            mediaRecorder.prepare();
 
             return true;
         } catch (IllegalStateException error) {
@@ -369,12 +369,11 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
         super.releaseVideoRecorder();
 
         try {
-            camera.lock(); // lock camera for later use
+            // lock camera for later use
+            camera.lock();
         } catch (Exception ignore) {
         }
     }
-
-    //------------------------Implementation------------------
 
     private void startPreview(SurfaceHolder surfaceHolder) {
         try {

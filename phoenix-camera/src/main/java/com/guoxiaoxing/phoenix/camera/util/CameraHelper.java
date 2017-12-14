@@ -28,7 +28,6 @@ public final class CameraHelper {
     public final static String TAG = "CameraHelper";
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 
-
     private CameraHelper() {
     }
 
@@ -44,25 +43,25 @@ public final class CameraHelper {
         try {
             CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
             String[] idList = manager.getCameraIdList();
-            boolean notNull = true;
+            boolean notFull = true;
             if (idList.length == 0) {
-                notNull = false;
+                notFull = false;
             } else {
                 for (final String str : idList) {
                     if (str == null || str.trim().isEmpty()) {
-                        notNull = false;
+                        notFull = false;
                         break;
                     }
                     final CameraCharacteristics characteristics = manager.getCameraCharacteristics(str);
 
                     final int supportLevel = characteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
                     if (supportLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY) {
-                        notNull = false;
+                        notFull = false;
                         break;
                     }
                 }
             }
-            return notNull;
+            return notFull;
         } catch (Throwable ignore) {
             return false;
         }
