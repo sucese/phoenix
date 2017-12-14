@@ -65,7 +65,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun eventBus(obj: EventEntity) {
         when (obj.what) {
-        //receive the select result from PreviewActivity
+        //receive the select result from CameraPreviewActivity
             PhoenixConstant.FLAG_PREVIEW_UPDATE_SELECT -> {
                 val selectImages = obj.mediaEntities
                 isAnimation = selectImages.size > 0

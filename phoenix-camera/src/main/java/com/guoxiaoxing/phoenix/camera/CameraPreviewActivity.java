@@ -14,12 +14,13 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
 
-import com.guoxiaoxing.phoenix.camera.common.MediaAction;
+import com.guoxiaoxing.phoenix.camera.config.model.MediaAction;
 import com.guoxiaoxing.phoenix.camera.config.CameraConfig;
 import com.guoxiaoxing.phoenix.camera.util.ImageLoader;
 import com.guoxiaoxing.phoenix.camera.util.Utils;
@@ -27,9 +28,9 @@ import com.guoxiaoxing.phoenix.camera.widget.AutoFitFrameLayout;
 
 import java.io.File;
 
-public class PreviewActivity extends AppCompatActivity implements View.OnClickListener {
+public class CameraPreviewActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = "PreviewActivity";
+    private static final String TAG = "CameraPreviewActivity";
 
     public static final int ACTION_CONFIRM = 900;
     public static final int ACTION_RETAKE = 901;
@@ -65,13 +66,13 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
     private String[] ratioLabels;
 
     public static Intent newIntentPhoto(Context context, String filePath) {
-        return new Intent(context, PreviewActivity.class)
+        return new Intent(context, CameraPreviewActivity.class)
                 .putExtra(MEDIA_ACTION_ARG, MediaAction.ACTION_PHOTO)
                 .putExtra(FILE_PATH_ARG, filePath);
     }
 
     public static Intent newIntentVideo(Context context, String filePath) {
-        return new Intent(context, PreviewActivity.class)
+        return new Intent(context, CameraPreviewActivity.class)
                 .putExtra(MEDIA_ACTION_ARG, MediaAction.ACTION_VIDEO)
                 .putExtra(FILE_PATH_ARG, filePath);
     }
@@ -80,7 +81,10 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preview);
+        if (getWindow() != null) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+        setContentView(R.layout.activity_camera_preview);
 
         String originalRatioLabel = getString(R.string.preview_controls_original_ratio_label);
         ratioLabels = new String[]{originalRatioLabel, "1:1", "4:3", "16:9"};
@@ -224,7 +228,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-                    mediaController = new MediaController(PreviewActivity.this);
+                    mediaController = new MediaController(CameraPreviewActivity.this);
                     mediaController.setAnchorView(surfaceView);
                     mediaController.setMediaPlayer(new MediaController.MediaPlayerControl() {
                         @Override

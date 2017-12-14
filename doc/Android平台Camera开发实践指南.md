@@ -313,6 +313,8 @@ camera.takePicture(null, null, new Camera.PictureCallback() {
  });
 ```
 
+拍照完成后如果还要继续拍照则调用camera.startPreview()继续开启预览，否则关闭预览，释放相机资源。
+
 ### 1.6 开始视频录制
 
 视频的录制时通过MediaRecorder来完成的。

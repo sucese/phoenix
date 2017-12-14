@@ -31,19 +31,19 @@
         android:layout_alignParentBottom="true"
         android:background="#82212121"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="16dp">
 
         <TextView
             android:id="@+id/cancel_media_action"
             style="@style/PreviewButtonsStyle"
-            android:drawableTop="@drawable/phoenix_clear_white"
-            android:text="@string/preview_controls_cancel" />
+            android:drawableTop="@drawable/phoenix_clear_white"/>
 
         <TextView
             android:id="@+id/crop_image"
             style="@style/PreviewButtonsStyle"
-            android:drawableTop="@drawable/phoenix_crop_white"
-            android:text="@string/preview_controls_crop" />
+            android:drawableTop="@drawable/phoenix_crop_white"/>
 
         <TextView
             android:id="@+id/ratio_image"
@@ -53,14 +53,12 @@
         <TextView
             android:id="@+id/re_take_media"
             style="@style/PreviewButtonsStyle"
-            android:drawableTop="@drawable/phoenix_replay_white_24dp"
-            android:text="@string/preview_controls_retake" />
+            android:drawableTop="@drawable/phoenix_replay_white" />
 
         <TextView
             android:id="@+id/confirm_media_result"
             style="@style/PreviewButtonsStyle"
-            android:drawableTop="@drawable/phoenix_done_white"
-            android:text="@string/preview_controls_confirm" />
+            android:drawableTop="@drawable/phoenix_done_white"/>
 
     </LinearLayout>
 

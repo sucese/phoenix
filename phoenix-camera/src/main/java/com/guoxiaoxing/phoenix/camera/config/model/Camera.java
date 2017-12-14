@@ -1,4 +1,4 @@
-package com.guoxiaoxing.phoenix.camera.common;
+package com.guoxiaoxing.phoenix.camera.config.model;
 
 import android.support.annotation.IntDef;
 

@@ -22,10 +22,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import com.guoxiaoxing.phoenix.camera.common.Camera;
-import com.guoxiaoxing.phoenix.camera.common.Flash;
-import com.guoxiaoxing.phoenix.camera.common.MediaAction;
-import com.guoxiaoxing.phoenix.camera.common.Record;
+import com.guoxiaoxing.phoenix.camera.config.model.Camera;
+import com.guoxiaoxing.phoenix.camera.config.model.Flash;
+import com.guoxiaoxing.phoenix.camera.config.model.MediaAction;
+import com.guoxiaoxing.phoenix.camera.config.model.Record;
 import com.guoxiaoxing.phoenix.camera.config.CameraConfig;
 import com.guoxiaoxing.phoenix.camera.config.CameraConfigProvider;
 import com.guoxiaoxing.phoenix.camera.config.CameraConfigProviderImpl;
@@ -38,6 +38,7 @@ import com.guoxiaoxing.phoenix.camera.controller.view.CameraView;
 import com.guoxiaoxing.phoenix.camera.listener.CameraControlListener;
 import com.guoxiaoxing.phoenix.camera.listener.CameraStateListener;
 import com.guoxiaoxing.phoenix.camera.listener.CameraVideoRecordTextListener;
+import com.guoxiaoxing.phoenix.camera.listener.ICameraFragment;
 import com.guoxiaoxing.phoenix.camera.listener.OnCameraResultListener;
 import com.guoxiaoxing.phoenix.camera.util.CameraHelper;
 import com.guoxiaoxing.phoenix.camera.util.Size;
@@ -557,16 +558,16 @@ public class CameraFragment<CameraId> extends Fragment implements ICameraFragmen
     //        if (requestCode == REQUEST_PREVIEW_CODE) {
     //            final FragmentActivity activity = getActivity();
     //            if (activity != null) {
-    //                if (PreviewActivity.isResultConfirm(data)) {
+    //                if (CameraPreviewActivity.isResultConfirm(data)) {
     //                    Intent resultIntent = new Intent();
     //                    resultIntent.putExtra(CameraConfig.Arguments.FILE_PATH,
-    //                            PreviewActivity.getMediaFilePatch(data));
+    //                            CameraPreviewActivity.getMediaFilePatch(data));
     //                    activity.setResult(Activity.RESULT_OK, resultIntent);
     //                    activity.finish();
-    //                } else if (PreviewActivity.isResultCancel(data)) {
+    //                } else if (CameraPreviewActivity.isResultCancel(data)) {
     //                    activity.setResult(Activity.RESULT_CANCELED);
     //                    activity.finish();
-    //                } else if (PreviewActivity.isResultRetake(data)) {
+    //                } else if (CameraPreviewActivity.isResultRetake(data)) {
     //                    //ignore, just proceed the camera
     //                }
     //            }

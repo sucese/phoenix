@@ -3,10 +3,15 @@
     package="com.guoxiaoxing.phoenix.camera">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application>
         <activity
             android:name=".CameraActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CameraPreviewActivity"
             android:screenOrientation="portrait" />
     </application>
 

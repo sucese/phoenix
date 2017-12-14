@@ -1,4 +1,4 @@
-package com.guoxiaoxing.phoenix.camera;
+package com.guoxiaoxing.phoenix.camera.listener;
 
 import android.support.annotation.Nullable;
 

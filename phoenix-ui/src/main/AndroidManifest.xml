@@ -34,10 +34,6 @@
             android:name="com.guoxiaoxing.phoenix.picker.ui.BaseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.guoxiaoxing.phoenix.picker.ui.camera.CameraActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
             android:name="com.guoxiaoxing.phoenix.picker.ui.picker.PickerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

@@ -592,6 +592,7 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
                     }
                 });
             }
+            camera.startPreview();
         } catch (Throwable error) {
             Log.e(TAG, "Can't save exif info: " + error.getMessage());
         }

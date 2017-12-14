@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewCompat;
@@ -15,11 +14,12 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.guoxiaoxing.phoenix.camera.common.MediaAction;
+import com.guoxiaoxing.phoenix.camera.config.model.MediaAction;
 import com.guoxiaoxing.phoenix.camera.config.CameraConfig;
 import com.guoxiaoxing.phoenix.camera.listener.CameraControlAdapter;
 import com.guoxiaoxing.phoenix.camera.listener.CameraStateAdapter;
 import com.guoxiaoxing.phoenix.camera.listener.CameraVideoRecordTextAdapter;
+import com.guoxiaoxing.phoenix.camera.listener.ICameraFragment;
 import com.guoxiaoxing.phoenix.camera.listener.OnCameraResultAdapter;
 import com.guoxiaoxing.phoenix.camera.widget.CameraSettingsView;
 import com.guoxiaoxing.phoenix.camera.widget.CameraSwitchView;
@@ -98,6 +98,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                             public void onPhotoTaken(byte[] bytes, String filePath) {
                                 Toast.makeText(getBaseContext(), "onPictureTaken "
                                         + filePath, Toast.LENGTH_SHORT).show();
+                                startActivity(CameraPreviewActivity.newIntentPhoto(CameraActivity.this, filePath));
                             }
                         }
                 );
@@ -118,6 +119,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     public void onVideoRecorded(String filePath) {
                         Toast.makeText(getBaseContext(), "onVideoRecorded "
                                 + filePath, Toast.LENGTH_SHORT).show();
+                        startActivity(CameraPreviewActivity.newIntentVideo(CameraActivity.this, filePath));
                     }
                 });
                 cameraFragment.switchCaptureAction(MediaAction.ACTION_PHOTO);
@@ -171,13 +173,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             //cameraFragmentApi.setResultListener(new OnCameraResultListener() {
             //    @Override
             //    public void onVideoRecorded(String filePath) {
-            //        Intent intent = PreviewActivity.newIntentVideo(CameraFragmentMainActivity.this, filePath);
+            //        Intent intent = CameraPreviewActivity.newIntentVideo(CameraFragmentMainActivity.this, filePath);
             //        startActivityForResult(intent, REQUEST_CODE_PREVIEW);
             //    }
 //
             //    @Override
             //    public void onPictureTaken(byte[] bytes, String filePath) {
-            //        Intent intent = PreviewActivity.newIntentPhoto(CameraFragmentMainActivity.this, filePath);
+            //        Intent intent = CameraPreviewActivity.newIntentPhoto(CameraFragmentMainActivity.this, filePath);
             //        startActivityForResult(intent, REQUEST_CODE_PREVIEW);
             //    }
             //});
