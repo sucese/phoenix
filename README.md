@@ -13,7 +13,8 @@
 
 更多关于图像/视频编解码的文章
 
-- [Android平台图像压缩方案](https://github.com/guoxiaoxing/phoenix/blob/master/doc/图像处理/Android平台图像压缩方案.md)
+- [Android平台图像压缩方案](https://github.com/guoxiaoxing/phoenix/blob/master/doc/Android平台图像压缩方案.md)
+- [Android平台Camera开发实践指南](https://github.com/guoxiaoxing/phoenix/blob/master/doc/Android平台Camera开发实践指南.md)
 
 **特点**
 
