@@ -9,7 +9,7 @@
 Android Camera 相关API也是Android生态碎片化最为严重的一块，首先Android本身就有两套API，Android 5.0以下的Camera和Android 5.0以上的Camera2，而且
 更为严重的时，各家手机厂商都Camera2的支持程度也各不相同，这就导致我们在相机开发中要花费很大精力来处理兼容性问题。
 
-相机开发的一般流程是什么样的？
+相机开发的一般流程是什么样的？🤔
 
 1. 检测并访问相机资源 检查手机是否存在相机资源，如果存在则请求访问相机资源。
 2. 创建预览界面，创建继承自SurfaceView并实现SurfaceHolder接口的拍摄预览类。有了拍摄预览类，即可创建一个布局文件，将预览画面与设计好的用户界面控件融合在一起，实时显示相机的预览图像。
@@ -17,7 +17,7 @@ Android Camera 相关API也是Android生态碎片化最为严重的一块，首�
 4. 拍照并保存文件，将拍摄获得的图像转换成位图文件，最终输出保存成各种常用格式的图片。
 5. 释放相机资源，相机是一个共享资源，当相机使用完毕后，必须正确地将其释放，以免其它程序访问使用时发生冲突。
 
-相机开发一般需要注意哪些问题？
+相机开发一般需要注意哪些问题？🤔
 
 1. 版本兼容性问题，Android 5.0以下的Camera和Android 5.0以上使用Camera2，Android 4.0以下的SurfaceView和Android 4.0以上的TextureView，Android 6.0以上要做相机等运行时权限兼容。
 2. 设备兼容性问题，Camera/Camera2里的各种特性在有些手机厂商的设备实现方式和支持程度是不一样的，这个需要做兼容性测试，一点点踩坑。
@@ -38,7 +38,7 @@ Android Camera 相关API也是Android生态碎片化最为严重的一块，首�
 
 更多关于SurfaceView与TextureView区别的内容可以参考这篇文章[Android 5.0(Lollipop)中的SurfaceTexture，TextureView, SurfaceView和GLSurfaceView](http://blog.csdn.net/jinzhuojun/article/details/44062175).
 
-那么如何针对版本进行方案的选择尼？🤔
+那么如何针对版本进行方案的选择呢？🤔
 
 官方的开源库[cameraview](https://github.com/google/cameraview)给出了方案：
 
