@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".MainActivity">
+    tools:mContext=".MainActivity">
 
     <TextView
         android:id="@+id/tv_video"

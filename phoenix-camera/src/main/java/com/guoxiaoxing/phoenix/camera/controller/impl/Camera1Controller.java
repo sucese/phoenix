@@ -15,7 +15,7 @@ import com.guoxiaoxing.phoenix.camera.manager.CameraManager;
 import com.guoxiaoxing.phoenix.camera.manager.impl.Camera1Manager;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraCloseListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraOpenListener;
-import com.guoxiaoxing.phoenix.camera.manager.listener.CameraPhotoListener;
+import com.guoxiaoxing.phoenix.camera.manager.listener.CameraPictureListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraVideoListener;
 import com.guoxiaoxing.phoenix.camera.util.CameraHelper;
 import com.guoxiaoxing.phoenix.camera.util.Size;
@@ -33,50 +33,48 @@ import java.io.File;
  */
 @SuppressWarnings("deprecation")
 public class Camera1Controller implements CameraController<Integer>, CameraOpenListener<Integer, SurfaceHolder.Callback>
-        , CameraPhotoListener, CameraCloseListener<Integer>, CameraVideoListener {
+        , CameraPictureListener, CameraCloseListener<Integer>, CameraVideoListener {
 
     private final static String TAG = "Camera1Controller";
 
-    private final Context context;
-
-    private Integer currentCameraId;
-    private CameraConfigProvider cameraConfigProvider;
-    private CameraManager<Integer, SurfaceHolder.Callback> cameraManager;
-    private CameraView cameraView;
-
-    private File outputFile;
+    private final Context mContext;
+    private Integer mCameraId;
+    private File mOutputFile;
+    private CameraView mCameraView;
+    private CameraConfigProvider mCameraConfigProvider;
+    private CameraManager<Integer, SurfaceHolder.Callback> mCameraManager;
 
     public Camera1Controller(Context context, CameraView cameraView, CameraConfigProvider cameraConfigProvider) {
-        this.context = context;
-        this.cameraView = cameraView;
-        this.cameraConfigProvider = cameraConfigProvider;
+        this.mContext = context;
+        this.mCameraView = cameraView;
+        this.mCameraConfigProvider = cameraConfigProvider;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        cameraManager = new Camera1Manager();
-        cameraManager.initializeCameraManager(cameraConfigProvider, context);
-        setCurrentCameraId(cameraManager.getFaceBackCameraId());
+        mCameraManager = new Camera1Manager();
+        mCameraManager.initializeCameraManager(mCameraConfigProvider, mContext);
+        setmCameraId(mCameraManager.getFaceBackCameraId());
     }
 
-    private void setCurrentCameraId(Integer cameraId) {
-        this.currentCameraId = cameraId;
-        cameraManager.setCameraId(cameraId);
+    private void setmCameraId(Integer cameraId) {
+        this.mCameraId = cameraId;
+        mCameraManager.setCameraId(cameraId);
     }
 
     @Override
     public void onResume() {
-        cameraManager.openCamera(currentCameraId, this);
+        mCameraManager.openCamera(mCameraId, this);
     }
 
     @Override
     public void onPause() {
-        cameraManager.closeCamera(null);
+        mCameraManager.closeCamera(null);
     }
 
     @Override
     public void onDestroy() {
-        cameraManager.releaseCameraManager();
+        mCameraManager.releaseCameraManager();
     }
 
     @Override
@@ -86,8 +84,8 @@ public class Camera1Controller implements CameraController<Integer>, CameraOpenL
 
     @Override
     public void takePhoto(CameraResultListener callback, @Nullable String direcoryPath, @Nullable String fileName) {
-        outputFile = CameraHelper.getOutputMediaFile(context, CameraConfig.MEDIA_ACTION_PHOTO, direcoryPath, fileName);
-        cameraManager.takePicture(outputFile, this, callback);
+        mOutputFile = CameraHelper.getOutputMediaFile(mContext, CameraConfig.MEDIA_ACTION_PHOTO, direcoryPath, fileName);
+        mCameraManager.takePicture(mOutputFile, this, callback);
     }
 
     @Override
@@ -97,70 +95,70 @@ public class Camera1Controller implements CameraController<Integer>, CameraOpenL
 
     @Override
     public void startVideoRecord(@Nullable String direcoryPath, @Nullable String fileName) {
-        outputFile = CameraHelper.getOutputMediaFile(context, CameraConfig.MEDIA_ACTION_VIDEO, direcoryPath, fileName);
-        cameraManager.startVideoRecord(outputFile, this);
+        mOutputFile = CameraHelper.getOutputMediaFile(mContext, CameraConfig.MEDIA_ACTION_VIDEO, direcoryPath, fileName);
+        mCameraManager.startVideoRecord(mOutputFile, this);
     }
 
     @Override
     public void stopVideoRecord(CameraResultListener callback) {
-        cameraManager.stopVideoRecord(callback);
+        mCameraManager.stopVideoRecord(callback);
     }
 
     @Override
     public boolean isVideoRecording() {
-        return cameraManager.isVideoRecording();
+        return mCameraManager.isVideoRecording();
     }
 
     @Override
     public void switchCamera(@CameraConfig.CameraFace final int cameraFace) {
-        final Integer backCameraId = cameraManager.getFaceBackCameraId();
-        final Integer frontCameraId = cameraManager.getFaceFrontCameraId();
-        final Integer currentCameraId = cameraManager.getCurrentCameraId();
+        final Integer backCameraId = mCameraManager.getFaceBackCameraId();
+        final Integer frontCameraId = mCameraManager.getFaceFrontCameraId();
+        final Integer currentCameraId = mCameraManager.getCurrentCameraId();
 
         if (cameraFace == CameraConfig.CAMERA_FACE_REAR && backCameraId != null) {
-            setCurrentCameraId(backCameraId);
-            cameraManager.closeCamera(this);
+            setmCameraId(backCameraId);
+            mCameraManager.closeCamera(this);
         } else if (frontCameraId != null && !frontCameraId.equals(currentCameraId)) {
-            setCurrentCameraId(frontCameraId);
-            cameraManager.closeCamera(this);
+            setmCameraId(frontCameraId);
+            mCameraManager.closeCamera(this);
         }
     }
 
     @Override
     public void setFlashMode(@CameraConfig.FlashMode int flashMode) {
-        cameraManager.setFlashMode(flashMode);
+        mCameraManager.setFlashMode(flashMode);
     }
 
     @Override
     public void switchQuality() {
-        cameraManager.closeCamera(this);
+        mCameraManager.closeCamera(this);
     }
 
     @Override
     public int getNumberOfCameras() {
-        return cameraManager.getNumberOfCameras();
+        return mCameraManager.getNumberOfCameras();
     }
 
     @Override
     public int getMediaAction() {
-        return cameraConfigProvider.getMediaAction();
+        return mCameraConfigProvider.getMediaAction();
     }
 
     @Override
     public File getOutputFile() {
-        return outputFile;
+        return mOutputFile;
     }
 
     @Override
-    public Integer getCurrentCameraId() {
-        return currentCameraId;
+    public Integer getCameraId() {
+        return mCameraId;
     }
 
     @Override
     public void onCameraOpened(Integer cameraId, Size previewSize, SurfaceHolder.Callback surfaceCallback) {
-        cameraView.updateUiForMediaAction(cameraConfigProvider.getMediaAction());
-        cameraView.updateCameraPreview(previewSize, new AutoFitSurfaceView(context, surfaceCallback));
-        cameraView.updateCameraSwitcher(getNumberOfCameras());
+        mCameraView.updateUiForMediaAction(mCameraConfigProvider.getMediaAction());
+        mCameraView.updateCameraPreview(previewSize, new AutoFitSurfaceView(mContext, surfaceCallback));
+        mCameraView.updateCameraSwitcher(getNumberOfCameras());
     }
 
     @Override
@@ -170,28 +168,28 @@ public class Camera1Controller implements CameraController<Integer>, CameraOpenL
 
     @Override
     public void onCameraClosed(Integer closedCameraId) {
-        cameraView.releaseCameraPreview();
+        mCameraView.releaseCameraPreview();
 
-        cameraManager.openCamera(currentCameraId, this);
+        mCameraManager.openCamera(mCameraId, this);
     }
 
     @Override
-    public void onPhotoTaken(byte[] bytes, File photoFile, CameraResultListener callback) {
-        cameraView.onPhotoTaken(bytes, callback);
+    public void onPictureTaken(byte[] bytes, File photoFile, CameraResultListener callback) {
+        mCameraView.onPictureTaken(bytes, callback);
     }
 
     @Override
-    public void onPhotoTakeError() {
+    public void onPictureTakeError() {
     }
 
     @Override
     public void onVideoRecordStarted(Size videoSize) {
-        cameraView.onVideoRecordStart(videoSize.getWidth(), videoSize.getHeight());
+        mCameraView.onVideoRecordStart(videoSize.getWidth(), videoSize.getHeight());
     }
 
     @Override
     public void onVideoRecordStopped(File videoFile, @Nullable CameraResultListener callback) {
-        cameraView.onVideoRecordStop(callback);
+        mCameraView.onVideoRecordStop(callback);
     }
 
     @Override
@@ -201,16 +199,16 @@ public class Camera1Controller implements CameraController<Integer>, CameraOpenL
 
     @Override
     public CameraManager getCameraManager() {
-        return cameraManager;
+        return mCameraManager;
     }
 
     @Override
     public CharSequence[] getVideoQualityOptions() {
-        return cameraManager.getVideoQualityOptions();
+        return mCameraManager.getVideoQualityOptions();
     }
 
     @Override
     public CharSequence[] getPhotoQualityOptions() {
-        return cameraManager.getPictureQualityOptions();
+        return mCameraManager.getPictureQualityOptions();
     }
 }

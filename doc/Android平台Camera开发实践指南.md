@@ -197,15 +197,15 @@ private void startPreview(SurfaceHolder surfaceHolder) {
         //设置对焦模式
         setAutoFocus(camera, parameters);
         //设置闪光模式
-        setFlashMode(cameraConfigProvider.getFlashMode());
+        setFlashMode(mCameraConfigProvider.getFlashMode());
 
-        if (cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_PHOTO
-                || cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_UNSPECIFIED)
+        if (mCameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_PHOTO
+                || mCameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_UNSPECIFIED)
             turnPhotoCameraFeaturesOn(camera, parameters);
-        else if (cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_PHOTO)
+        else if (mCameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_PHOTO)
             turnVideoCameraFeaturesOn(camera, parameters);
 
-        final int rotation = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        final int rotation = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
         int degrees = 0;
         switch (rotation) {
             case Surface.ROTATION_0:
@@ -232,15 +232,15 @@ private void startPreview(SurfaceHolder surfaceHolder) {
         this.camera.setDisplayOrientation(displayRotation);
 
         if (Build.VERSION.SDK_INT > 13
-                && (cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_VIDEO
-                || cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_UNSPECIFIED)) {
+                && (mCameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_VIDEO
+                || mCameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_UNSPECIFIED)) {
 //                parameters.setRecordingHint(true);
         }
 
         if (Build.VERSION.SDK_INT > 14
                 && parameters.isVideoStabilizationSupported()
-                && (cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_VIDEO
-                || cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_UNSPECIFIED)) {
+                && (mCameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_VIDEO
+                || mCameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_UNSPECIFIED)) {
             parameters.setVideoStabilization(true);
         }
 
@@ -364,17 +364,17 @@ protected boolean preparemediaRecorder() {
         mediaRecorder.setOutputFile(outputFilePath);
         
         //设置视频输出的最大尺寸
-        if (cameraConfigProvider.getVideoFileSize() > 0) {
-            mediaRecorder.setMaxFileSize(cameraConfigProvider.getVideoFileSize());
+        if (mCameraConfigProvider.getVideoFileSize() > 0) {
+            mediaRecorder.setMaxFileSize(mCameraConfigProvider.getVideoFileSize());
             mediaRecorder.setOnInfoListener(this);
         }
         
         //设置视频输出的最大时长
-        if (cameraConfigProvider.getVideoDuration() > 0) {
-            mediaRecorder.setMaxDuration(cameraConfigProvider.getVideoDuration());
+        if (mCameraConfigProvider.getVideoDuration() > 0) {
+            mediaRecorder.setMaxDuration(mCameraConfigProvider.getVideoDuration());
             mediaRecorder.setOnInfoListener(this);
         }
-        mediaRecorder.setOrientationHint(getVideoOrientation(cameraConfigProvider.getSensorPosition()));
+        mediaRecorder.setOrientationHint(getVideoOrientation(mCameraConfigProvider.getSensorPosition()));
         
         //准备
         mediaRecorder.prepare();
@@ -444,7 +444,7 @@ Camera2拍照流程如下所示：
 打开相机之前，我们首先要获取CameraManager，然后获取相机列表，进而获取各个摄像头（主要是前置摄像头和后置摄像头）的参数。
 
 ```java
-mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+mCameraManager = (CameraManager) mContext.getSystemService(Context.CAMERA_SERVICE);
 try {
     final String[] ids = mCameraManager.getCameraIdList();
     numberOfCameras = ids.length;
@@ -488,11 +488,11 @@ Camera2与Camera一样也有cameraId的概念，我们通过mCameraManager.getCa
 
 ```java
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public static boolean hasCamera2(Context context) {
-    if (context == null) return false;
+public static boolean hasCamera2(Context mContext) {
+    if (mContext == null) return false;
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return false;
     try {
-        CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+        CameraManager manager = (CameraManager) mContext.getSystemService(Context.CAMERA_SERVICE);
         String[] idList = manager.getCameraIdList();
         boolean notFull = true;
         if (idList.length == 0) {
@@ -738,7 +738,7 @@ private void captureStillPicture() {
         //使用相同的AR和AF模式作为预览
         captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
         //设置方向
-        captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getPhotoOrientation(cameraConfigProvider.getSensorPosition()));
+        captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getPhotoOrientation(mCameraConfigProvider.getSensorPosition()));
 
         //创建会话
         CameraCaptureSession.CaptureCallback CaptureCallback = new CameraCaptureSession.CaptureCallback() {

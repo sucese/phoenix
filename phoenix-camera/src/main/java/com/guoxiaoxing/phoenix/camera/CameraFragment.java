@@ -204,7 +204,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
             }
 
             @Override
-            public void onPhotoTaken(byte[] bytes, CameraResultListener callback) {
+            public void onPictureTaken(byte[] bytes, CameraResultListener callback) {
                 final String filePath = mCameraController.getOutputFile().toString();
                 if (cameraResultListener != null) {
                     cameraResultListener.onPhotoTaken(bytes, filePath);

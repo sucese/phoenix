@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
-    tools:context="com.guoxiaoxing.phoenix.demo.camera.CameraDemoActivity">
+    tools:mContext="com.guoxiaoxing.phoenix.demo.camera.CameraDemoActivity">
 
     <Button
         android:id="@+id/btn_camera_activity"

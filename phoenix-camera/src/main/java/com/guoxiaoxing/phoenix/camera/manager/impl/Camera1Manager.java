@@ -20,7 +20,7 @@ import com.guoxiaoxing.phoenix.camera.config.VideoQualityOption;
 import com.guoxiaoxing.phoenix.camera.listener.CameraResultListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraCloseListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraOpenListener;
-import com.guoxiaoxing.phoenix.camera.manager.listener.CameraPhotoListener;
+import com.guoxiaoxing.phoenix.camera.manager.listener.CameraPictureListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraVideoListener;
 import com.guoxiaoxing.phoenix.camera.util.CameraHelper;
 import com.guoxiaoxing.phoenix.camera.util.Size;
@@ -53,7 +53,7 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
 
     private File outputPath;
     private CameraVideoListener videoListener;
-    private CameraPhotoListener photoListener;
+    private CameraPictureListener photoListener;
 
     private Integer futurFlashMode;
 
@@ -162,9 +162,9 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
     }
 
     @Override
-    public void takePicture(File photoFile, CameraPhotoListener cameraPhotoListener, final CameraResultListener callback) {
+    public void takePicture(File photoFile, CameraPictureListener cameraPictureListener, final CameraResultListener callback) {
         this.outputPath = photoFile;
-        this.photoListener = cameraPhotoListener;
+        this.photoListener = cameraPictureListener;
         backgroundHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -588,7 +588,7 @@ public class Camera1Manager extends BaseCameraManager<Integer, SurfaceHolder.Cal
                 uiHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        photoListener.onPhotoTaken(bytes, outputPath, callback);
+                        photoListener.onPictureTaken(bytes, outputPath, callback);
                     }
                 });
             }

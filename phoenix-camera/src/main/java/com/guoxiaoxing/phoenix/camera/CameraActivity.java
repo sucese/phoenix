@@ -75,7 +75,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                                                        @Override
                                                        public void onPhotoTaken(byte[] bytes, String filePath) {
-                                                           Toast.makeText(getBaseContext(), "onPhotoTaken " + filePath, Toast.LENGTH_SHORT).show();
+                                                           Toast.makeText(getBaseContext(), "onPictureTaken " + filePath, Toast.LENGTH_SHORT).show();
                                                        }
                                                    },
                     "/storage/self/primary",
@@ -173,7 +173,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             //    }
 //
             //    @Override
-            //    public void onPhotoTaken(byte[] bytes, String filePath) {
+            //    public void onPictureTaken(byte[] bytes, String filePath) {
             //        Intent intent = PreviewActivity.newIntentPhoto(CameraFragmentMainActivity.this, filePath);
             //        startActivityForResult(intent, REQUEST_PREVIEW_CODE);
             //    }

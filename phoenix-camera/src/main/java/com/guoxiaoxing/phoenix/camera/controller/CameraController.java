@@ -50,7 +50,7 @@ public interface CameraController<CameraId> {
     @CameraConfig.MediaAction
     int getMediaAction();
 
-    CameraId getCurrentCameraId();
+    CameraId getCameraId();
 
     File getOutputFile();
 

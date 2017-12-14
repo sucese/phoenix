@@ -35,7 +35,7 @@ import com.guoxiaoxing.phoenix.camera.config.VideoQualityOption;
 import com.guoxiaoxing.phoenix.camera.listener.CameraResultListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraCloseListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraOpenListener;
-import com.guoxiaoxing.phoenix.camera.manager.listener.CameraPhotoListener;
+import com.guoxiaoxing.phoenix.camera.manager.listener.CameraPictureListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraVideoListener;
 import com.guoxiaoxing.phoenix.camera.util.CameraHelper;
 import com.guoxiaoxing.phoenix.camera.util.ImageSaver;
@@ -69,7 +69,7 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
     private static final int STATE_WAITING_NON_PRE_CAPTURE = 3;
     private static final int STATE_PICTURE_TAKEN = 4;
     private CameraOpenListener<String, TextureView.SurfaceTextureListener> cameraOpenListener;
-    private CameraPhotoListener cameraPhotoListener;
+    private CameraPictureListener cameraPictureListener;
     private CameraVideoListener cameraVideoListener;
     private File outputPath;
     @CameraPreviewState
@@ -240,9 +240,9 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
     }
 
     @Override
-    public void takePicture(File photoFile, CameraPhotoListener cameraPhotoListener, CameraResultListener callback) {
+    public void takePicture(File photoFile, CameraPictureListener cameraPictureListener, CameraResultListener callback) {
         this.outputPath = photoFile;
-        this.cameraPhotoListener = cameraPhotoListener;
+        this.cameraPictureListener = cameraPictureListener;
         this.callback = callback;
 
         backgroundHandler.post(new Runnable() {
@@ -745,11 +745,11 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
             @Override
             public void onSuccessFinish(final byte[] bytes) {
                 Log.d(TAG, "onPhotoSuccessFinish: ");
-                if (cameraPhotoListener != null) {
+                if (cameraPictureListener != null) {
                     uiHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            cameraPhotoListener.onPhotoTaken(bytes, outputPath, callback);
+                            cameraPictureListener.onPictureTaken(bytes, outputPath, callback);
                             callback = null;
                         }
                     });
@@ -763,7 +763,7 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
                 uiHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        cameraPhotoListener.onPhotoTakeError();
+                        cameraPictureListener.onPictureTakeError();
                     }
                 });
             }

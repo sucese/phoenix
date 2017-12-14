@@ -17,7 +17,7 @@ import com.guoxiaoxing.phoenix.camera.manager.CameraManager;
 import com.guoxiaoxing.phoenix.camera.manager.impl.Camera2Manager;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraCloseListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraOpenListener;
-import com.guoxiaoxing.phoenix.camera.manager.listener.CameraPhotoListener;
+import com.guoxiaoxing.phoenix.camera.manager.listener.CameraPictureListener;
 import com.guoxiaoxing.phoenix.camera.manager.listener.CameraVideoListener;
 import com.guoxiaoxing.phoenix.camera.util.CameraHelper;
 import com.guoxiaoxing.phoenix.camera.util.Size;
@@ -36,7 +36,7 @@ import java.io.File;
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class Camera2Controller implements CameraController<String>,
         CameraOpenListener<String, TextureView.SurfaceTextureListener>,
-        CameraPhotoListener, CameraVideoListener, CameraCloseListener<String> {
+        CameraPictureListener, CameraVideoListener, CameraCloseListener<String> {
 
     private final static String TAG = "Camera2Controller";
 
@@ -156,7 +156,7 @@ public class Camera2Controller implements CameraController<String>,
     }
 
     @Override
-    public String getCurrentCameraId() {
+    public String getCameraId() {
         return currentCameraId;
     }
 
@@ -180,12 +180,12 @@ public class Camera2Controller implements CameraController<String>,
     }
 
     @Override
-    public void onPhotoTaken(byte[] bytes, File photoFile, CameraResultListener callback) {
-        cameraView.onPhotoTaken(bytes, callback);
+    public void onPictureTaken(byte[] bytes, File photoFile, CameraResultListener callback) {
+        cameraView.onPictureTaken(bytes, callback);
     }
 
     @Override
-    public void onPhotoTakeError() {
+    public void onPictureTakeError() {
     }
 
     @Override

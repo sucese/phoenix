@@ -4,6 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.guoxiaoxing.phoenix.demo.picture.PictureDemoActivity">
+    tools:mContext="com.guoxiaoxing.phoenix.demo.picture.PictureDemoActivity">
 
 </LinearLayout>

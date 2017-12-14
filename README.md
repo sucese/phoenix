@@ -92,9 +92,9 @@ public class App extends Application {
         Phoenix.config()
                 .imageLoader(new ImageLoader() {
                     @Override
-                    public void loadImage(Context context, ImageView imageView
+                    public void loadImage(Context mContext, ImageView imageView
                                                 , String imagePath, int type) {
-                        Glide.with(context)
+                        Glide.with(mContext)
                                 .load(imagePath)
                                 .into(imageView);
                     }
@@ -149,8 +149,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```java
 File file = new File(localPath);
 try {
-    File compressFIle = PictureCompressor.with(context)
-            .savePath(context.getCacheDir().getAbsolutePath())
+    File compressFIle = PictureCompressor.with(mContext)
+            .savePath(mContext.getCacheDir().getAbsolutePath())
             .load(file)
             .get();
     if (compressFIle != null) {
@@ -165,7 +165,7 @@ try {
 
 ```java
 File file = new File(localPath);
-PictureCompressor.with(context)
+PictureCompressor.with(mContext)
         .load(file)
         .setCompressListener(new OnCompressListener() {
             @Override
@@ -190,11 +190,11 @@ PictureCompressor.with(context)
 ```java
 final File compressFile;
 try {
-    File compressCachePath = new File(context.getCacheDir(), "outputs");
+    File compressCachePath = new File(mContext.getCacheDir(), "outputs");
     compressCachePath.mkdir();
     compressFile = File.createTempFile("compress", ".mp4", compressCachePath);
 } catch (IOException e) {
-    Toast.makeText(context, "Failed to create temporary file.", Toast.LENGTH_LONG).show();
+    Toast.makeText(mContext, "Failed to create temporary file.", Toast.LENGTH_LONG).show();
     return null;
 }
 
@@ -215,7 +215,7 @@ try {
     compressCachePath.mkdir();
     compressFile = File.createTempFile("compress", ".mp4", compressCachePath);
 } catch (IOException e) {
-    Toast.makeText(context, "Failed to create temporary file.", Toast.LENGTH_LONG).show();
+    Toast.makeText(mContext, "Failed to create temporary file.", Toast.LENGTH_LONG).show();
     return;
 }
 VideoCompressor.Listener listener = new VideoCompressor.Listener() {

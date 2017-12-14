@@ -7,6 +7,14 @@ import com.guoxiaoxing.phoenix.camera.config.CameraConfig;
 import com.guoxiaoxing.phoenix.camera.listener.CameraResultListener;
 import com.guoxiaoxing.phoenix.camera.util.Size;
 
+/**
+ * The camera manager for camera1
+ * <p>
+ * For more information, you can visit https://github.com/guoxiaoxing or contact me by
+ * guoxiaoxingse@163.com.
+ *
+ * @author guoxiaoxing
+ */
 public interface CameraView {
 
     void updateCameraPreview(Size size, View cameraPreview);
@@ -15,7 +23,7 @@ public interface CameraView {
 
     void updateCameraSwitcher(int numberOfCameras);
 
-    void onPhotoTaken(byte[] bytes, @Nullable CameraResultListener callback);
+    void onPictureTaken(byte[] bytes, @Nullable CameraResultListener callback);
 
     void onVideoRecordStart(int width, int height);
 
