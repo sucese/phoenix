@@ -7,15 +7,19 @@ import com.guoxiaoxing.phoenix.camera.listener.CameraResultListener;
 import com.guoxiaoxing.phoenix.camera.listener.CameraStateListener;
 import com.guoxiaoxing.phoenix.camera.listener.CameraVideoRecordTextListener;
 
-public interface CameraFragmentApi {
+public interface ICameraFragment {
 
-    void takePhotoOrCaptureVideo(CameraResultListener resultListener, @Nullable String directoryPath, @Nullable String fileName);
+    void takePicture(CameraResultListener resultListener, @Nullable String directoryPath, @Nullable String fileName);
+
+    void startRecordingVideo(@Nullable String directoryPath, @Nullable String fileName);
+
+    void stopRecordingVideo(CameraResultListener callback);
 
     void openSettingDialog();
 
     void switchCameraTypeFrontBack();
 
-    void switchActionPhotoVideo();
+    void switchCaptureAction(int actionType);
 
     void toggleFlashMode();
 

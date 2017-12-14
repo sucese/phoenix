@@ -57,60 +57,60 @@ import java.io.File;
  *
  * @author guoxiaoxing
  */
-public class CameraFragment<CameraId> extends Fragment implements CameraFragmentApi {
+public class CameraFragment<CameraId> extends Fragment implements ICameraFragment {
 
-    public static final String ARG_CONFIGURATION = "cameraConfig";
+    public static final String ARG_CONFIGURATION = "ARG_CONFIGURATION";
     public static final int MIN_VERSION_ICECREAM = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;
 
-    private AutoFitFrameLayout previewContainer;
+    private AutoFitFrameLayout mPreviewContainer;
 
-    private SensorManager sensorManager;
-    private AlertDialog settingsDialog;
+    private SensorManager mSensorManager;
+    private AlertDialog mSettingsDialog;
     private CameraController mCameraController;
-    private CameraConfigProvider cameraConfigProvider;
 
+    private CameraConfig mCameraConfig;
     @CameraConfig.MediaQuality
-    private int newQuality = -1;
-    private CameraConfig cameraConfig;
-
-    private CharSequence[] videoQualities;
-    private CharSequence[] photoQualities;
+    private int mNewQuality = -1;
+    private CharSequence[] mPhotoQualities;
+    private CharSequence[] mVideoQualities;
+    private CameraConfigProvider mCameraConfigProvider;
+    private CameraResultListener mCameraResultListener;
 
     @Flash.FlashMode
-    private int currentFlashMode = Flash.FLASH_AUTO;
+    private int mFlashMode = Flash.FLASH_AUTO;
     @Camera.CameraType
-    private int currentCameraType = Camera.CAMERA_TYPE_REAR;
+    private int mCameraType = Camera.CAMERA_TYPE_REAR;
     @MediaAction.MediaActionState
-    private int currentMediaActionState = MediaAction.ACTION_PHOTO;
+    private int mMediaActionState = MediaAction.ACTION_PHOTO;
     @Record.RecordState
-    private int currentRecordState = Record.TAKE_PHOTO_STATE;
+    private int mRecordState = Record.TAKE_PHOTO_STATE;
 
-    private String mediaFilePath;
-    private FileObserver fileObserver;
-    private long maxVideoFileSize = 0;
-    private TimerTaskBase countDownTimer;
+    private String mMediaFilePath;
+    private FileObserver mFileObserver;
+    private long mMaxVideoFileSize = 0;
+    private TimerTaskBase mCountDownTimer;
 
-    private CameraControlListener cameraControlListener;
-    private CameraVideoRecordTextListener cameraVideoRecordTextListener;
-    private CameraStateListener cameraStateListener;
+    private CameraControlListener mCameraControlListener;
+    private CameraStateListener mCameraStateListener;
+    private CameraVideoRecordTextListener mCameraVideoRecordTextListener;
 
-    private final TimerTaskBase.Callback timerCallBack = new TimerTaskBase.Callback() {
+    private final TimerTaskBase.Callback mTimerCallBack = new TimerTaskBase.Callback() {
         @Override
         public void setText(String text) {
-            if (cameraVideoRecordTextListener != null) {
-                cameraVideoRecordTextListener.setRecordDurationText(text);
+            if (mCameraVideoRecordTextListener != null) {
+                mCameraVideoRecordTextListener.setRecordDurationText(text);
             }
         }
 
         @Override
         public void setTextVisible(boolean visible) {
-            if (cameraVideoRecordTextListener != null) {
-                cameraVideoRecordTextListener.setRecordDurationTextVisible(visible);
+            if (mCameraVideoRecordTextListener != null) {
+                mCameraVideoRecordTextListener.setRecordDurationTextVisible(visible);
             }
         }
     };
 
-    private SensorEventListener sensorEventListener = new SensorEventListener() {
+    private SensorEventListener mSensorEventListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
             synchronized (this) {
@@ -118,25 +118,25 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
                     if (sensorEvent.values[0] < 4 && sensorEvent.values[0] > -4) {
                         if (sensorEvent.values[1] > 0) {
                             // UP
-                            cameraConfigProvider.setSensorPosition(CameraConfig.SENSOR_POSITION_UP);
-                            cameraConfigProvider.setDegrees(cameraConfigProvider.getDeviceDefaultOrientation() == CameraConfig.ORIENTATION_PORTRAIT ? 0 : 90);
+                            mCameraConfigProvider.setSensorPosition(CameraConfig.SENSOR_POSITION_UP);
+                            mCameraConfigProvider.setDegrees(mCameraConfigProvider.getDeviceDefaultOrientation() == CameraConfig.ORIENTATION_PORTRAIT ? 0 : 90);
                         } else if (sensorEvent.values[1] < 0) {
                             // UP SIDE DOWN
-                            cameraConfigProvider.setSensorPosition(CameraConfig.SENSOR_POSITION_UP_SIDE_DOWN);
-                            cameraConfigProvider.setDegrees(cameraConfigProvider.getDeviceDefaultOrientation() == CameraConfig.ORIENTATION_PORTRAIT ? 180 : 270);
+                            mCameraConfigProvider.setSensorPosition(CameraConfig.SENSOR_POSITION_UP_SIDE_DOWN);
+                            mCameraConfigProvider.setDegrees(mCameraConfigProvider.getDeviceDefaultOrientation() == CameraConfig.ORIENTATION_PORTRAIT ? 180 : 270);
                         }
                     } else if (sensorEvent.values[1] < 4 && sensorEvent.values[1] > -4) {
                         if (sensorEvent.values[0] > 0) {
                             // LEFT
-                            cameraConfigProvider.setSensorPosition(CameraConfig.SENSOR_POSITION_LEFT);
-                            cameraConfigProvider.setDegrees(cameraConfigProvider.getDeviceDefaultOrientation() == CameraConfig.ORIENTATION_PORTRAIT ? 90 : 180);
+                            mCameraConfigProvider.setSensorPosition(CameraConfig.SENSOR_POSITION_LEFT);
+                            mCameraConfigProvider.setDegrees(mCameraConfigProvider.getDeviceDefaultOrientation() == CameraConfig.ORIENTATION_PORTRAIT ? 90 : 180);
                         } else if (sensorEvent.values[0] < 0) {
                             // RIGHT
-                            cameraConfigProvider.setSensorPosition(CameraConfig.SENSOR_POSITION_RIGHT);
-                            cameraConfigProvider.setDegrees(cameraConfigProvider.getDeviceDefaultOrientation() == CameraConfig.ORIENTATION_PORTRAIT ? 270 : 0);
+                            mCameraConfigProvider.setSensorPosition(CameraConfig.SENSOR_POSITION_RIGHT);
+                            mCameraConfigProvider.setDegrees(mCameraConfigProvider.getDeviceDefaultOrientation() == CameraConfig.ORIENTATION_PORTRAIT ? 270 : 0);
                         }
                     }
-                    onScreenRotation(cameraConfigProvider.getDegrees());
+                    onScreenRotation(mCameraConfigProvider.getDegrees());
                 }
             }
         }
@@ -146,7 +146,6 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
 
         }
     };
-    private CameraResultListener cameraResultListener;
 
     protected static CameraFragment newInstance(CameraConfig cameraConfig) {
         CameraFragment fragment = new CameraFragment();
@@ -172,22 +171,21 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         super.onCreate(savedInstanceState);
         final Bundle arguments = getArguments();
         if (arguments != null) {
-            cameraConfig = (CameraConfig) arguments.getSerializable(ARG_CONFIGURATION);
+            mCameraConfig = (CameraConfig) arguments.getSerializable(ARG_CONFIGURATION);
         }
-        this.cameraConfigProvider = new CameraConfigProviderImpl();
-        this.cameraConfigProvider.setupWithAnnaConfiguration(cameraConfig);
+        this.mCameraConfigProvider = new CameraConfigProviderImpl();
+        this.mCameraConfigProvider.setCameraConfig(mCameraConfig);
 
-        this.sensorManager = (SensorManager) getContext().getSystemService(Activity.SENSOR_SERVICE);
+        this.mSensorManager = (SensorManager) getContext().getSystemService(Activity.SENSOR_SERVICE);
 
         final CameraView cameraView = new CameraView() {
 
             @Override
             public void updateCameraPreview(Size size, View cameraPreview) {
-                if (cameraControlListener != null) {
-                    cameraControlListener.unLockControls();
-                    cameraControlListener.allowRecord(true);
+                if (mCameraControlListener != null) {
+                    mCameraControlListener.unLockControls();
+                    mCameraControlListener.allowRecord(true);
                 }
-
                 setCameraPreview(cameraPreview, size);
             }
 
@@ -198,16 +196,16 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
 
             @Override
             public void updateCameraSwitcher(int numberOfCameras) {
-                if (cameraControlListener != null) {
-                    cameraControlListener.allowCameraSwitching(numberOfCameras > 1);
+                if (mCameraControlListener != null) {
+                    mCameraControlListener.allowCameraSwitching(numberOfCameras > 1);
                 }
             }
 
             @Override
             public void onPictureTaken(byte[] bytes, CameraResultListener callback) {
                 final String filePath = mCameraController.getOutputFile().toString();
-                if (cameraResultListener != null) {
-                    cameraResultListener.onPhotoTaken(bytes, filePath);
+                if (mCameraResultListener != null) {
+                    mCameraResultListener.onPhotoTaken(bytes, filePath);
                 }
                 if (callback != null) {
                     callback.onPhotoTaken(bytes, filePath);
@@ -232,33 +230,33 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         };
 
         if (CameraHelper.hasCamera2(getContext())) {
-            mCameraController = new Camera2Controller(getContext(), cameraView, cameraConfigProvider);
+            mCameraController = new Camera2Controller(getContext(), cameraView, mCameraConfigProvider);
         } else {
-            mCameraController = new Camera1Controller(getContext(), cameraView, cameraConfigProvider);
+            mCameraController = new Camera1Controller(getContext(), cameraView, mCameraConfigProvider);
         }
         mCameraController.onCreate(savedInstanceState);
 
         //onProcessBundle
-        currentMediaActionState = cameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_VIDEO ?
+        mMediaActionState = mCameraConfigProvider.getMediaAction() == CameraConfig.MEDIA_ACTION_VIDEO ?
                 MediaAction.ACTION_VIDEO : MediaAction.ACTION_PHOTO;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        previewContainer = (AutoFitFrameLayout) view.findViewById(R.id.previewContainer);
+        mPreviewContainer = (AutoFitFrameLayout) view.findViewById(R.id.previewContainer);
 
         final int defaultOrientation = Utils.getDeviceDefaultOrientation(getContext());
         switch (defaultOrientation) {
             case android.content.res.Configuration.ORIENTATION_LANDSCAPE:
-                cameraConfigProvider.setDeviceDefaultOrientation(CameraConfig.ORIENTATION_LANDSCAPE);
+                mCameraConfigProvider.setDeviceDefaultOrientation(CameraConfig.ORIENTATION_LANDSCAPE);
                 break;
             default:
-                cameraConfigProvider.setDeviceDefaultOrientation(CameraConfig.ORIENTATION_PORTRAIT);
+                mCameraConfigProvider.setDeviceDefaultOrientation(CameraConfig.ORIENTATION_PORTRAIT);
                 break;
         }
 
-        switch (cameraConfigProvider.getFlashMode()) {
+        switch (mCameraConfigProvider.getFlashMode()) {
             case CameraConfig.FLASH_MODE_AUTO:
                 setFlashMode(Flash.FLASH_AUTO);
                 break;
@@ -270,15 +268,13 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
                 break;
         }
 
-        if (cameraControlListener != null) {
-            setMaxVideoDuration(cameraConfigProvider.getVideoDuration());
-            setMaxVideoFileSize(cameraConfigProvider.getVideoFileSize());
+        if (mCameraControlListener != null) {
+            setMaxVideoDuration(mCameraConfigProvider.getVideoDuration());
+            setMaxVideoFileSize(mCameraConfigProvider.getVideoFileSize());
         }
 
-        setCameraTypeFrontBack(cameraConfigProvider.getCameraFace());
-
+        setCameraTypeFrontBack(mCameraConfigProvider.getCameraFace());
         notifyListeners();
-
     }
 
     public void notifyListeners() {
@@ -287,35 +283,18 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         onCameraTypeFrontBackChanged();
     }
 
-    @Override
-    public void takePhotoOrCaptureVideo(final CameraResultListener resultListener, @Nullable String directoryPath, @Nullable String fileName) {
-        switch (currentMediaActionState) {
-            case MediaAction.ACTION_PHOTO:
-                takePhoto(resultListener, directoryPath, fileName);
-                break;
-            case MediaAction.ACTION_VIDEO:
-                switch (currentRecordState) {
-                    case Record.RECORD_IN_PROGRESS_STATE:
-                        stopRecording(resultListener);
-                        break;
-                    default:
-                        startRecording(directoryPath, fileName);
-                        break;
-                }
-                break;
-        }
-    }
+
 
     @Override
     public void onResume() {
         super.onResume();
 
         mCameraController.onResume();
-        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(mSensorEventListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 
-        if (cameraControlListener != null) {
-            cameraControlListener.lockControls();
-            cameraControlListener.allowRecord(false);
+        if (mCameraControlListener != null) {
+            mCameraControlListener.lockControls();
+            mCameraControlListener.allowRecord(false);
         }
     }
 
@@ -324,11 +303,11 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         super.onPause();
 
         mCameraController.onPause();
-        sensorManager.unregisterListener(sensorEventListener);
+        mSensorManager.unregisterListener(mSensorEventListener);
 
-        if (cameraControlListener != null) {
-            cameraControlListener.lockControls();
-            cameraControlListener.allowRecord(false);
+        if (mCameraControlListener != null) {
+            mCameraControlListener.lockControls();
+            mCameraControlListener.allowRecord(false);
         }
     }
 
@@ -339,15 +318,58 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         mCameraController.onDestroy();
     }
 
+    @Override
+    public void takePicture(CameraResultListener callback, @Nullable String directoryPath, @Nullable String fileName) {
+        if (Build.VERSION.SDK_INT > MIN_VERSION_ICECREAM) {
+            new MediaActionSound().play(MediaActionSound.SHUTTER_CLICK);
+        }
+        setRecordState(Record.TAKE_PHOTO_STATE);
+        this.mCameraController.takePhoto(callback, directoryPath, fileName);
+        if (mCameraStateListener != null) {
+            mCameraStateListener.onRecordStatePhoto();
+        }
+    }
+
+    @Override
+    public void startRecordingVideo(@Nullable String directoryPath, @Nullable String fileName) {
+        if (Build.VERSION.SDK_INT > MIN_VERSION_ICECREAM) {
+            new MediaActionSound().play(MediaActionSound.START_VIDEO_RECORDING);
+        }
+
+        setRecordState(Record.RECORD_IN_PROGRESS_STATE);
+        this.mCameraController.startVideoRecord(directoryPath, fileName);
+
+        if (mCameraStateListener != null) {
+            mCameraStateListener.onRecordStateVideoInProgress();
+        }
+    }
+
+    @Override
+    public void stopRecordingVideo(CameraResultListener callback) {
+        if (Build.VERSION.SDK_INT > MIN_VERSION_ICECREAM) {
+            new MediaActionSound().play(MediaActionSound.STOP_VIDEO_RECORDING);
+        }
+
+        setRecordState(Record.READY_FOR_RECORD_STATE);
+        this.mCameraController.stopVideoRecord(callback);
+
+        this.onStopVideoRecord(callback);
+
+        if (mCameraStateListener != null) {
+            mCameraStateListener.onRecordStateVideoReadyForRecord();
+        }
+    }
+
+
     protected void setMaxVideoFileSize(long maxVideoFileSize) {
-        this.maxVideoFileSize = maxVideoFileSize;
+        this.mMaxVideoFileSize = maxVideoFileSize;
     }
 
     protected void setMaxVideoDuration(int maxVideoDurationInMillis) {
         if (maxVideoDurationInMillis > 0) {
-            this.countDownTimer = new CountdownTask(timerCallBack, maxVideoDurationInMillis);
+            this.mCountDownTimer = new CountdownTask(mTimerCallBack, maxVideoDurationInMillis);
         } else {
-            this.countDownTimer = new TimerTask(timerCallBack);
+            this.mCountDownTimer = new TimerTask(mTimerCallBack);
         }
     }
 
@@ -356,23 +378,23 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         final Context context = getContext();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        if (currentMediaActionState == MediaAction.ACTION_VIDEO) {
-            builder.setSingleChoiceItems(videoQualities, getVideoOptionCheckedIndex(), new DialogInterface.OnClickListener() {
+        if (mMediaActionState == MediaAction.ACTION_VIDEO) {
+            builder.setSingleChoiceItems(mVideoQualities, getVideoOptionCheckedIndex(), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int index) {
-                    newQuality = ((VideoQualityOption) videoQualities[index]).getMediaQuality();
+                    mNewQuality = ((VideoQualityOption) mVideoQualities[index]).getMediaQuality();
                 }
             });
-            if (cameraConfigProvider.getVideoFileSize() > 0)
+            if (mCameraConfigProvider.getVideoFileSize() > 0)
                 builder.setTitle(String.format(getString(R.string.settings_video_quality_title),
-                        "(Max " + String.valueOf(cameraConfigProvider.getVideoFileSize() / (1024 * 1024) + " MB)")));
+                        "(Max " + String.valueOf(mCameraConfigProvider.getVideoFileSize() / (1024 * 1024) + " MB)")));
             else
                 builder.setTitle(String.format(getString(R.string.settings_video_quality_title), ""));
         } else {
-            builder.setSingleChoiceItems(photoQualities, getPhotoOptionCheckedIndex(), new DialogInterface.OnClickListener() {
+            builder.setSingleChoiceItems(mPhotoQualities, getPhotoOptionCheckedIndex(), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int index) {
-                    newQuality = ((PictureQualityOption) photoQualities[index]).getMediaQuality();
+                    mNewQuality = ((PictureQualityOption) mPhotoQualities[index]).getMediaQuality();
                 }
             });
             builder.setTitle(R.string.settings_photo_quality_title);
@@ -381,11 +403,11 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         builder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (newQuality > 0 && newQuality != cameraConfigProvider.getMediaQuality()) {
-                    cameraConfigProvider.setMediaQuality(newQuality);
+                if (mNewQuality > 0 && mNewQuality != mCameraConfigProvider.getMediaQuality()) {
+                    mCameraConfigProvider.setMediaQuality(mNewQuality);
                     dialogInterface.dismiss();
-                    if (cameraControlListener != null) {
-                        cameraControlListener.lockControls();
+                    if (mCameraControlListener != null) {
+                        mCameraControlListener.lockControls();
                     }
                     mCameraController.switchQuality();
                 }
@@ -397,30 +419,30 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
                 dialogInterface.dismiss();
             }
         });
-        settingsDialog = builder.create();
-        settingsDialog.show();
+        mSettingsDialog = builder.create();
+        mSettingsDialog.show();
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        layoutParams.copyFrom(settingsDialog.getWindow().getAttributes());
+        layoutParams.copyFrom(mSettingsDialog.getWindow().getAttributes());
         layoutParams.width = Utils.convertDipToPixels(context, 350);
         layoutParams.height = Utils.convertDipToPixels(context, 350);
-        settingsDialog.getWindow().setAttributes(layoutParams);
+        mSettingsDialog.getWindow().setAttributes(layoutParams);
     }
 
     @Override
     public void switchCameraTypeFrontBack() {
-        if (cameraControlListener != null) {
-            cameraControlListener.lockControls();
-            cameraControlListener.allowRecord(false);
+        if (mCameraControlListener != null) {
+            mCameraControlListener.lockControls();
+            mCameraControlListener.allowRecord(false);
         }
 
         int cameraFace = CameraConfig.CAMERA_FACE_REAR;
-        switch (currentCameraType) {
+        switch (mCameraType) {
             case Camera.CAMERA_TYPE_FRONT:
-                currentCameraType = Camera.CAMERA_TYPE_REAR;
+                mCameraType = Camera.CAMERA_TYPE_REAR;
                 cameraFace = CameraConfig.CAMERA_FACE_REAR;
                 break;
             case Camera.CAMERA_TYPE_REAR:
-                currentCameraType = Camera.CAMERA_TYPE_FRONT;
+                mCameraType = Camera.CAMERA_TYPE_FRONT;
                 cameraFace = CameraConfig.CAMERA_FACE_FRONT;
                 break;
         }
@@ -428,19 +450,19 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         onCameraTypeFrontBackChanged();
         this.mCameraController.switchCamera(cameraFace);
 
-        if (cameraControlListener != null) {
-            cameraControlListener.unLockControls();
+        if (mCameraControlListener != null) {
+            mCameraControlListener.unLockControls();
         }
     }
 
     protected void setCameraTypeFrontBack(@CameraConfig.CameraFace int cameraFace) {
         switch (cameraFace) {
             case CameraConfig.CAMERA_FACE_FRONT:
-                currentCameraType = Camera.CAMERA_TYPE_FRONT;
+                mCameraType = Camera.CAMERA_TYPE_FRONT;
                 cameraFace = CameraConfig.CAMERA_FACE_FRONT;
                 break;
             case CameraConfig.CAMERA_FACE_REAR:
-                currentCameraType = Camera.CAMERA_TYPE_REAR;
+                mCameraType = Camera.CAMERA_TYPE_REAR;
                 cameraFace = CameraConfig.CAMERA_FACE_REAR;
                 break;
         }
@@ -450,39 +472,32 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
     }
 
     protected void onCameraTypeFrontBackChanged() {
-        if (cameraStateListener != null) {
-            switch (currentCameraType) {
+        if (mCameraStateListener != null) {
+            switch (mCameraType) {
                 case Camera.CAMERA_TYPE_REAR:
-                    cameraStateListener.onCurrentCameraBack();
+                    mCameraStateListener.onCurrentCameraBack();
                     break;
                 case Camera.CAMERA_TYPE_FRONT:
-                    cameraStateListener.onCurrentCameraFront();
+                    mCameraStateListener.onCurrentCameraFront();
                     break;
             }
         }
     }
 
     @Override
-    public void switchActionPhotoVideo() {
-        switch (currentMediaActionState) {
-            case MediaAction.ACTION_PHOTO:
-                currentMediaActionState = MediaAction.ACTION_VIDEO;
-                break;
-            case MediaAction.ACTION_VIDEO:
-                currentMediaActionState = MediaAction.ACTION_PHOTO;
-                break;
-        }
+    public void switchCaptureAction(int actionType) {
+        mMediaActionState = actionType;
         onActionPhotoVideoChanged();
     }
 
     protected void onActionPhotoVideoChanged() {
-        if (cameraStateListener != null) {
-            switch (currentMediaActionState) {
+        if (mCameraStateListener != null) {
+            switch (mMediaActionState) {
                 case MediaAction.ACTION_VIDEO:
-                    cameraStateListener.onCameraSetupForVideo();
+                    mCameraStateListener.onCameraSetupForVideo();
                     break;
                 case MediaAction.ACTION_PHOTO:
-                    cameraStateListener.onCameraSetupForPhoto();
+                    mCameraStateListener.onCameraSetupForPhoto();
                     break;
             }
         }
@@ -490,49 +505,49 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
 
     @Override
     public void toggleFlashMode() {
-        switch (currentFlashMode) {
+        switch (mFlashMode) {
             case Flash.FLASH_AUTO:
-                currentFlashMode = Flash.FLASH_OFF;
+                mFlashMode = Flash.FLASH_OFF;
                 break;
             case Flash.FLASH_OFF:
-                currentFlashMode = Flash.FLASH_ON;
+                mFlashMode = Flash.FLASH_ON;
                 break;
             case Flash.FLASH_ON:
-                currentFlashMode = Flash.FLASH_AUTO;
+                mFlashMode = Flash.FLASH_AUTO;
                 break;
         }
         onFlashModeChanged();
     }
 
     private void onFlashModeChanged() {
-        switch (currentFlashMode) {
+        switch (mFlashMode) {
             case Flash.FLASH_AUTO:
-                if (cameraStateListener != null) cameraStateListener.onFlashAuto();
-                cameraConfigProvider.setFlashMode(CameraConfig.FLASH_MODE_AUTO);
+                if (mCameraStateListener != null) mCameraStateListener.onFlashAuto();
+                mCameraConfigProvider.setFlashMode(CameraConfig.FLASH_MODE_AUTO);
                 this.mCameraController.setFlashMode(CameraConfig.FLASH_MODE_AUTO);
                 break;
             case Flash.FLASH_ON:
-                if (cameraStateListener != null) cameraStateListener.onFlashOn();
-                cameraConfigProvider.setFlashMode(CameraConfig.FLASH_MODE_ON);
+                if (mCameraStateListener != null) mCameraStateListener.onFlashOn();
+                mCameraConfigProvider.setFlashMode(CameraConfig.FLASH_MODE_ON);
                 this.mCameraController.setFlashMode(CameraConfig.FLASH_MODE_ON);
                 break;
             case Flash.FLASH_OFF:
-                if (cameraStateListener != null) cameraStateListener.onFlashOff();
-                cameraConfigProvider.setFlashMode(CameraConfig.FLASH_MODE_OFF);
+                if (mCameraStateListener != null) mCameraStateListener.onFlashOff();
+                mCameraConfigProvider.setFlashMode(CameraConfig.FLASH_MODE_OFF);
                 this.mCameraController.setFlashMode(CameraConfig.FLASH_MODE_OFF);
                 break;
         }
     }
 
     protected void onScreenRotation(int degrees) {
-        if (cameraStateListener != null) {
-            cameraStateListener.shouldRotateControls(degrees);
+        if (mCameraStateListener != null) {
+            mCameraStateListener.shouldRotateControls(degrees);
         }
         rotateSettingsDialog(degrees);
     }
 
     protected void setRecordState(@Record.RecordState int recordState) {
-        this.currentRecordState = recordState;
+        this.mRecordState = recordState;
     }
 
 
@@ -560,13 +575,13 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
     //}
 
     protected void setFlashMode(@Flash.FlashMode int mode) {
-        this.currentFlashMode = mode;
+        this.mFlashMode = mode;
         onFlashModeChanged();
     }
 
     protected void rotateSettingsDialog(int degrees) {
-        if (settingsDialog != null && settingsDialog.isShowing() && Build.VERSION.SDK_INT > 10) {
-            ViewGroup dialogView = (ViewGroup) settingsDialog.getWindow().getDecorView();
+        if (mSettingsDialog != null && mSettingsDialog.isShowing() && Build.VERSION.SDK_INT > 10) {
+            ViewGroup dialogView = (ViewGroup) mSettingsDialog.getWindow().getDecorView();
             for (int i = 0; i < dialogView.getChildCount(); i++) {
                 dialogView.getChildAt(i).setRotation(degrees);
             }
@@ -576,8 +591,8 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
     protected int getVideoOptionCheckedIndex() {
         int checkedIndex = -1;
 
-        final int mediaQuality = cameraConfigProvider.getMediaQuality();
-        final int passedMediaQuality = cameraConfigProvider.getPassedMediaQuality();
+        final int mediaQuality = mCameraConfigProvider.getMediaQuality();
+        final int passedMediaQuality = mCameraConfigProvider.getPassedMediaQuality();
 
         if (mediaQuality == CameraConfig.MEDIA_QUALITY_AUTO) checkedIndex = 0;
         else if (mediaQuality == CameraConfig.MEDIA_QUALITY_HIGH) checkedIndex = 1;
@@ -592,7 +607,7 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
     protected int getPhotoOptionCheckedIndex() {
         int checkedIndex = -1;
 
-        final int mediaQuality = cameraConfigProvider.getMediaQuality();
+        final int mediaQuality = mCameraConfigProvider.getMediaQuality();
 
         if (mediaQuality == CameraConfig.MEDIA_QUALITY_HIGHEST) checkedIndex = 0;
         else if (mediaQuality == CameraConfig.MEDIA_QUALITY_HIGH) checkedIndex = 1;
@@ -601,76 +616,37 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
         return checkedIndex;
     }
 
-    protected void takePhoto(CameraResultListener callback, @Nullable String directoryPath, @Nullable String fileName) {
-        if (Build.VERSION.SDK_INT > MIN_VERSION_ICECREAM) {
-            new MediaActionSound().play(MediaActionSound.SHUTTER_CLICK);
-        }
-        setRecordState(Record.TAKE_PHOTO_STATE);
-        this.mCameraController.takePhoto(callback, directoryPath, fileName);
-        if (cameraStateListener != null) {
-            cameraStateListener.onRecordStatePhoto();
-        }
-    }
-
-    protected void startRecording(@Nullable String directoryPath, @Nullable String fileName) {
-        if (Build.VERSION.SDK_INT > MIN_VERSION_ICECREAM) {
-            new MediaActionSound().play(MediaActionSound.START_VIDEO_RECORDING);
-        }
-
-        setRecordState(Record.RECORD_IN_PROGRESS_STATE);
-        this.mCameraController.startVideoRecord(directoryPath, fileName);
-
-        if (cameraStateListener != null) {
-            cameraStateListener.onRecordStateVideoInProgress();
-        }
-    }
-
-    protected void stopRecording(CameraResultListener callback) {
-        if (Build.VERSION.SDK_INT > MIN_VERSION_ICECREAM) {
-            new MediaActionSound().play(MediaActionSound.STOP_VIDEO_RECORDING);
-        }
-
-        setRecordState(Record.READY_FOR_RECORD_STATE);
-        this.mCameraController.stopVideoRecord(callback);
-
-        this.onStopVideoRecord(callback);
-
-        if (cameraStateListener != null) {
-            cameraStateListener.onRecordStateVideoReadyForRecord();
-        }
-    }
-
     protected void clearCameraPreview() {
-        if (previewContainer != null)
-            previewContainer.removeAllViews();
+        if (mPreviewContainer != null)
+            mPreviewContainer.removeAllViews();
     }
 
     protected void setCameraPreview(View preview, Size previewSize) {
         //onCameraControllerReady()
-        videoQualities = mCameraController.getVideoQualityOptions();
-        photoQualities = mCameraController.getPhotoQualityOptions();
+        mVideoQualities = mCameraController.getVideoQualityOptions();
+        mPhotoQualities = mCameraController.getPhotoQualityOptions();
 
-        if (previewContainer == null || preview == null) return;
-        previewContainer.removeAllViews();
-        previewContainer.addView(preview);
+        if (mPreviewContainer == null || preview == null) return;
+        mPreviewContainer.removeAllViews();
+        mPreviewContainer.addView(preview);
 
-        previewContainer.setAspectRatio(previewSize.getHeight() / (double) previewSize.getWidth());
+        mPreviewContainer.setAspectRatio(previewSize.getHeight() / (double) previewSize.getWidth());
     }
 
     protected void setMediaFilePath(final File mediaFile) {
-        this.mediaFilePath = mediaFile.toString();
+        this.mMediaFilePath = mediaFile.toString();
     }
 
     protected void onStartVideoRecord(final File mediaFile) {
         setMediaFilePath(mediaFile);
-        if (maxVideoFileSize > 0) {
+        if (mMaxVideoFileSize > 0) {
 
-            if (cameraVideoRecordTextListener != null) {
-                cameraVideoRecordTextListener.setRecordSizeText(maxVideoFileSize, "1Mb" + " / " + maxVideoFileSize / (1024 * 1024) + "Mb");
-                cameraVideoRecordTextListener.setRecordSizeTextVisible(true);
+            if (mCameraVideoRecordTextListener != null) {
+                mCameraVideoRecordTextListener.setRecordSizeText(mMaxVideoFileSize, "1Mb" + " / " + mMaxVideoFileSize / (1024 * 1024) + "Mb");
+                mCameraVideoRecordTextListener.setRecordSizeTextVisible(true);
             }
             try {
-                fileObserver = new FileObserver(this.mediaFilePath) {
+                mFileObserver = new FileObserver(this.mMediaFilePath) {
                     private long lastUpdateSize = 0;
 
                     @Override
@@ -681,58 +657,58 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (cameraVideoRecordTextListener != null) {
-                                        cameraVideoRecordTextListener.setRecordSizeText(maxVideoFileSize, fileSize + "Mb" + " / " + maxVideoFileSize / (1024 * 1024) + "Mb");
+                                    if (mCameraVideoRecordTextListener != null) {
+                                        mCameraVideoRecordTextListener.setRecordSizeText(mMaxVideoFileSize, fileSize + "Mb" + " / " + mMaxVideoFileSize / (1024 * 1024) + "Mb");
                                     }
                                 }
                             });
                         }
                     }
                 };
-                fileObserver.startWatching();
+                mFileObserver.startWatching();
             } catch (Exception e) {
                 Log.e("FileObserver", "setMediaFilePath: ", e);
             }
         }
 
-        if (countDownTimer == null) {
-            this.countDownTimer = new TimerTask(timerCallBack);
+        if (mCountDownTimer == null) {
+            this.mCountDownTimer = new TimerTask(mTimerCallBack);
         }
-        countDownTimer.start();
+        mCountDownTimer.start();
 
-        if (cameraStateListener != null) {
-            cameraStateListener.onStartVideoRecord(mediaFile);
+        if (mCameraStateListener != null) {
+            mCameraStateListener.onStartVideoRecord(mediaFile);
         }
     }
 
     protected void onStopVideoRecord(@Nullable CameraResultListener callback) {
-        if (cameraControlListener != null) {
-            cameraControlListener.allowRecord(false);
+        if (mCameraControlListener != null) {
+            mCameraControlListener.allowRecord(false);
         }
-        if (cameraStateListener != null) {
-            cameraStateListener.onStopVideoRecord();
+        if (mCameraStateListener != null) {
+            mCameraStateListener.onStopVideoRecord();
         }
         setRecordState(Record.READY_FOR_RECORD_STATE);
 
-        if (fileObserver != null)
-            fileObserver.stopWatching();
+        if (mFileObserver != null)
+            mFileObserver.stopWatching();
 
-        if (countDownTimer != null) {
-            countDownTimer.stop();
+        if (mCountDownTimer != null) {
+            mCountDownTimer.stop();
         }
 
-        final int mediaAction = cameraConfigProvider.getMediaAction();
-        if (cameraControlListener != null) {
+        final int mediaAction = mCameraConfigProvider.getMediaAction();
+        if (mCameraControlListener != null) {
             if (mediaAction != CameraConfig.MEDIA_ACTION_UNSPECIFIED) {
-                cameraControlListener.setMediaActionSwitchVisible(false);
+                mCameraControlListener.setMediaActionSwitchVisible(false);
             } else {
-                cameraControlListener.setMediaActionSwitchVisible(true);
+                mCameraControlListener.setMediaActionSwitchVisible(true);
             }
         }
 
         final String filePath = this.mCameraController.getOutputFile().toString();
-        if (cameraResultListener != null) {
-            cameraResultListener.onVideoRecorded(filePath);
+        if (mCameraResultListener != null) {
+            mCameraResultListener.onVideoRecorded(filePath);
         }
 
         if (callback != null) {
@@ -742,21 +718,21 @@ public class CameraFragment<CameraId> extends Fragment implements CameraFragment
 
     @Override
     public void setStateListener(CameraStateListener cameraStateListener) {
-        this.cameraStateListener = cameraStateListener;
+        this.mCameraStateListener = cameraStateListener;
     }
 
     @Override
     public void setTextListener(CameraVideoRecordTextListener cameraVideoRecordTextListener) {
-        this.cameraVideoRecordTextListener = cameraVideoRecordTextListener;
+        this.mCameraVideoRecordTextListener = cameraVideoRecordTextListener;
     }
 
     @Override
     public void setControlsListener(CameraControlListener cameraControlListener) {
-        this.cameraControlListener = cameraControlListener;
+        this.mCameraControlListener = cameraControlListener;
     }
 
     @Override
     public void setResultListener(CameraResultListener cameraResultListener) {
-        this.cameraResultListener = cameraResultListener;
+        this.mCameraResultListener = cameraResultListener;
     }
 }

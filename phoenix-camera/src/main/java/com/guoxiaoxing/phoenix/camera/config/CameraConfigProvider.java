@@ -49,5 +49,5 @@ public interface CameraConfigProvider {
 
     int getPassedMediaQuality();
 
-    void setupWithAnnaConfiguration(CameraConfig cameraConfig);
+    void setCameraConfig(CameraConfig cameraConfig);
 }

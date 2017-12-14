@@ -117,7 +117,7 @@ public class CameraConfigProviderImpl implements CameraConfigProvider {
     }
 
     @Override
-    public void setupWithAnnaConfiguration(CameraConfig cameraConfig) {
+    public void setCameraConfig(CameraConfig cameraConfig) {
         if (cameraConfig != null) {
 
             final int mediaAction = cameraConfig.getMediaAction();

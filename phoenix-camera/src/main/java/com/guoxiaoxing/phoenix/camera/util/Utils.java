@@ -47,4 +47,8 @@ public class Utils {
         return (int) px;
     }
 
+    public static int getRefLength(Context context, float len) {
+        return (int) (context.getResources().getDisplayMetrics().density * len + 0.5F);
+    }
+
 }
