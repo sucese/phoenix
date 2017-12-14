@@ -19,16 +19,19 @@ Android Camera 相关API也是Android生态碎片化最为严重的一块，首�
 
 相机开发一般需要注意哪些问题？
 
-1. 版本兼容性问题，Android 5.0以上使用Camera2，Android 5.0要做Camera兼容。Android 6.0以上要做相机等运行时权限兼容。
+1. 版本兼容性问题，Android 5.0以下的Camera和Android 5.0以上使用Camera2，Android 4.0以下的SurfaceView和Android 4.0以上的TextureView，Android 6.0以上要做相机等运行时权限兼容。
 2. 设备兼容性问题，Camera/Camera2里的各种特性在有些手机厂商的设备实现方式和支持程度是不一样的，这个需要做兼容性测试，一点点踩坑。
 3. 各种场景下的生命周期变化问题，最常见的是后台场景和锁屏场景，这两种场景下的相机资源的申请与释放，Surface的创建与销毁会带来一些问题，这个我们
 后面会仔细分析。
 
-要解决这种兼容性问题，就要两套并用，那是不是根据版本来选择呢？Android 5.0 以下用Camera，Android 5.0以上用Camera2，这样是不可欺的。前面也说到不同手机
-厂商对Camera2的支持程度各不相同，即便是Android 5.0 以上的手机，也存在对Camera2支持非常差的情况，这个时候就要降级使用Camera，如何判断对Camera的支持
+关于Camera/Camear2
+
+既然要解决这种兼容性问题，就要两套并用，那是不是根据版本来选择：Android 5.0 以下用Camera，Android 5.0以上用Camera2呢？🤔
+
+事实上，这样是不可欺的。前面说过不同手机厂商对Camera2的支持程度各不相同，即便是Android 5.0 以上的手机，也存在对Camera2支持非常差的情况，这个时候就要降级使用Camera，如何判断对Camera的支持
 程度我们下面会说。
 
-另外关于预览界面也有两套方案Android 4.0以前的SurfaceView和Android 4.0之后的TextureView，关于这两个View的区别这里也简单说一下：
+关于SurfaceView/TextureView
 
 - SurfaceView是一个有自己Surface的View。界面渲染可以放在单独线程而不是主线程中。它更像是一个Window，自身不能做变形和动画。
 - TextureView同样也有自己的Surface。但是它只能在拥有硬件加速层层的Window中绘制，它更像是一个普通View，可以做变形和动画。
@@ -37,9 +40,9 @@ Android Camera 相关API也是Android生态碎片化最为严重的一块，首�
 
 那么如何针对版本进行方案的选择尼？🤔
 
-官方的开源库[cameraview](https://github.com/google/cameraview)给了方案：
+官方的开源库[cameraview](https://github.com/google/cameraview)给出了方案：
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/camera/camera2_structure.png"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/camera/cameraview_overview.png"/>
 
 既然要两套并用，就要定义统一的接口，针对不同场景提供不同的实现，使用的时候也是根据不同的场景来创建不同的实例。
 
