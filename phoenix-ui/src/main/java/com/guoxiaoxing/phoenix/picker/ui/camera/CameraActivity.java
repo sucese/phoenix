@@ -3,24 +3,25 @@ package com.guoxiaoxing.phoenix.picker.ui.camera;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.guoxiaoxing.phoenix.R;
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant;
 import com.guoxiaoxing.phoenix.core.model.MediaEntity;
 import com.guoxiaoxing.phoenix.core.model.MimeType;
-import com.guoxiaoxing.phoenix.picker.ui.camera.config.model.MediaAction;
+import com.guoxiaoxing.phoenix.picker.ui.BaseActivity;
 import com.guoxiaoxing.phoenix.picker.ui.camera.config.CameraConfig;
+import com.guoxiaoxing.phoenix.picker.ui.camera.config.model.MediaAction;
 import com.guoxiaoxing.phoenix.picker.ui.camera.listener.CameraControlAdapter;
 import com.guoxiaoxing.phoenix.picker.ui.camera.listener.CameraStateAdapter;
 import com.guoxiaoxing.phoenix.picker.ui.camera.listener.CameraVideoRecordTextAdapter;
@@ -36,7 +37,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CameraActivity extends AppCompatActivity implements View.OnClickListener {
+public class CameraActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String TAG_CAMERA_FRAGMENT = "CameraFragment";
     private static final int REQUEST_CODE_CAMERA_PERMISSIONS = 0x000100;
@@ -94,6 +95,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         mCameraSwitchView.setOnClickListener(this);
         mCameraLayout.setOnClickListener(this);
 
+        mRecordButton.setTimeLimit(option.getRecordVideoTime() * 1000);
         mRecordButton.setOnRecordButtonListener(new RecordButton.OnRecordButtonListener() {
             @Override
             public void onClick() {
@@ -102,6 +104,18 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 cameraFragment.takePicture(DIRECTORY_NAME, "IMG_" + System.currentTimeMillis(), new OnCameraResultAdapter() {
                             @Override
                             public void onPhotoTaken(byte[] bytes, String filePath) {
+
+                                try {
+                                    MediaScannerConnection.scanFile(CameraActivity.this, new String[]{filePath}, null,
+                                            new MediaScannerConnection.OnScanCompletedListener() {
+                                                @Override
+                                                public void onScanCompleted(String path, Uri uri) {
+
+                                                }
+                                            });
+                                } catch (Exception ignore) {
+                                }
+
                                 ArrayList<MediaEntity> mediaList = new ArrayList<>();
                                 MediaEntity mediaEntity = MediaEntity.newBuilder()
                                         .localPath(filePath)
@@ -131,6 +145,18 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 cameraFragment.stopRecordingVideo(new OnCameraResultAdapter() {
                     @Override
                     public void onVideoRecorded(String filePath) {
+
+                        try {
+                            MediaScannerConnection.scanFile(CameraActivity.this, new String[]{filePath}, null,
+                                    new MediaScannerConnection.OnScanCompletedListener() {
+                                        @Override
+                                        public void onScanCompleted(String path, Uri uri) {
+
+                                        }
+                                    });
+                        } catch (Exception ignore) {
+                        }
+
                         ArrayList<MediaEntity> mediaList = new ArrayList<>();
                         MediaEntity mediaEntity = MediaEntity.newBuilder()
                                 .localPath(filePath)
@@ -187,6 +213,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         mCameraLayout.setVisibility(View.VISIBLE);
         final CameraFragment cameraFragment = CameraFragment.newInstance(new CameraConfig.Builder()
                 .setCamera(CameraConfig.CAMERA_FACE_REAR).build());
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option);
+        cameraFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, cameraFragment, TAG_CAMERA_FRAGMENT)
                 .commitAllowingStateLoss();

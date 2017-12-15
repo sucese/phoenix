@@ -89,9 +89,12 @@ UI（当然我们也需要提供默认的实现），这样就可以让功能和
 - CameraManager：相机的实际管理者，调用相机API来操作相机，进行拍照和录像等操作。
 - Camera/Camera2：相机API。
 
-[phoenix](https://github.com/guoxiaoxing/phoenix)项目已经实现了这套方案，效果图如下所示：
+[phoenix](https://github.com/guoxiaoxing/phoenix)项目最新版本[![Download](https://api.bintray.com/packages/guoxiaoxing/maven/phoenix/allList/download.svg)](https://bintray.com/guoxiaoxing/maven/phoenix/_latestVersion)已经实现了这套方案，效果图如下所示：
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/camera/camera.gif"/>
+<p align="center">
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/function_4.png" height="400"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/play_3.gif" height="400"/>
+</p>
 
 理解了整体的架构，我们接着就来分析针对这套架构，Camera/Camera2分别该如何实现。
 
@@ -903,23 +906,3 @@ try {
 ```
 
 以上便是Camera/Camera2实践的相关内容，更多关于图像、视频处理的内容可以参见[phoenix](https://github.com/guoxiaoxing/phoenix)项目。
-
-## 附录
-
-### 关于一些常见的坑
-
-#### SurfaceView预览图像颠倒问题
-
-#### SurfaceView预览图像拉伸问题
-
-#### 前置摄像头的镜像问题
-
-#### 锁屏/后台场景下相机资源的释放问题
-
-### 关于权限问题的处理
-
-```xml
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-feature android:name="android.hardware.camera" />
-<uses-feature android:name="android.hardware.camera.autofocus" />
-```

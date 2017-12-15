@@ -51,8 +51,8 @@ public class PhoenixOption implements Parcelable {
     private int minPickNumber = 0;
     //显示多少秒以内的视频
     private int videoFilterTime;
-    //视频秒数录制 默认60s
-    private int recordVideoTime = 60;
+    //视频秒数录制 默认10s
+    private int recordVideoTime = 5;
     //图片选择界面每行图片个数
     private int spanCount = 4;
     //选择列表图片宽度

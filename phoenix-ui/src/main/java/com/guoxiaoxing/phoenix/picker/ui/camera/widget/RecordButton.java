@@ -20,12 +20,13 @@ public class RecordButton extends View {
     private static final String TAG = "RecordButton";
 
     public static final long TIME_TO_START_RECORD = 500L;
-    public static final float TIME_LIMIT_IN_MILS = 10000.0F;
     public static final float PROGRESS_LIM_TO_FINISH_STARTING_ANIM = 0.1F;
 
     public static final int RECORD_NOT_STARTED = 0;
     public static final int RECORD_STARTED = 1;
     public static final int RECORD_ENDED = 2;
+
+    public int timeLimit = 10 * 1000;
 
     private int boundingBoxSize;
     private int outerCycleWidth;
@@ -70,7 +71,7 @@ public class RecordButton extends View {
     private RecordButtonHandler.Task updateUITask = new RecordButtonHandler.Task() {
         public void run() {
             long timeLapse = System.currentTimeMillis() - btnPressTime;
-            float percent = (float) (timeLapse - TIME_TO_START_RECORD) / TIME_LIMIT_IN_MILS;
+            float percent = (float) (timeLapse - TIME_TO_START_RECORD) / (timeLimit + 1000);
             if (timeLapse >= TIME_TO_START_RECORD) {
                 synchronized (RecordButton.this) {
                     if (recordState == RECORD_NOT_STARTED) {
@@ -275,6 +276,14 @@ public class RecordButton extends View {
 
     public void setOnRecordButtonListener(OnRecordButtonListener onRecordButtonListener) {
         this.onRecordButtonListener = onRecordButtonListener;
+    }
+
+    public int getTimeLimit() {
+        return timeLimit;
+    }
+
+    public void setTimeLimit(int timeLimit) {
+        this.timeLimit = timeLimit;
     }
 
     public interface OnRecordButtonListener {

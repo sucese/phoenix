@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.guoxiaoxing.phoenix.R;
+import com.guoxiaoxing.phoenix.picker.ui.BaseFragment;
 import com.guoxiaoxing.phoenix.picker.ui.camera.config.model.Camera;
 import com.guoxiaoxing.phoenix.picker.ui.camera.config.model.Flash;
 import com.guoxiaoxing.phoenix.picker.ui.camera.config.model.MediaAction;
@@ -59,7 +60,7 @@ import java.io.File;
  *
  * @author guoxiaoxing
  */
-public class CameraFragment<CameraId> extends Fragment implements ICameraFragment {
+public class CameraFragment<CameraId> extends BaseFragment implements ICameraFragment {
 
     public static final String ARG_CONFIGURATION = "ARG_CONFIGURATION";
     public static final int MIN_VERSION_ICECREAM = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;

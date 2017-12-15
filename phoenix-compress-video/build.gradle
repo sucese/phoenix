@@ -31,8 +31,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:0.5'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
 
-//    compile "com.github.guoxiaoxing:phoenix-core:$rootProject.ext.phoenixCoreVersion"
-    compile project(':phoenix-core')
+    compile "com.github.guoxiaoxing:phoenix-core:$rootProject.ext.phoenixCoreVersion"
+//    compile project(':phoenix-core')
 }
 
 publish {
