@@ -81,7 +81,7 @@ UI（当然我们也需要提供默认的实现），这样就可以让功能和
 
 相机SDK框架图如下所示：
 
-<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/camera/camera_sdk_structure.png"/>
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/camera/camera_sdk_structure.png" width="500"/>
 
 - CameraActivity：相机界面，主要用来实现UI的定制，实际功能（点击事件）交由CameraFragment完成。
 - CameraFragment：向CameraActivity提供功能接口，完成CameraActivity里的点击事件，例如：拍照、录像等。
