@@ -2,6 +2,7 @@ package com.guoxiaoxing.phoenix.picker;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Parcelable;
 
 import com.guoxiaoxing.phoenix.R;
 import com.guoxiaoxing.phoenix.picker.ui.camera.CameraActivity;
@@ -14,6 +15,7 @@ import com.guoxiaoxing.phoenix.picker.ui.picker.PickerActivity;
 import com.guoxiaoxing.phoenix.picker.ui.picker.PreviewActivity;
 import com.guoxiaoxing.phoenix.picker.util.DoubleUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class Phoenix implements Starter {
@@ -67,6 +69,9 @@ public final class Phoenix implements Starter {
                 case PhoenixOption.TYPE_BROWSER_PICTURE: {
                     Intent intent = new Intent(activity, PreviewActivity.class);
                     intent.putExtra(PhoenixConstant.PHOENIX_OPTION, option);
+                    intent.putExtra(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_PREVIEW);
+                    intent.putParcelableArrayListExtra(PhoenixConstant.KEY_PICK_LIST, (ArrayList<? extends Parcelable>) option.getPickedMediaList());
+                    intent.putParcelableArrayListExtra(PhoenixConstant.KEY_ALL_LIST, (ArrayList<? extends Parcelable>) option.getPickedMediaList());
                     activity.startActivityForResult(intent, requestCode);
                     activity.overridePendingTransition(R.anim.phoenix_activity_in, 0);
                 }

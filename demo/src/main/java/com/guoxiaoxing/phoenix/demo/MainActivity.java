@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
             public void onItemClick(int position, View v) {
                 if (mMediaAdapter.getData().size() > 0) {
                     //预览
-//                    Phoenix.with()
-//                            .pickedMediaList(mMediaAdapter.getData())
-//                            .start(MainActivity.this, PhoenixOption.TYPE_BROWSER_PICTURE, 0);
+                    Phoenix.with()
+                            .pickedMediaList(mMediaAdapter.getData())
+                            .start(MainActivity.this, PhoenixOption.TYPE_BROWSER_PICTURE, 0);
                 }
             }
         });

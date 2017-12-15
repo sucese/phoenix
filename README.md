@@ -2,7 +2,7 @@
 
 ## 功能介绍
 
-[![Download](https://api.bintray.com/packages/guoxiaoxing/maven/phoenix/images/download.svg)](https://bintray.com/guoxiaoxing/maven/phoenix/_latestVersion)
+[![Download](https://api.bintray.com/packages/guoxiaoxing/maven/phoenix/allList/download.svg)](https://bintray.com/guoxiaoxing/maven/phoenix/_latestVersion)
 [![License](https://img.shields.io/github/license/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
 [![Stars](https://img.shields.io/github/stars/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
 [![Forks](https://img.shields.io/github/forks/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 

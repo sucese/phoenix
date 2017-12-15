@@ -133,7 +133,7 @@ Android图片的编码是由Skia库来完成的。
 Skia在[external/skia](https://android.googlesource.com/platform/external/skia/+/master)包中，我们虽然在平时的开发中没有直接用到Skia，但它对我们太重要了，它
 是Android系统的重要组成部分，很多重要操作例如图像编解码，Canvas绘制在底层都是通过Skia来完成的。它同样被广泛用于Google的其他产品中。
 
-Skia在[src/images](https://android.googlesource.com/platform/external/skia/+/master/src/images/)包下定义了各种格式图片的编解码器。
+Skia在[src/allList](https://android.googlesource.com/platform/external/skia/+/master/src/allList/)包下定义了各种格式图片的编解码器。
 
 kImageEncoder.cpp
 
@@ -225,7 +225,7 @@ static bool Bitmap_compress(JNIEnv* env, jobject clazz, SkBitmap* bitmap,
     return success;
 }
 ```
-可以看到该函数根据编码格式选择[SkImageEncoder](https://android.googlesource.com/platform/external/skia/+/master/src/images/SkJpegEncoder.cpp)，从而创建对应的图像编码器，最后
+可以看到该函数根据编码格式选择[SkImageEncoder](https://android.googlesource.com/platform/external/skia/+/master/src/allList/SkJpegEncoder.cpp)，从而创建对应的图像编码器，最后
 调用encodeStream(strm, *bitmap, quality)方法来完成编码。通
 
 上面的代码创建了SkJpegEncoder，并最终调用了它里面的make()方法，如下所示：

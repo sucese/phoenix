@@ -93,7 +93,7 @@ compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-video:0.0.13'
 ```java
 Phoenix.with()
         .themeColor(PhoenixOption.THEME_DEFAULT)// themeColor
-        .fileType(MimeType.ofAll())//Display file type images, video, image and video
+        .fileType(MimeType.ofAll())//Display file type allList, video, image and video
         .maxPickNumber(10)// Maximum number of options
         .minPickNumber(0)// Minimum number of options
         .spanCount(4)// The number of displays per row
@@ -110,8 +110,8 @@ Phoenix.with()
         .onPickerListener(new OnPickerListener() {
             @Override
             public void onPickSuccess(List<MediaEntity> pickList) {
-                adapter.setList(pickList);
-                adapter.notifyDataSetChanged();
+                mAdapter.setList(pickList);
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override

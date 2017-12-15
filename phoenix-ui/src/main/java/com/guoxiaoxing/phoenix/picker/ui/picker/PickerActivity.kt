@@ -258,15 +258,12 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         if (id == R.id.pickTvPreview) {
             val selectedImages = pickAdapter.getPickMediaList()
 
-            val mediaEntities = ArrayList<MediaEntity>()
-            for (mediaEntity in selectedImages) {
-                mediaEntities.add(mediaEntity)
-            }
             val bundle = Bundle()
             bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
-            bundle.putSerializable(PhoenixConstant.KEY_LIST, mediaEntities as Serializable)
-            bundle.putSerializable(PhoenixConstant.KEY_SELECT_LIST, selectedImages as Serializable)
+            bundle.putSerializable(PhoenixConstant.KEY_ALL_LIST, selectedImages as Serializable)
+            bundle.putSerializable(PhoenixConstant.KEY_PICK_LIST, selectedImages as Serializable)
             bundle.putBoolean(PhoenixConstant.EXTRA_BOTTOM_PREVIEW, true)
+            bundle.putInt(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_PICK)
             startActivity(PreviewActivity::class.java, bundle)
             overridePendingTransition(R.anim.phoenix_activity_in, 0)
         }
@@ -358,8 +355,10 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         val selectedImages = pickAdapter.getPickMediaList()
         ImagesObservable.instance.saveLocalMedia(previewImages)
         bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
-        bundle.putSerializable(PhoenixConstant.KEY_SELECT_LIST, selectedImages as Serializable)
+        bundle.putSerializable(PhoenixConstant.KEY_ALL_LIST, allMediaList as Serializable)
+        bundle.putSerializable(PhoenixConstant.KEY_PICK_LIST, selectedImages as Serializable)
         bundle.putInt(PhoenixConstant.KEY_POSITION, position)
+        bundle.putInt(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_PICK)
         startActivity(PreviewActivity::class.java, bundle)
         overridePendingTransition(R.anim.phoenix_activity_in, 0)
     }

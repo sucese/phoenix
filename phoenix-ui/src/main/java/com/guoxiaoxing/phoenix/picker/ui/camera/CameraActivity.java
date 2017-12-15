@@ -1,6 +1,7 @@
 package com.guoxiaoxing.phoenix.picker.ui.camera;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.guoxiaoxing.phoenix.R;
+import com.guoxiaoxing.phoenix.core.common.PhoenixConstant;
+import com.guoxiaoxing.phoenix.core.model.MediaEntity;
+import com.guoxiaoxing.phoenix.core.model.MimeType;
 import com.guoxiaoxing.phoenix.picker.ui.camera.config.model.MediaAction;
 import com.guoxiaoxing.phoenix.picker.ui.camera.config.CameraConfig;
 import com.guoxiaoxing.phoenix.picker.ui.camera.listener.CameraControlAdapter;
@@ -26,6 +30,7 @@ import com.guoxiaoxing.phoenix.picker.ui.camera.widget.CameraSettingsView;
 import com.guoxiaoxing.phoenix.picker.ui.camera.widget.CameraSwitchView;
 import com.guoxiaoxing.phoenix.picker.ui.camera.widget.FlashSwitchView;
 import com.guoxiaoxing.phoenix.picker.ui.camera.widget.RecordButton;
+import com.guoxiaoxing.phoenix.picker.ui.picker.PreviewActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -97,9 +102,17 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 cameraFragment.takePicture(DIRECTORY_NAME, "IMG_" + System.currentTimeMillis(), new OnCameraResultAdapter() {
                             @Override
                             public void onPhotoTaken(byte[] bytes, String filePath) {
-                                Toast.makeText(getBaseContext(), "onPictureTaken "
-                                        + filePath, Toast.LENGTH_SHORT).show();
-                                startActivity(CameraPreviewActivity.newIntentPhoto(CameraActivity.this, filePath));
+                                ArrayList<MediaEntity> mediaList = new ArrayList<>();
+                                MediaEntity mediaEntity = MediaEntity.newBuilder()
+                                        .localPath(filePath)
+                                        .fileType(MimeType.ofImage())
+                                        .build();
+                                mediaList.add(mediaEntity);
+                                Intent intent = new Intent(CameraActivity.this, PreviewActivity.class);
+                                intent.putParcelableArrayListExtra(PhoenixConstant.KEY_ALL_LIST, mediaList);
+                                intent.putParcelableArrayListExtra(PhoenixConstant.KEY_PICK_LIST, mediaList);
+                                intent.putExtra(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_CAMERA);
+                                startActivity(intent);
                             }
                         }
                 );
@@ -118,9 +131,17 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 cameraFragment.stopRecordingVideo(new OnCameraResultAdapter() {
                     @Override
                     public void onVideoRecorded(String filePath) {
-                        Toast.makeText(getBaseContext(), "onVideoRecorded "
-                                + filePath, Toast.LENGTH_SHORT).show();
-                        startActivity(CameraPreviewActivity.newIntentVideo(CameraActivity.this, filePath));
+                        ArrayList<MediaEntity> mediaList = new ArrayList<>();
+                        MediaEntity mediaEntity = MediaEntity.newBuilder()
+                                .localPath(filePath)
+                                .fileType(MimeType.ofVideo())
+                                .build();
+                        mediaList.add(mediaEntity);
+                        Intent intent = new Intent(CameraActivity.this, PreviewActivity.class);
+                        intent.putParcelableArrayListExtra(PhoenixConstant.KEY_ALL_LIST, mediaList);
+                        intent.putParcelableArrayListExtra(PhoenixConstant.KEY_PICK_LIST, mediaList);
+                        intent.putExtra(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_CAMERA);
+                        startActivity(intent);
                     }
                 });
                 cameraFragment.switchCaptureAction(MediaAction.ACTION_PHOTO);

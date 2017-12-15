@@ -7,10 +7,12 @@ public final class PhoenixConstant {
 
     public static final int IMAGE_PROCESS_TYPE_DEFAULT = 0x000000;
 
-
     public static final int REQUEST_CODE_PICTURE_EDIT = 0x000011;
     public static final int RESULT_CODE_PICTURE_EDIT = 0x000022;
 
+    public static final int TYPE_PREIVEW_FROM_PICK = 0x000100;
+    public static final int TYPE_PREIVEW_FROM_PREVIEW = 0x000101;
+    public static final int TYPE_PREIVEW_FROM_CAMERA = 0x000102;
 
     /**
      * 拍摄照片的最大数量
@@ -40,12 +42,19 @@ public final class PhoenixConstant {
     /**
      * 图片/视频列表
      */
-    public final static String KEY_LIST = "KEY_LIST";
+    public final static String KEY_ALL_LIST = "KEY_ALL_LIST";
 
     /**
      * 已选择的图片/视频列表
      */
-    public final static String KEY_SELECT_LIST = "KEY_SELECT_LIST";
+    public final static String KEY_PICK_LIST = "KEY_PICK_LIST";
+
+    public final static String EXTRA_BOTTOM_PREVIEW = "EXTRA_BOTTOM_PREVIEW";
+
+    /**
+     * 预览类型，从选择界面进入/从拍照界面进入。
+     */
+    public static final String KEY_PREVIEW_TYPE = "";
 
     public static final String BITMPA_KEY = "bitmap_key";
     public static final String ROTATION_KEY = "rotation_key";
@@ -60,7 +69,6 @@ public final class PhoenixConstant {
     public final static String DIRECTORY_PATH = "directory_path";
     public final static String BUNDLE_CAMERA_PATH = "CameraPath";
     public final static String BUNDLE_ORIGINAL_PATH = "OriginalPath";
-    public final static String EXTRA_BOTTOM_PREVIEW = "bottom_preview";
     public final static String EXTRA_PICKER_OPTION = "PictureSelectorConfig";
     public final static String AUDIO = "audio";
     public final static String IMAGE = "image";

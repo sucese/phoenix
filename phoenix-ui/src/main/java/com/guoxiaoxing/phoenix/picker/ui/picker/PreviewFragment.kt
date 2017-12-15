@@ -43,6 +43,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     private var refresh: Boolean = false
     private var index: Int = 0
     private var screenWidth: Int = 0
+    private var previewType: Int = 0
 
     //EventBus 3.0 回调
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -123,8 +124,9 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
     private fun setupData() {
         position = arguments.getInt(PhoenixConstant.KEY_POSITION, 0)
-        pickMediaList = arguments.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_SELECT_LIST)
-        allMediaList = arguments.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_LIST)
+        pickMediaList = arguments.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_PICK_LIST)
+        allMediaList = arguments.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_ALL_LIST)
+        previewType = arguments.getInt(PhoenixConstant.KEY_PREVIEW_TYPE)
 
         pickTvTitle.text = (position + 1).toString() + "/" + allMediaList.size
 
@@ -144,6 +146,20 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
             ll_picture_edit.visibility = View.VISIBLE
         } else {
             ll_picture_edit.visibility = View.GONE
+        }
+
+        if(previewType == PhoenixConstant.TYPE_PREIVEW_FROM_PICK){
+            ll_check.visibility = View.VISIBLE
+            preview_ll_edit.visibility = View.VISIBLE
+            preview_ll_ok.visibility = View.VISIBLE
+        }else if(previewType == PhoenixConstant.TYPE_PREIVEW_FROM_PREVIEW){
+            ll_check.visibility = View.GONE
+            preview_ll_edit.visibility = View.GONE
+            preview_ll_ok.visibility = View.GONE
+        }else if(previewType == PhoenixConstant.TYPE_PREIVEW_FROM_CAMERA){
+            ll_check.visibility = View.GONE
+            preview_rl_bottom.visibility = View.GONE
+            preview_ll_ok.visibility = View.GONE
         }
 
         preview_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {

@@ -81,6 +81,17 @@ UI（当然我们也需要提供默认的实现），这样就可以让功能和
 
 相机SDK框架图如下所示：
 
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/camera/camera_sdk_structure.png"/>
+
+- CameraActivity：相机界面，主要用来实现UI的定制，实际功能（点击事件）交由CameraFragment完成。
+- CameraFragment：向CameraActivity提供功能接口，完成CameraActivity里的点击事件，例如：拍照、录像等。
+- CameraLifecycle：处理相机随着Activity生命周期变化的情况，内部持有CameraManager，处理相机初始化和释放，预览的创建与销毁等问题。
+- CameraManager：相机的实际管理者，调用相机API来操作相机，进行拍照和录像等操作。
+- Camera/Camera2：相机API。
+
+[phoenix](https://github.com/guoxiaoxing/phoenix)项目已经实现了这套方案，效果图如下所示：
+
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/camera/camera.gif"/>
 
 理解了整体的架构，我们接着就来分析针对这套架构，Camera/Camera2分别该如何实现。
 
@@ -891,23 +902,4 @@ try {
 }
 ```
 
-## 附录
-
-
-### 关于一些常见的坑
-
-#### SurfaceView预览图像颠倒问题
-
-#### SurfaceView预览图像拉伸问题
-
-#### 前置摄像头的镜像问题
-
-#### 锁屏/后台场景下相机资源的释放问题
-
-### 关于权限问题的处理
-
-```xml
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-feature android:name="android.hardware.camera" />
-<uses-feature android:name="android.hardware.camera.autofocus" />
-```
+以上便是Camera/Camera2实践的相关内容，更多关于图像、视频处理的内容可以参见[phoenix](https://github.com/guoxiaoxing/phoenix)项目。
