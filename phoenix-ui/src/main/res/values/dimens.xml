@@ -16,4 +16,8 @@
     <dimen name="phoenix_dimen_60">60dp</dimen>
     <dimen name="phoenix_dimen_75">75dp</dimen>
     <dimen name="phoenix_dimen_107">107dp</dimen>
+
+    <bool name="isTablet">false</bool>
+    <integer name="frontFaceCameraRotationShift">270</integer>
+    <integer name="rearCameraRotationShift">90</integer>
 </resources>

@@ -9,7 +9,6 @@
       <module fileurl="file://$PROJECT_DIR$/phoenix-editor/media-editor.iml" filepath="$PROJECT_DIR$/phoenix-editor/media-editor.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-ui/media-ui.iml" filepath="$PROJECT_DIR$/phoenix-ui/media-ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix.iml" filepath="$PROJECT_DIR$/phoenix.iml" />
-      <module fileurl="file://$PROJECT_DIR$/phoenix-camera/phoenix-camera.iml" filepath="$PROJECT_DIR$/phoenix-camera/phoenix-camera.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-compress-picture/phoenix-compress-picture.iml" filepath="$PROJECT_DIR$/phoenix-compress-picture/phoenix-compress-picture.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-compress-video/phoenix-compress-video.iml" filepath="$PROJECT_DIR$/phoenix-compress-video/phoenix-compress-video.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-compress-video-hard/phoenix-compress-video.iml" filepath="$PROJECT_DIR$/phoenix-compress-video-hard/phoenix-compress-video.iml" />

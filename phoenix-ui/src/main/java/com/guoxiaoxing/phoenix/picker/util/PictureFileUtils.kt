@@ -129,7 +129,7 @@ object PictureFileUtils {
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
 
-     * @param context       The context.
+     * @param context       The mContext.
      * *
      * @param uri           The Uri to query.
      * *
@@ -195,7 +195,7 @@ object PictureFileUtils {
      * Callers should check whether the path is local before assuming it
      * represents a local file.
 
-     * @param context The context.
+     * @param context The mContext.
      * *
      * @param uri     The Uri to query.
      * *

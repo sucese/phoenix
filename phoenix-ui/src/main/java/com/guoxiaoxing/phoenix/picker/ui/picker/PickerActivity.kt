@@ -13,7 +13,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.guoxiaoxing.phoenix.R
-import com.guoxiaoxing.phoenix.camera.CameraActivity
+import com.guoxiaoxing.phoenix.picker.ui.camera.CameraActivity
 import com.guoxiaoxing.phoenix.core.PhoenixOption.THEME_DEFAULT
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
 import com.guoxiaoxing.phoenix.core.model.MediaEntity

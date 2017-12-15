@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/rl_camera_control"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:paddingTop="10dp">
+
+            <com.guoxiaoxing.phoenix.picker.ui.camera.widget.CameraSettingsView
+                android:id="@+id/settings_view"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp" />
+
+            <com.guoxiaoxing.phoenix.picker.ui.camera.widget.FlashSwitchView
+                android:id="@+id/flash_switch_view"
+                android:layout_width="40dp"
+                android:visibility="gone"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true" />
+
+            <com.guoxiaoxing.phoenix.picker.ui.camera.widget.CameraSwitchView
+                android:id="@+id/front_back_camera_switcher"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/record_panel"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/transparent">
+
+            <com.guoxiaoxing.phoenix.picker.ui.camera.widget.RecordButton
+                android:id="@+id/record_button"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp" />
+
+            <TextView
+                android:id="@+id/record_duration_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/record_button"
+                android:textColor="@android:color/white"
+                android:textSize="14dp"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/record_size_mb_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/record_button"
+                android:textColor="@android:color/white"
+                android:textSize="14dp"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</FrameLayout>

@@ -49,4 +49,27 @@
         <item>#ee00ff</item>
         <item>#ff00e1</item>
     </array>
+
+    <color name="button_background">#4CAF50</color>
+    <color name="circle_shallow_translucent_background">#26ffffff</color>
+
+    <color name="black_btn_text_color">#ff000000</color>
+    <color name="black_eighty_percent">#cc000000</color>
+    <color name="black_fifty_percent">#80000000</color>
+    <color name="black_forty_percent">#66000000</color>
+    <color name="black_seventy_percent">#b2000000</color>
+    <color name="black_sixty_percent">#99000000</color>
+    <color name="black_tenth_percent">#1a000000</color>
+    <color name="black_thirty_percent">#4c000000</color>
+    <color name="black_twenty_percent">#33000000</color>
+    <color name="black_two_percent">#05000000</color>
+
+    <color name="white_fifty_percent">#80ffffff</color>
+    <color name="white_forty_percent">#66ffffff</color>
+    <color name="white_ninety_percent">#e6ffffff</color>
+    <color name="white_seventy_percent">#b2ffffff</color>
+    <color name="white_sixty_percent">#99ffffff</color>
+    <color name="white_ten_percent">#1affffff</color>
+    <color name="white_thirty_percent">#4cffffff</color>
+    <color name="white_twenty_percent">#33ffffff</color>
 </resources>

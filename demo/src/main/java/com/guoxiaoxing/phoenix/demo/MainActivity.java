@@ -8,11 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.guoxiaoxing.phoenix.camera.CameraActivity;
+import com.guoxiaoxing.phoenix.picker.ui.camera.CameraActivity;
 import com.guoxiaoxing.phoenix.core.PhoenixOption;
 import com.guoxiaoxing.phoenix.core.model.MediaEntity;
 import com.guoxiaoxing.phoenix.core.model.MimeType;
-import com.guoxiaoxing.phoenix.demo.camera.CameraDemoActivity;
 import com.guoxiaoxing.phoenix.demo.picture.PictureDemoActivity;
 import com.guoxiaoxing.phoenix.demo.video.VideoDemoActivity;
 import com.guoxiaoxing.phoenix.picker.Phoenix;

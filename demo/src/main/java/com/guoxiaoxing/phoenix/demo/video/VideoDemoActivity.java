@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.guoxiaoxing.phoenix.camera.CameraActivity;
+import com.guoxiaoxing.phoenix.picker.ui.camera.CameraActivity;
 import com.guoxiaoxing.phoenix.demo.R;
 
 public class VideoDemoActivity extends AppCompatActivity implements View.OnClickListener {

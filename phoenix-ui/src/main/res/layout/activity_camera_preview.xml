@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/preview_activity_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <com.guoxiaoxing.phoenix.picker.ui.camera.widget.AutoFitFrameLayout
+        android:id="@+id/previewAspectFrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+
+        <SurfaceView
+            android:id="@+id/video_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/phoenix_video_play" />
+
+    </com.guoxiaoxing.phoenix.picker.ui.camera.widget.AutoFitFrameLayout>
+
+    <FrameLayout
+        android:id="@+id/photo_preview_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true" />
+
+    <LinearLayout
+        android:id="@+id/preview_control_panel"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="#82212121"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/cancel_media_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/phoenix_clear_white" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/re_take_media"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/phoenix_replay_white" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/confirm_media_result"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/phoenix_done_white" />
+
+    </LinearLayout>
+
+</RelativeLayout>

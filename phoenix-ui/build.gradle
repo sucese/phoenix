@@ -35,7 +35,6 @@ dependencies {
 
     compile "com.github.guoxiaoxing:phoenix-core:$rootProject.ext.phoenixCoreVersion"
 //    compile project(':phoenix-core')
-    compile project(path: ':phoenix-camera')
 }
 
 publish {
