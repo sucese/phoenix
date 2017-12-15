@@ -903,3 +903,23 @@ try {
 ```
 
 以上便是Camera/Camera2实践的相关内容，更多关于图像、视频处理的内容可以参见[phoenix](https://github.com/guoxiaoxing/phoenix)项目。
+
+## 附录
+
+### 关于一些常见的坑
+
+#### SurfaceView预览图像颠倒问题
+
+#### SurfaceView预览图像拉伸问题
+
+#### 前置摄像头的镜像问题
+
+#### 锁屏/后台场景下相机资源的释放问题
+
+### 关于权限问题的处理
+
+```xml
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-feature android:name="android.hardware.camera" />
+<uses-feature android:name="android.hardware.camera.autofocus" />
+```
