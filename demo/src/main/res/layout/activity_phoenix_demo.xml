@@ -41,7 +41,7 @@
     <Button
         android:id="@+id/btn_take_picture"
         android:layout_width="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:text="拍照/视频演示" />
 </LinearLayout>

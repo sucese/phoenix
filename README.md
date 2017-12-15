@@ -258,7 +258,9 @@ try {
 
 ## 更新日志
 
-[点击下载Demo](https://github.com/guoxiaoxing/phoenix/raw/master/art/Phoenix.apk)
+扫描二维码下载Demo
+
+<img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/download_apk.png"/>
 
 ## 贡献代码
 
