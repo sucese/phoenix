@@ -57,8 +57,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
 
     private var isAnimation = false
     private lateinit var folderWindow: FolderPopWindow
-    private lateinit var animation: Animation
-
+    private var animation: Animation? = null
     private lateinit var rxPermissions: RxPermissions
     private lateinit var mediaLoader: MediaLoader
 
@@ -404,7 +403,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
             RxBus.default.unregister(this)
         }
         ImagesObservable.instance.clearLocalMedia()
-        animation.cancel()
+        animation?.cancel()
     }
 
     private fun startCamera() {

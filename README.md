@@ -35,6 +35,7 @@
 **功能**
 
 - 拍照
+- 录制视频
 - 图片选择
 - 图片预览
 - 图片压缩
@@ -70,13 +71,13 @@
 
 ```
 //图片/视频选择、预览、编辑与拍照
-compile 'com.github.guoxiaoxing:phoenix:1.0.9'
+compile 'com.github.guoxiaoxing:phoenix:1.0.10'
 
 //选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.9'
+compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.10'
 
 //选填 - 视频压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing:phoenix-compress-video:1.0.9'
+compile 'com.github.guoxiaoxing:phoenix-compress-video:1.0.10'
 ```
 
 ### 调用功能
