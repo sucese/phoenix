@@ -2,10 +2,11 @@
 
 ## 功能介绍
 
-[![Download](https://api.bintray.com/packages/guoxiaoxing/maven/phoenix/allList/download.svg)](https://bintray.com/guoxiaoxing/maven/phoenix/_latestVersion)
+[![Download](https://api.bintray.com/packages/guoxiaoxing/maven/phoenix/images/download.svg)](https://bintray.com/guoxiaoxing/maven/phoenix/_latestVersion)
 [![License](https://img.shields.io/github/license/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
 [![Stars](https://img.shields.io/github/stars/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
 [![Forks](https://img.shields.io/github/forks/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
+[![Forks](https://img.shields.io/github/issues/guoxiaoxing/phoenix.svg)](https://jitpack.io/#guoxiaoxing/phoenix) 
 
 >Android平台上拍照/录像，图片/视频选择，编辑和压缩的一站式解决方案。
 
@@ -71,7 +72,7 @@
 
 ```
 //图片/视频选择、预览、编辑与拍照
-compile 'com.github.guoxiaoxing:phoenix:1.0.11'
+compile 'com.github.guoxiaoxing:phoenix:x'
 
 //选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
 compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.11'
