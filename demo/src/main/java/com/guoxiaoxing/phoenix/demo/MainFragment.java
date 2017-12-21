@@ -1,42 +1,59 @@
 package com.guoxiaoxing.phoenix.demo;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import com.guoxiaoxing.phoenix.picker.ui.camera.CameraActivity;
 import com.guoxiaoxing.phoenix.core.PhoenixOption;
 import com.guoxiaoxing.phoenix.core.model.MediaEntity;
 import com.guoxiaoxing.phoenix.core.model.MimeType;
-import com.guoxiaoxing.phoenix.demo.picture.PictureDemoActivity;
-import com.guoxiaoxing.phoenix.demo.video.VideoDemoActivity;
 import com.guoxiaoxing.phoenix.picker.Phoenix;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAddMediaListener
+/**
+ * For more information, you can visit https://github.com/guoxiaoxing or contact me by
+ * guoxiaoxingse@163.com.
+ *
+ * @author guoxiaoxing
+ * @since 2017/12/21 下午4:35
+ */
+public class MainFragment extends Fragment implements MediaAdapter.OnAddMediaListener
         , View.OnClickListener {
 
     private int REQUEST_CODE = 0x000111;
     private MediaAdapter mMediaAdapter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if(getWindow() != null){
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
-        setContentView(R.layout.activity_phoenix_demo);
-        findViewById(R.id.btn_compress_picture).setOnClickListener(this);
-        findViewById(R.id.btn_compress_video).setOnClickListener(this);
-        findViewById(R.id.btn_take_picture).setOnClickListener(this);
+    public static MainFragment newInstance(){
+        return new MainFragment();
+    }
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 4, GridLayoutManager.VERTICAL, false));
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getActivity().getWindow() != null) {
+            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_phoenix_demo, container, false);
+        view.findViewById(R.id.btn_compress_picture).setOnClickListener(this);
+        view.findViewById(R.id.btn_compress_video).setOnClickListener(this);
+        view.findViewById(R.id.btn_take_picture).setOnClickListener(this);
+
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, false));
         mMediaAdapter = new MediaAdapter(this);
         recyclerView.setAdapter(mMediaAdapter);
         mMediaAdapter.setOnItemClickListener(new MediaAdapter.OnItemClickListener() {
@@ -46,10 +63,11 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
                     //预览
                     Phoenix.with()
                             .pickedMediaList(mMediaAdapter.getData())
-                            .start(MainActivity.this, PhoenixOption.TYPE_BROWSER_PICTURE, 0);
+                            .start(getActivity(), PhoenixOption.TYPE_BROWSER_PICTURE, 0);
                 }
             }
         });
+        return view;
     }
 
     @Override
@@ -72,13 +90,13 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
                 .pickedMediaList(mMediaAdapter.getData())// 已选图片数据
                 .videoFilterTime(30)//显示多少秒以内的视频
                 .mediaFilterSize(10000)//显示多少kb以下的图片/视频，默认为0，表示不限制
-                .start(MainActivity.this, PhoenixOption.TYPE_PICK_MEDIA, REQUEST_CODE);
+                .start(this, PhoenixOption.TYPE_PICK_MEDIA, REQUEST_CODE);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             //返回的数据
             List<MediaEntity> result = Phoenix.result(data);
             mMediaAdapter.setData(result);
@@ -87,16 +105,5 @@ public class MainActivity extends AppCompatActivity implements MediaAdapter.OnAd
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btn_compress_picture:
-                startActivity(new Intent(MainActivity.this, PictureDemoActivity.class));
-                break;
-            case R.id.btn_compress_video:
-                startActivity(new Intent(MainActivity.this, VideoDemoActivity.class));
-                break;
-            case R.id.btn_take_picture:
-                startActivity(new Intent(MainActivity.this, CameraActivity.class));
-                break;
-        }
     }
 }

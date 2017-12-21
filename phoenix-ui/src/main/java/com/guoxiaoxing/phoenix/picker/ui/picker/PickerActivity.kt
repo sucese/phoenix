@@ -170,7 +170,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         pickAdapter.setPickMediaList(mediaList)
         changeImageNumber(mediaList)
 
-        mediaLoader = MediaLoader(this, fileType, isGif, videoFilterTime.toLong())
+        mediaLoader = MediaLoader(this, fileType, isGif, videoFilterTime.toLong(), mediaFilterSize)
         rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(object : Observer<Boolean> {
                     override fun onSubscribe(d: Disposable) {}

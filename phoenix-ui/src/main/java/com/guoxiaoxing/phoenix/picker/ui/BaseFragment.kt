@@ -44,6 +44,7 @@ open class BaseFragment : Fragment() {
     protected var minSelectNum: Int = 0
     protected var fileType: Int = 0
     protected var videoFilterTime: Int = 0
+    protected var mediaFilterSize: Int = 0
     protected var recordVideoTime: Int = 0
     protected var isGif: Boolean = false
     protected var enableCamera: Boolean = false
@@ -171,6 +172,7 @@ open class BaseFragment : Fragment() {
         checkNumMode = option.isPickNumberMode
         openClickSound = option.isEnableClickSound
         videoFilterTime = option.videoFilterTime
+        mediaFilterSize = option.mediaFilterSize
         recordVideoTime = option.recordVideoTime
         enableCompress = option.isEnableCompress
         previewEggs = option.isPreviewEggs

@@ -71,13 +71,13 @@
 
 ```
 //图片/视频选择、预览、编辑与拍照
-compile 'com.github.guoxiaoxing:phoenix:1.0.10'
+compile 'com.github.guoxiaoxing:phoenix:1.0.11'
 
 //选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.10'
+compile 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.11'
 
 //选填 - 视频压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing:phoenix-compress-video:1.0.10'
+compile 'com.github.guoxiaoxing:phoenix-compress-video:1.0.11'
 ```
 
 ### 调用功能
@@ -125,6 +125,8 @@ Phoenix.with()
         .enableClickSound(false)// 是否开启点击声音
         .pickedMediaList(mMediaAdapter.getData())// 已选图片数据
         .videoFilterTime(0)//显示多少秒以内的视频
+        .mediaFilterSize(10000)//显示多少kb以下的图片/视频，默认为0，表示不限制
+         //如果是在Activity里使用就传Activity，如果是在Fragment里使用就传Fragment
         .start(MainActivity.this, PhoenixOption.TYPE_PICK_MEDIA, REQUEST_CODE);
 ```
 

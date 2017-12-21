@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 
 import com.guoxiaoxing.phoenix.core.listener.Starter;
 import com.guoxiaoxing.phoenix.core.model.MediaEntity;
@@ -51,6 +52,8 @@ public class PhoenixOption implements Parcelable {
     private int minPickNumber = 0;
     //显示多少秒以内的视频
     private int videoFilterTime;
+    //显示多少kb以下的图片/视频，默认为0，表示不限制
+    private int mediaFilterSize;
     //视频秒数录制 默认10s
     private int recordVideoTime = 5;
     //图片选择界面每行图片个数
@@ -97,46 +100,6 @@ public class PhoenixOption implements Parcelable {
         return enableCamera;
     }
 
-    public boolean isEnableGif() {
-        return enableGif;
-    }
-
-    public boolean isEnablePreview() {
-        return enablePreview;
-    }
-
-    public boolean isPickNumberMode() {
-        return pickNumberMode;
-    }
-
-    public boolean isEnableClickSound() {
-        return enableClickSound;
-    }
-
-    public boolean isPreviewEggs() {
-        return previewEggs;
-    }
-
-    public List<MediaEntity> getPickedMediaList() {
-        return pickedMediaList;
-    }
-
-    public boolean isEnableCompress() {
-        return enableCompress;
-    }
-
-    public int getCompressVideoFilterSize() {
-        return compressVideoFilterSize;
-    }
-
-    public int getCompressPictureFilterSize() {
-        return compressPictureFilterSize;
-    }
-
-    public String getSavePath() {
-        return savePath;
-    }
-
     public int getTheme() {
         return theme;
     }
@@ -151,6 +114,10 @@ public class PhoenixOption implements Parcelable {
 
     public int getVideoFilterTime() {
         return videoFilterTime;
+    }
+
+    public int getMediaFilterSize() {
+        return mediaFilterSize;
     }
 
     public int getRecordVideoTime() {
@@ -171,6 +138,46 @@ public class PhoenixOption implements Parcelable {
 
     public boolean isEnableAnimation() {
         return enableAnimation;
+    }
+
+    public boolean isEnableGif() {
+        return enableGif;
+    }
+
+    public boolean isEnablePreview() {
+        return enablePreview;
+    }
+
+    public boolean isPickNumberMode() {
+        return pickNumberMode;
+    }
+
+    public boolean isEnableClickSound() {
+        return enableClickSound;
+    }
+
+    public boolean isPreviewEggs() {
+        return previewEggs;
+    }
+
+    public boolean isEnableCompress() {
+        return enableCompress;
+    }
+
+    public int getCompressVideoFilterSize() {
+        return compressVideoFilterSize;
+    }
+
+    public int getCompressPictureFilterSize() {
+        return compressPictureFilterSize;
+    }
+
+    public List<MediaEntity> getPickedMediaList() {
+        return pickedMediaList;
+    }
+
+    public String getSavePath() {
+        return savePath;
     }
 
     public PhoenixOption fileType(int val) {
@@ -200,6 +207,11 @@ public class PhoenixOption implements Parcelable {
 
     public PhoenixOption videoFilterTime(int val) {
         videoFilterTime = val;
+        return this;
+    }
+
+    public PhoenixOption mediaFilterSize(int val) {
+        mediaFilterSize = val;
         return this;
     }
 
@@ -278,13 +290,19 @@ public class PhoenixOption implements Parcelable {
         return this;
     }
 
+    public void start(Fragment fragment, int type, int requestCode) {
+        Starter starter = ReflectUtils.loadStarter(ReflectUtils.Phoenix);
+        if (starter != null) {
+            starter.start(fragment, this, type, requestCode);
+        }
+    }
+
     public void start(Activity activity, int type, int requestCode) {
         Starter starter = ReflectUtils.loadStarter(ReflectUtils.Phoenix);
         if (starter != null) {
             starter.start(activity, this, type, requestCode);
         }
     }
-
 
     @Override
     public int describeContents() {
@@ -299,6 +317,7 @@ public class PhoenixOption implements Parcelable {
         dest.writeInt(this.maxPickNumber);
         dest.writeInt(this.minPickNumber);
         dest.writeInt(this.videoFilterTime);
+        dest.writeInt(this.mediaFilterSize);
         dest.writeInt(this.recordVideoTime);
         dest.writeInt(this.spanCount);
         dest.writeInt(this.thumbnailWidth);
@@ -323,6 +342,7 @@ public class PhoenixOption implements Parcelable {
         this.maxPickNumber = in.readInt();
         this.minPickNumber = in.readInt();
         this.videoFilterTime = in.readInt();
+        this.mediaFilterSize = in.readInt();
         this.recordVideoTime = in.readInt();
         this.spanCount = in.readInt();
         this.thumbnailWidth = in.readInt();

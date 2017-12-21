@@ -16,10 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.guoxiaoxing.phoenix.compress.video.soft.MediaRecorderActivity" />
         <activity android:name=".picture.PictureDemoActivity" />
         <activity android:name=".video.VideoDemoActivity" />
-        <activity android:name=".camera.CameraDemoActivity"></activity>
+        <activity android:name=".camera.CameraDemoActivity" />
+        <activity android:name=".MainFragmentActivity">
+        </activity>
     </application>
 
 </manifest>
