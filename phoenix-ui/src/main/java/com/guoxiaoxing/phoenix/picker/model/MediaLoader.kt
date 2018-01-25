@@ -62,12 +62,22 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                                             + durationCondition
                                             + sizeCondition,
                                     VIDEO_SELECTION_ARGS, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
+                            PhoenixConstant.TYPE_AUDIO -> CursorLoader(
+                                    activity,
+                                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                                    AUDIO_PROJECTION,
+                                    AUDIO_SELECTION
+                                            + durationCondition
+                                            + sizeCondition,
+                                    AUDIO_SELECTION_ARGS, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
                             else ->
                                 CursorLoader(
                                         activity,
                                         ALL_QUERY_URI,
                                         ALL_PROJECTION,
-                                        ALL_SELECTION,
+                                        ALL_SELECTION
+                                                + durationCondition
+                                                + sizeCondition,
                                         null,
                                         MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
 
@@ -206,10 +216,15 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
         private val LATITUDE = "latitude"
         private val LONGITUDE = "longitude"
 
-
+        /**
+         * 全部媒体数据 - SELECTION_ARGS
+         */
         private val ALL_SELECTION_ARGS = arrayOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString(),
                 MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString())
 
+        /**
+         * 全部媒体数据 - PROJECTION
+         */
         private val ALL_PROJECTION = arrayOf(MediaStore.Images.Media._ID,
                 MediaStore.MediaColumns.DATA,
                 MediaStore.MediaColumns.DISPLAY_NAME,
@@ -222,19 +237,27 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                 LONGITUDE,
                 DURATION)
 
-
+        /**
+         * 全部媒体数据 - SELECTION
+         */
         private val ALL_SELECTION = (
                 MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                         + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
                         + " OR "
                         + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                         + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
+                        + " OR "
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO
                         + " AND "
                         + MediaStore.Files.FileColumns.SIZE + ">0"
                         + " AND "
                         + DURATION + ">0")
 
 
+        /**
+         * 图片 - PROJECTION
+         */
         private val IMAGE_PROJECTION = arrayOf(MediaStore.Images.Media._ID,
                 MediaStore.MediaColumns.DATA,
                 MediaStore.MediaColumns.DISPLAY_NAME,
@@ -247,7 +270,7 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                 LONGITUDE)
 
         /**
-         * 获取全部图片
+         * 图片 - SELECTION
          */
         private val IMAGE_SELECTION = (
                 MediaStore.Images.Media.MIME_TYPE + "=? or " +
@@ -260,10 +283,13 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                 )
 
         /**
-         * 获取全部图片
+         * 图片 - SELECTION_ARGS
          */
         private val IMAGE_SELECTION_ARGS = arrayOf("image/jpeg", "image/png", "image/webp")
 
+        /**
+         * 视频 - PROJECTION
+         */
         private val VIDEO_PROJECTION = arrayOf(MediaStore.Images.Media._ID,
                 MediaStore.MediaColumns.DATA,
                 MediaStore.MediaColumns.DISPLAY_NAME,
@@ -277,7 +303,7 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                 DURATION)
 
         /**
-         * 获取全部视频
+         * 视频 - SELECTION
          */
         private val VIDEO_SELECTION = (
                 MediaStore.Images.Media.MIME_TYPE + "=?"
@@ -288,9 +314,34 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                 )
 
         /**
-         * 获取全部视频
+         * 视频 - SELECTION_ARGS
          */
         private val VIDEO_SELECTION_ARGS = arrayOf("video/mp4")
+
+        /**
+         * 音频 - PROJECTION
+         */
+        private val AUDIO_PROJECTION = arrayOf(MediaStore.Images.Media._ID,
+                MediaStore.MediaColumns.DATA,
+                MediaStore.MediaColumns.DISPLAY_NAME,
+                MediaStore.MediaColumns.DATE_ADDED,
+                MediaStore.MediaColumns.MIME_TYPE,
+                MediaStore.MediaColumns.SIZE,
+                DURATION)
+
+        /**
+         * 音频 - SELECTION
+         */
+        private val AUDIO_SELECTION = (
+                MediaStore.Images.Media.MIME_TYPE + "=?"
+                        + " AND "
+                        + DURATION + ">0"
+                )
+
+        /**
+         * 音频 - SELECTION_ARGS
+         */
+        private val AUDIO_SELECTION_ARGS = arrayOf("audio/wav")
 
         /**
          * 获取全部图片和视频，但过滤掉gif图片
