@@ -69,7 +69,6 @@ Android平台对于视频编解码而言，常见的方案选择有两种：
 
 <img src="https://github.com/guoxiaoxing/phoenix/raw/master/art/codec/MediaCodec.png"/>
 
-
 MediaCodec等一系列的类主要用来编解码音视频，整个家族成员主要包括以下几个类：
 
 - MediaCodec：用来访问底层媒体编解码器，即编码器/解码器的部件。
@@ -81,3 +80,4 @@ MediaCodec等一系列的类主要用来编解码音视频，整个家族成员�
 - Image
 - Surface
 - AudioTrack
+

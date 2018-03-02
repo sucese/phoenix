@@ -59,9 +59,9 @@ public class MediaEntity implements Serializable, Parcelable {
     private String compressPath;
 
     //crop
-    //剪切后地址
+    //裁剪后地址
     private String cutPath;
-    //
+    //裁剪
     private int cropOffsetX;
     //
     private int cropOffsetY;
