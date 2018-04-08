@@ -2,6 +2,9 @@ language: android
 
 sudo: false
 
+before_install:
+  gradle createWrapper
+
 android:
   components:
   - tools
