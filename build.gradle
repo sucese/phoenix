@@ -49,8 +49,3 @@ ext {
     testRunnerVersion = '1.0.1'
     testEspressoVersion = '3.0.1'
 }
-
-task createWrapper(type: Wrapper) {
-    gradleVersion = '3.1.0'
-    distributionUrl='https://services.gradle.org/distributions/gradle-4.4-all.zip'
-}

@@ -10,4 +10,3 @@ build/
 .externalNativeBuild
 
 .gradle/
-gradle/
