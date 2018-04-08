@@ -1,7 +1,6 @@
 .DS_Store
 .idea/
 *.iml
-*.apk
 
 /local.properties
 
