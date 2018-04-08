@@ -99,7 +99,7 @@
 
         <LinearLayout
             android:id="@+id/preview_ll_ok"
-            android:layout_width="80dp"
+            android:layout_width="84dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"

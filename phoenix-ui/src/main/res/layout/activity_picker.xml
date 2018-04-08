@@ -43,7 +43,7 @@
 
         <LinearLayout
             android:id="@+id/pickLlOk"
-            android:layout_width="80dp"
+            android:layout_width="84dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"

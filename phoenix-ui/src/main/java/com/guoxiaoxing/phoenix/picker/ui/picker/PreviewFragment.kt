@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
@@ -44,6 +45,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     private var index: Int = 0
     private var screenWidth: Int = 0
     private var previewType: Int = 0
+    private var animation: Animation? = null
 
     //EventBus 3.0 回调
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -115,6 +117,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         }
 
         preview_tv_ok_text.text = getString(R.string.picture_please_select)
+        animation = AnimationUtils.loadAnimation(mContext, R.anim.phoenix_window_in)
 
         ll_check.setOnClickListener(this)
         pickTvBack.setOnClickListener(this)
@@ -256,13 +259,15 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         if (enable) {
             preview_ll_ok.isEnabled = true
             preview_ll_ok.alpha = 1F
+
+            preview_tv_ok_number.startAnimation(animation)
             preview_tv_ok_number.visibility = View.VISIBLE
-            preview_tv_ok_number.text = pickMediaList.size.toString() + ""
+            preview_tv_ok_number.text = "(" + pickMediaList.size.toString() + ")"
             preview_tv_ok_text.text = getString(R.string.picture_completed)
         } else {
             preview_ll_ok.isEnabled = false
             preview_ll_ok.alpha = 0.7F
-            preview_tv_ok_number.visibility = View.INVISIBLE
+            preview_tv_ok_number.visibility = View.GONE
             preview_tv_ok_text.text = getString(R.string.picture_please_select)
         }
         updatePickerActivity(refresh)
