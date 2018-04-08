@@ -28,6 +28,10 @@ android:
   - platform-tools
   - build-tools-27.0.3
   - android-$ANDROID_API_LEVEL
+  - addon-google_apis-google-$ANDROID_API_LEVEL
+  - extra-google-google_play_services
   - extra-android-m2repository
+  - extra-google-m2repository
   - extra-android-support
+  - sys-img-$ANDROID_ABI-google_apis-$ANDROID_EMU_API_LEVEL
   - sys-img-$ANDROID_ABI-google_apis-$ANDROID_EMU_API_LEVEL
