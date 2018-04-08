@@ -13,3 +13,4 @@ android:
   - android-25
   - extra-android-m2repository
   - extra-android-support
+  - sys-img-armeabi-v7a-android-26
