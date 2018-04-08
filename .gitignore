@@ -10,3 +10,5 @@ build/
 .externalNativeBuild
 
 .gradle/
+gradle/
+!/gradle/wrapper/gradle-wrapper.properties
