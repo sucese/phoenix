@@ -1,6 +1,5 @@
 package com.guoxiaoxing.phoenix.picker.ui
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -16,6 +15,7 @@ import android.widget.Toast
 import com.guoxiaoxing.phoenix.R
 import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant
+import com.guoxiaoxing.phoenix.core.listener.Starter
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.core.model.MimeType
 import com.guoxiaoxing.phoenix.core.util.ReflectUtils
@@ -119,11 +119,11 @@ open class BaseActivity : FragmentActivity() {
     }
 
     protected fun processMedia(mediaList: MutableList<MediaEntity>) {
-
         val enableCompress = option.isEnableCompress
 
         if (!enableCompress) {
             onResult(mediaList)
+            return;
         }
 
         //压缩图片
@@ -257,7 +257,14 @@ open class BaseActivity : FragmentActivity() {
         val result = ArrayList<MediaEntity>(images.size)
         result.addAll(images)
         intent.putExtra(PhoenixConstant.PHOENIX_RESULT, result)
-        setResult(Activity.RESULT_OK, intent)
+
+        if (getIntent().hasExtra(Starter.BUNDLE_KEY_FUTURE_ACTION)) {
+            intent.action = getIntent().getStringExtra(Starter.BUNDLE_KEY_FUTURE_ACTION)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        } else {
+            setResult(RESULT_OK, intent)
+        }
         closeActivity()
     }
 

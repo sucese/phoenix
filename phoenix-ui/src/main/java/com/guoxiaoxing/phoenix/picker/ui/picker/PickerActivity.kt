@@ -2,6 +2,7 @@ package com.guoxiaoxing.phoenix.picker.ui.picker
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -290,8 +291,17 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        processMedia(allMediaList)
+        //processMedia(allMediaList)   //我觉得这行代码没啥用
 
+        if (Activity.RESULT_OK != resultCode) return
+
+        when (requestCode) {
+            PhoenixConstant.REQUEST_CODE_CAPTURE -> {
+                onResult(data!!.getSerializableExtra(PhoenixConstant.PHOENIX_RESULT) as MutableList<MediaEntity>)
+            }
+            else -> {
+            }
+        }
     }
 
     override fun onItemClick(folderName: String, images: MutableList<MediaEntity>) {
@@ -348,7 +358,6 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         val mediaEntity = previewImages[position]
         val pictureType = mediaEntity.mimeType
         val bundle = Bundle()
-        val result = ArrayList<MediaEntity>()
         val mediaType = MimeType.getFileType(pictureType)
         DebugUtil.i(TAG, "mediaType:" + mediaType)
         val selectedImages = pickAdapter.getPickMediaList()
@@ -368,7 +377,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      * @param selectImages
      */
     @SuppressLint("StringFormatMatches")
-    fun changeImageNumber(selectImages: List<MediaEntity>) {
+    private fun changeImageNumber(selectImages: List<MediaEntity>) {
         val enable = selectImages.isNotEmpty()
         if (enable) {
             pickLlOk.isEnabled = true
@@ -409,7 +418,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     private fun startCamera() {
         val bundle = Bundle()
         bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
-        startActivity(CameraActivity::class.java, bundle)
+        startActivity(CameraActivity::class.java, bundle, PhoenixConstant.REQUEST_CODE_CAPTURE)
         overridePendingTransition(R.anim.phoenix_activity_in, 0)
     }
 }

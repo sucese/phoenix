@@ -304,6 +304,20 @@ public class PhoenixOption implements Parcelable {
         }
     }
 
+    public void start(Fragment fragment, int type, String futureAction) {
+        Starter starter = ReflectUtils.loadStarter(ReflectUtils.Phoenix);
+        if (starter != null) {
+            starter.start(fragment, this, type, futureAction);
+        }
+    }
+
+    public void start(Activity activity, int type, String futureAction) {
+        Starter starter = ReflectUtils.loadStarter(ReflectUtils.Phoenix);
+        if (starter != null) {
+            starter.start(activity, this, type, futureAction);
+        }
+    }
+
     @Override
     public int describeContents() {
         return 0;

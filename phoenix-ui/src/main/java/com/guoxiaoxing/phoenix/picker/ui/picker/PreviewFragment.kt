@@ -1,6 +1,7 @@
 package com.guoxiaoxing.phoenix.picker.ui.picker
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
@@ -26,13 +27,11 @@ import com.guoxiaoxing.phoenix.picker.rx.bus.Subscribe
 import com.guoxiaoxing.phoenix.picker.rx.bus.ThreadMode
 import com.guoxiaoxing.phoenix.picker.ui.BaseFragment
 import com.guoxiaoxing.phoenix.picker.ui.editor.PictureEditFragment
-import com.guoxiaoxing.phoenix.picker.util.LightStatusBarUtils
-import com.guoxiaoxing.phoenix.picker.util.ScreenUtil
-import com.guoxiaoxing.phoenix.picker.util.ToolbarUtil
-import com.guoxiaoxing.phoenix.picker.util.VoiceUtils
+import com.guoxiaoxing.phoenix.picker.util.*
 import com.guoxiaoxing.phoenix.picker.widget.photoview.PhotoView
 import com.guoxiaoxing.phoenix.picker.widget.videoview.PhoenixVideoView
 import kotlinx.android.synthetic.main.fragment_preview.*
+import java.io.Serializable
 import java.util.*
 
 class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.AnimationListener, OnPictureEditListener {
@@ -151,18 +150,18 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
             ll_picture_edit.visibility = View.GONE
         }
 
-        if(previewType == PhoenixConstant.TYPE_PREIVEW_FROM_PICK){
+        if (previewType == PhoenixConstant.TYPE_PREIVEW_FROM_PICK) {
             ll_check.visibility = View.VISIBLE
             preview_ll_edit.visibility = View.VISIBLE
             preview_ll_ok.visibility = View.VISIBLE
-        }else if(previewType == PhoenixConstant.TYPE_PREIVEW_FROM_PREVIEW){
+        } else if (previewType == PhoenixConstant.TYPE_PREIVEW_FROM_PREVIEW) {
             ll_check.visibility = View.GONE
             preview_ll_edit.visibility = View.GONE
             preview_ll_ok.visibility = View.GONE
-        }else if(previewType == PhoenixConstant.TYPE_PREIVEW_FROM_CAMERA){
+        } else if (previewType == PhoenixConstant.TYPE_PREIVEW_FROM_CAMERA) {
             ll_check.visibility = View.GONE
-            preview_rl_bottom.visibility = View.GONE
-            preview_ll_ok.visibility = View.GONE
+            preview_rl_bottom.visibility = View.VISIBLE
+            preview_ll_ok.visibility = View.VISIBLE
         }
 
         preview_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -352,7 +351,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                     override fun onPageScrollStateChanged(state: Int) {
                         if (state == ViewPager.SCROLL_STATE_DRAGGING) {
                             preview_video.onPause()
-                        }else{
+                        } else {
                             preview_video.onResume()
                         }
                     }
@@ -411,23 +410,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                 onPickNumberChange(true)
             }
         } else if (id == R.id.preview_ll_ok) {
-            val images = pickMediaList
-            val pictureType = if (images.size > 0) images[0].mimeType else ""
-            val size = images.size
-            val eqImg = !TextUtils.isEmpty(pictureType) && pictureType.startsWith(PhoenixConstant.IMAGE)
-
-            // 如果设置了图片最小选择数量，则判断是否满足条件
-            if (minSelectNum > 0) {
-                if (size < minSelectNum) {
-                    @SuppressLint("StringFormatMatches") val str = if (eqImg)
-                        getString(R.string.picture_min_img_num, minSelectNum)
-                    else
-                        getString(R.string.phoenix_message_min_number, minSelectNum)
-                    showToast(str)
-                    return
-                }
-            }
-            updatePickResult(images)
+            handlePreviewOkClickEvent()
         } else if (id == R.id.preview_ll_edit) {
             val pictureEditFragment = PictureEditFragment.newInstance()
             val bundle = Bundle()
@@ -458,6 +441,45 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
     fun updatePickResult(images: List<MediaEntity>) {
         RxBus.default.post(EventEntity(PhoenixConstant.FLAG_PREVIEW_COMPLETE, images))
+        activity.finish()
+        activity.overridePendingTransition(0, R.anim.phoenix_activity_out)
+    }
+
+    private fun handlePreviewOkClickEvent() {
+        if (PhoenixConstant.TYPE_PREIVEW_FROM_PICK == previewType) {
+            pickerViewPreviewFinish()
+        } else if (PhoenixConstant.TYPE_PREIVEW_FROM_CAMERA == previewType) {
+            cameraViewPreviewFinish()
+        } else {
+            DebugUtil.i("preview ok event not defined yet.")
+        }
+    }
+
+    private fun pickerViewPreviewFinish() {
+        val images = pickMediaList
+        val pictureType = if (images.size > 0) images[0].mimeType else ""
+        val size = images.size
+        val eqImg = !TextUtils.isEmpty(pictureType) && pictureType.startsWith(PhoenixConstant.IMAGE)
+
+        // 如果设置了图片最小选择数量，则判断是否满足条件
+        if (minSelectNum > 0) {
+            if (size < minSelectNum) {
+                @SuppressLint("StringFormatMatches") val str = if (eqImg)
+                    getString(R.string.picture_min_img_num, minSelectNum)
+                else
+                    getString(R.string.phoenix_message_min_number, minSelectNum)
+                showToast(str)
+                return
+            }
+        }
+        updatePickResult(images)
+    }
+
+    private fun cameraViewPreviewFinish() {
+        val intent = Intent()
+        intent.putExtra(PhoenixConstant.KEY_ALL_LIST, pickMediaList as Serializable)
+        intent.putExtra(PhoenixConstant.KEY_PICK_LIST, pickMediaList as Serializable)
+        activity.setResult(Activity.RESULT_OK, intent)
         activity.finish()
         activity.overridePendingTransition(0, R.anim.phoenix_activity_out)
     }
