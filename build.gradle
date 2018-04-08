@@ -51,5 +51,6 @@ ext {
 }
 
 task createWrapper(type: Wrapper) {
-    gradleVersion = '4.4'
+    gradleVersion = '3.1.0'
+    distributionUrl='https://services.gradle.org/distributions/gradle-4.4-all.zip'
 }
