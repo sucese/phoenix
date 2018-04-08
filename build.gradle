@@ -49,3 +49,7 @@ ext {
     testRunnerVersion = '1.0.1'
     testEspressoVersion = '3.0.1'
 }
+
+task createWrapper(type: Wrapper) {
+    gradleVersion = '4.4'
+}
