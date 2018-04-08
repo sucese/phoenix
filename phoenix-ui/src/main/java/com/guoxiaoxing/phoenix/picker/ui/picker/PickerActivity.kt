@@ -344,7 +344,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      * *
      * @param position      position
      */
-    fun startPreview(previewImages: MutableList<MediaEntity>, position: Int) {
+    private fun startPreview(previewImages: MutableList<MediaEntity>, position: Int) {
         val mediaEntity = previewImages[position]
         val pictureType = mediaEntity.mimeType
         val bundle = Bundle()
@@ -354,7 +354,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         val selectedImages = pickAdapter.getPickMediaList()
         ImagesObservable.instance.saveLocalMedia(previewImages)
         bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
-        bundle.putSerializable(PhoenixConstant.KEY_ALL_LIST, allMediaList as Serializable)
+        bundle.putSerializable(PhoenixConstant.KEY_ALL_LIST, previewImages as Serializable)
         bundle.putSerializable(PhoenixConstant.KEY_PICK_LIST, selectedImages as Serializable)
         bundle.putInt(PhoenixConstant.KEY_POSITION, position)
         bundle.putInt(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_PICK)
