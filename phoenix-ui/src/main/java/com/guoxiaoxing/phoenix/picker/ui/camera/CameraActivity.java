@@ -159,13 +159,14 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
                         MediaEntity mediaEntity = MediaEntity.newBuilder()
                                 .localPath(filePath)
                                 .fileType(MimeType.ofVideo())
+                                .mimeType(MimeType.createVideoType(filePath))
                                 .build();
                         mediaList.add(mediaEntity);
                         Intent intent = new Intent(CameraActivity.this, PreviewActivity.class);
                         intent.putParcelableArrayListExtra(PhoenixConstant.KEY_ALL_LIST, mediaList);
                         intent.putParcelableArrayListExtra(PhoenixConstant.KEY_PICK_LIST, mediaList);
                         intent.putExtra(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_CAMERA);
-                        startActivity(intent);
+                        startActivityForResult(intent, PhoenixConstant.REQUEST_CODE_PREVIEW);
                     }
                 });
                 cameraFragment.switchCaptureAction(MediaAction.ACTION_PHOTO);

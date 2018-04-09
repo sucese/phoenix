@@ -149,8 +149,8 @@ public final class Phoenix implements Starter {
                         activity.startActivityForResult(intent, requestCode);
                     }
                     activity.overridePendingTransition(R.anim.phoenix_activity_in, 0);
+                    break;
                 }
-                break;
                 case PhoenixOption.TYPE_BROWSER_PICTURE: {
                     Intent intent = new Intent(activity, PreviewActivity.class);
                     intent.putExtra(PhoenixConstant.PHOENIX_OPTION, option);
@@ -165,8 +165,8 @@ public final class Phoenix implements Starter {
                         activity.startActivityForResult(intent, requestCode);
                     }
                     activity.overridePendingTransition(R.anim.phoenix_activity_in, 0);
+                    break;
                 }
-                break;
             }
         }
     }
