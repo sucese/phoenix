@@ -44,12 +44,12 @@ dependencies {
     }
 
     //图片/视频库
-//    implementation "com.github.guoxiaoxing:phoenix:$rootProject.ext.phoenixVerson"
-//    implementation "com.github.guoxiaoxing:phoenix-compress-picture:$rootProject.ext.phoenixVerson"
-//    implementation "com.github.guoxiaoxing:phoenix-compress-video:$rootProject.ext.phoenixVerson"
+    implementation "com.github.guoxiaoxing:phoenix:$rootProject.ext.phoenixVerson"
+    implementation "com.github.guoxiaoxing:phoenix-compress-picture:$rootProject.ext.phoenixVerson"
+    implementation "com.github.guoxiaoxing:phoenix-compress-video:$rootProject.ext.phoenixVerson"
 
-//    //图片/视频库
-    implementation project(':phoenix-ui')
-    implementation project(':phoenix-compress-video')
-    implementation project(':phoenix-compress-picture')
+    //图片/视频库
+//    implementation project(':phoenix-ui')
+//    implementation project(':phoenix-compress-video')
+//    implementation project(':phoenix-compress-picture')
 }

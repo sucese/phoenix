@@ -72,13 +72,13 @@
 
 ```
 //图片/视频选择、预览、编辑与拍照
-implementation 'com.github.guoxiaoxing:phoenix:1.0.13'
+implementation 'com.github.guoxiaoxing:phoenix:1.0.14'
 
 //选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-implementation 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.13'
+implementation 'com.github.guoxiaoxing:phoenix-compress-picture:1.0.14'
 
 //选填 - 视频压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
-implementation 'com.github.guoxiaoxing:phoenix-compress-video:1.0.13'
+implementation 'com.github.guoxiaoxing:phoenix-compress-video:1.0.14'
 ```
 
 ### 调用功能

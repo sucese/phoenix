@@ -7,7 +7,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.novoda:bintray-release:0.7.0'
+        classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
 
@@ -27,8 +27,8 @@ task clean(type: Delete) {
 }
 
 ext {
-    phoenixVerson = '1.0.13'
-    phoenixCoreVersion = '1.0.11'
+    phoenixVerson = '1.0.14'
+    phoenixCoreVersion = '1.0.12'
 
     //android
     compileSdkVersion = 25
