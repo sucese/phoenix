@@ -13,6 +13,10 @@ import com.guoxiaoxing.phoenix.core.PhoenixOption;
  * @since 2017/8/14 上午10:17
  */
 public interface Starter {
+    String BUNDLE_KEY_FUTURE_ACTION = "future_action";
+
     void start(Fragment fragment, PhoenixOption option, int type, int requestCode);
     void start(Activity activity, PhoenixOption option, int type, int requestCode);
+    void start(Fragment fragment, PhoenixOption option, int type, String futureAction);
+    void start(Activity activity, PhoenixOption option, int type, String futureAction);
 }

@@ -55,7 +55,7 @@ public class PhoenixOption implements Parcelable {
     //显示多少kb以下的图片/视频，默认为0，表示不限制
     private int mediaFilterSize;
     //视频秒数录制 默认10s
-    private int recordVideoTime = 5;
+    private int recordVideoTime = 10;
     //图片选择界面每行图片个数
     private int spanCount = 4;
     //选择列表图片宽度
@@ -301,6 +301,20 @@ public class PhoenixOption implements Parcelable {
         Starter starter = ReflectUtils.loadStarter(ReflectUtils.Phoenix);
         if (starter != null) {
             starter.start(activity, this, type, requestCode);
+        }
+    }
+
+    public void start(Fragment fragment, int type, String futureAction) {
+        Starter starter = ReflectUtils.loadStarter(ReflectUtils.Phoenix);
+        if (starter != null) {
+            starter.start(fragment, this, type, futureAction);
+        }
+    }
+
+    public void start(Activity activity, int type, String futureAction) {
+        Starter starter = ReflectUtils.loadStarter(ReflectUtils.Phoenix);
+        if (starter != null) {
+            starter.start(activity, this, type, futureAction);
         }
     }
 

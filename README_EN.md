@@ -77,15 +77,15 @@ Add the dependency
 
 ```
 //Picture/video selection, preview, edit and take photos
-compile 'com.github.guoxiaoxing.phoenix:phoenix-ui:0.0.13'
+implementation 'com.github.guoxiaoxing.phoenix:phoenix-ui:0.0.13'
 
 //Optional - image compression, open function: Phoenix,with().enableCompress(true)
 //obtain results: MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-picture:0.0.13'
+implementation 'com.github.guoxiaoxing.phoenix:phoenix-compress-picture:0.0.13'
 
 //Optional - video compression, open function: Phoenix,with().enableCompress(true)
 //obtain results: MediaEntity.getCompressPath()
-compile 'com.github.guoxiaoxing.phoenix:phoenix-compress-video:0.0.13'
+implementation 'com.github.guoxiaoxing.phoenix:phoenix-compress-video:0.0.13'
 ```
 
 ### Start

@@ -1,11 +1,11 @@
 buildscript {
-    ext.kotlin_version = '1.1.51'
+    ext.kotlin_version = '1.2.31'
     repositories {
         jcenter()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0-alpha03'
+        classpath 'com.android.tools.build:gradle:3.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.novoda:bintray-release:0.7.0'
     }
@@ -32,13 +32,20 @@ ext {
 
     //android
     compileSdkVersion = 25
-    buildToolsVersion = "26.0.2"
     minSdkVersion = 16
     targetSdkVersion = 25
     versionCode = 1
     versionName = "1.0"
     supportLibraryVersion = "25.4.0"
+    constraintLayoutVersion = '1.0.2'
+    multiDexVersion = '1.0.3'
 
-    rxJavaVerstion = "2.0.5"
-    rxAndroidVerstion = "2.0.1"
+    rxJavaVersion = "2.0.5"
+    rxAndroidVersion = "2.0.1"
+    gsonVersion = '2.8.2'
+    glideVersion = '4.6.1'
+
+    junitVersion = '4.12'
+    testRunnerVersion = '1.0.1'
+    testEspressoVersion = '3.0.1'
 }

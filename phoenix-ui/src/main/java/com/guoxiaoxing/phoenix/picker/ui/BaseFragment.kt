@@ -96,6 +96,7 @@ open class BaseFragment : Fragment() {
         val enableCompress = option.isEnableCompress
         if (!enableCompress) {
             onResult(mediaList)
+            return
         }
 
         //压缩图片
@@ -138,7 +139,6 @@ open class BaseFragment : Fragment() {
                         onResult(result)
                     }
                 })
-
     }
 
     protected fun showToast(msg: String) {

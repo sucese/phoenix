@@ -16,7 +16,7 @@ class PreviewActivity : BaseActivity() {
         setupFragment()
     }
 
-    fun setupFragment() {
+    private fun setupFragment() {
         val position = intent.getIntExtra(PhoenixConstant.KEY_POSITION, 0)
         val selectImages = intent.getSerializableExtra(PhoenixConstant.KEY_PICK_LIST) as List<MediaEntity>
         val images = intent.getSerializableExtra(PhoenixConstant.KEY_ALL_LIST) as List<MediaEntity>
@@ -29,6 +29,7 @@ class PreviewActivity : BaseActivity() {
         bundle.putParcelableArrayList(PhoenixConstant.KEY_PICK_LIST, selectImages as ArrayList<out Parcelable>)
         bundle.putParcelableArrayList(PhoenixConstant.KEY_ALL_LIST, images as ArrayList<out Parcelable>)
         fragment.arguments = bundle
+
         supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.preview_fragment_container, fragment)

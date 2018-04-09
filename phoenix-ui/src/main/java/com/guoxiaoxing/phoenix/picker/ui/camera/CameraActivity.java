@@ -38,11 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CameraActivity extends BaseActivity implements View.OnClickListener {
-
-    public static final String TAG_CAMERA_FRAGMENT = "CameraFragment";
-    private static final int REQUEST_CODE_CAMERA_PERMISSIONS = 0x000100;
-    private static final int REQUEST_CODE_PREVIEW = 0x000101;
-
+    private static final String TAG_CAMERA_FRAGMENT = "CameraFragment";
     private static final String DIRECTORY_NAME = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath()
             + "/Camera";
 
@@ -120,13 +116,15 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
                                 MediaEntity mediaEntity = MediaEntity.newBuilder()
                                         .localPath(filePath)
                                         .fileType(MimeType.ofImage())
+                                        .mimeType(MimeType.createImageType(filePath))
                                         .build();
                                 mediaList.add(mediaEntity);
+
                                 Intent intent = new Intent(CameraActivity.this, PreviewActivity.class);
                                 intent.putParcelableArrayListExtra(PhoenixConstant.KEY_ALL_LIST, mediaList);
                                 intent.putParcelableArrayListExtra(PhoenixConstant.KEY_PICK_LIST, mediaList);
                                 intent.putExtra(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_CAMERA);
-                                startActivity(intent);
+                                startActivityForResult(intent, PhoenixConstant.REQUEST_CODE_PREVIEW);
                             }
                         }
                 );
@@ -191,7 +189,7 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
             }
             if (!permissionsToRequest.isEmpty()) {
                 ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(
-                        new String[permissionsToRequest.size()]), REQUEST_CODE_CAMERA_PERMISSIONS);
+                        new String[permissionsToRequest.size()]), PhoenixConstant.REQUEST_CODE_CAMERA_PERMISSIONS);
             } else addCameraFragment();
         } else {
             addCameraFragment();
@@ -356,6 +354,19 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
                     mRecordDurationText.setVisibility(visible ? View.VISIBLE : View.GONE);
                 }
             });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (RESULT_OK != resultCode) return;
+
+        switch (requestCode) {
+            case PhoenixConstant.REQUEST_CODE_PREVIEW:
+                onResult((List<MediaEntity>) data.getSerializableExtra(PhoenixConstant.KEY_PICK_LIST));
+                break;
+            default:
+                break;
         }
     }
 

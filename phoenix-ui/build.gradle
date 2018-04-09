@@ -5,7 +5,6 @@ apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
@@ -27,14 +26,16 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.google.code.gson:gson:2.8.1'
-    compile "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
-    compile "com.android.support:design:$rootProject.ext.supportLibraryVersion"
-    compile "com.android.support:support-annotations:$rootProject.ext.supportLibraryVersion"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "com.google.code.gson:gson:${gsonVersion}"
+    implementation "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
+    implementation "com.android.support:design:$rootProject.ext.supportLibraryVersion"
+    implementation "com.android.support:support-annotations:$rootProject.ext.supportLibraryVersion"
 
-    compile "com.github.guoxiaoxing:phoenix-core:$rootProject.ext.phoenixCoreVersion"
-//    compile project(':phoenix-core')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+//    api "com.github.guoxiaoxing:phoenix-core:$rootProject.ext.phoenixCoreVersion"
+    api project(':phoenix-core')
 }
 
 publish {
@@ -44,4 +45,7 @@ publish {
     publishVersion = "$rootProject.ext.phoenixVerson"
     desc = 'The one-stop solution for image/video selection, editing and compression on the Android platform.'
     website = 'https://github.com/guoxiaoxing/phoenix'
+}
+repositories {
+    mavenCentral()
 }

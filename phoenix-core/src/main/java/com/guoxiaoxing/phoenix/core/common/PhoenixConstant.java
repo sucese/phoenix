@@ -7,8 +7,10 @@ public final class PhoenixConstant {
 
     public static final int IMAGE_PROCESS_TYPE_DEFAULT = 0x000000;
 
-    public static final int REQUEST_CODE_PICTURE_EDIT = 0x000011;
-    public static final int RESULT_CODE_PICTURE_EDIT = 0x000022;
+    public static final int REQUEST_CODE_PICTURE_EDIT = 0x000001;
+    public static final int REQUEST_CODE_CAPTURE = 0x000002;
+    public static final int REQUEST_CODE_CAMERA_PERMISSIONS = 0x000100;
+    public static final int REQUEST_CODE_PREVIEW = 0x000101;
 
     public static final int TYPE_PREIVEW_FROM_PICK = 0x000100;
     public static final int TYPE_PREIVEW_FROM_PREVIEW = 0x000101;
