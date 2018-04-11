@@ -30,8 +30,8 @@ dependencies {
     androidTestImplementation "com.android.support.test:runner:${testRunnerVersion}"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${testEspressoVersion}"
 
-//    implementation "com.github.guoxiaoxing:phoenix-core:$rootProject.ext.phoenixCoreVersion"
-    implementation project(':phoenix-core')
+    implementation "com.github.guoxiaoxing:phoenix-core:$rootProject.ext.phoenixCoreVersion"
+//    implementation project(':phoenix-core')
 }
 
 publish {
