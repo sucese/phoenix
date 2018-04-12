@@ -335,10 +335,6 @@ public class CameraFragment<CameraId> extends BaseFragment implements ICameraFra
 
     @Override
     public void startRecordingVideo(@Nullable String directoryPath, @Nullable String fileName) {
-        if (Build.VERSION.SDK_INT > MIN_VERSION_ICECREAM) {
-            new MediaActionSound().play(MediaActionSound.START_VIDEO_RECORDING);
-        }
-
         setRecordState(Record.RECORD_IN_PROGRESS_STATE);
         this.mCameraLifecycle.startVideoRecord(directoryPath, fileName);
 
@@ -349,10 +345,6 @@ public class CameraFragment<CameraId> extends BaseFragment implements ICameraFra
 
     @Override
     public void stopRecordingVideo(OnCameraResultListener callback) {
-        if (Build.VERSION.SDK_INT > MIN_VERSION_ICECREAM) {
-            new MediaActionSound().play(MediaActionSound.STOP_VIDEO_RECORDING);
-        }
-
         setRecordState(Record.READY_FOR_RECORD_STATE);
         this.mCameraLifecycle.stopVideoRecord(callback);
 
