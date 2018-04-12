@@ -19,7 +19,7 @@ class BlurDetailView(ctx: Context, onMosaicChangeListener: OnMosaicChangeListene
     init {
         this.onMosaicChangeListener = onMosaicChangeListener
         LayoutInflater.from(ctx).inflate(R.layout.item_edit_blur, this, true)
-        val rootFunc = findViewById(R.id.llMosaicDetails) as LinearLayout
+        val rootFunc = findViewById<View>(R.id.llMosaicDetails) as LinearLayout
         val values = BlurMode.values()
         for (index in 0 until values.size) {
             val mode = values[index]
@@ -39,7 +39,7 @@ class BlurDetailView(ctx: Context, onMosaicChangeListener: OnMosaicChangeListene
                 onMosaicClick(mode, 0, item, rootFunc)
             }
         }
-        findViewById(R.id.ivRevoke).setOnClickListener {
+        findViewById<View>(R.id.ivRevoke).setOnClickListener {
             onRevokeListener?.revoke(com.guoxiaoxing.phoenix.picture.edit.operation.Operation.BlurOperation)
         }
     }

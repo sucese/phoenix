@@ -68,9 +68,10 @@ open class BaseActivity : FragmentActivity() {
         setupConfig()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(PhoenixConstant.BUNDLE_CAMERA_PATH, savePath)
-        outState.putString(PhoenixConstant.BUNDLE_ORIGINAL_PATH, originalPath)
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState!!.putString(PhoenixConstant.BUNDLE_CAMERA_PATH, savePath)
+        outState!!.putString(PhoenixConstant.BUNDLE_ORIGINAL_PATH, originalPath)
     }
 
     protected fun startActivity(clz: Class<*>, bundle: Bundle) {
@@ -395,7 +396,7 @@ open class BaseActivity : FragmentActivity() {
     }
 
     protected fun tintDrawable(resId: Int, color: Int): Drawable {
-        val drawable = ContextCompat.getDrawable(this, resId)
+        val drawable = ContextCompat.getDrawable(this, resId)!!
         DrawableCompat.setTint(drawable, color)
         return drawable
     }

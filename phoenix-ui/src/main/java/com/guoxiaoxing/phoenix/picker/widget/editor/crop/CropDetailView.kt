@@ -14,17 +14,17 @@ class CropDetailView(val view: View) : ViewTreeObserver.OnPreDrawListener {
 
     init {
         view.viewTreeObserver.addOnPreDrawListener(this)
-        view.findViewById(R.id.ivCropRotate).setOnClickListener {
+        view.findViewById<View>(R.id.ivCropRotate).setOnClickListener {
             cropListener?.onCropRotation(90f)
         }
-        view.findViewById(R.id.ivCropCancel).setOnClickListener {
+        view.findViewById<View>(R.id.ivCropCancel).setOnClickListener {
             cropListener?.onCropCancel()
         }
         mRestoreView = view.findViewById(R.id.tvCropRestore) as TextView
         mRestoreView.setOnClickListener {
             cropListener?.onCropRestore()
         }
-        view.findViewById(R.id.ivCropConfirm).setOnClickListener {
+        view.findViewById<View>(R.id.ivCropConfirm).setOnClickListener {
             cropListener?.onCropConfirm()
         }
     }

@@ -27,7 +27,7 @@ import com.guoxiaoxing.phoenix.picker.util.ScreenUtil
 import com.guoxiaoxing.phoenix.picker.util.StringUtils
 
 class FolderPopWindow(private val context: Context, private val mimeType: Int) : PopupWindow(), View.OnClickListener {
-    private val window: View
+    private val window: View = LayoutInflater.from(context).inflate(R.layout.window_folder, null)
     private var recyclerView: RecyclerView? = null
     private var adapter: PickerAlbumAdapter? = null
     private val animationIn: Animation
@@ -39,7 +39,6 @@ class FolderPopWindow(private val context: Context, private val mimeType: Int) :
     private val drawableDown: Drawable
 
     init {
-        window = LayoutInflater.from(context).inflate(R.layout.window_folder, null)
         this.contentView = window
         this.width = ScreenUtil.getScreenWidth(context)
         this.height = ScreenUtil.getScreenHeight(context)
@@ -48,8 +47,8 @@ class FolderPopWindow(private val context: Context, private val mimeType: Int) :
         this.isOutsideTouchable = true
         this.update()
         this.setBackgroundDrawable(ColorDrawable(Color.argb(123, 0, 0, 0)))
-        drawableUp = ContextCompat.getDrawable(context, R.drawable.phoenix_arrow_up)
-        drawableDown = ContextCompat.getDrawable(context, R.drawable.phoenix_arrow_down)
+        drawableUp = ContextCompat.getDrawable(context, R.drawable.phoenix_arrow_up)!!
+        drawableDown = ContextCompat.getDrawable(context, R.drawable.phoenix_arrow_down)!!
         animationIn = AnimationUtils.loadAnimation(context, R.anim.phoenix_album_show)
         animationOut = AnimationUtils.loadAnimation(context, R.anim.phoenix_album_dismiss)
         initView()

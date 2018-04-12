@@ -52,8 +52,8 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         when (obj.what) {
             PhoenixConstant.CLOSE_PREVIEW_FLAG -> {
                 // 压缩完后关闭预览界面
-                activity.finish()
-                activity.overridePendingTransition(0, R.anim.phoenix_activity_out)
+                activity!!.finish()
+                activity!!.overridePendingTransition(0, R.anim.phoenix_activity_out)
             }
         }
     }
@@ -64,12 +64,11 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     }
 
     @SuppressLint("StringFormatMatches")
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.fragment_preview, container, false)
-        return view
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_preview, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
         setupData()
@@ -99,10 +98,10 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         if (!RxBus.default.isRegistered(this)) {
             RxBus.default.register(this)
         }
-        screenWidth = ScreenUtil.getScreenWidth(activity)
+        screenWidth = ScreenUtil.getScreenWidth(activity!!)
 
-        ToolbarUtil.setColorNoTranslucent(activity, themeColor)
-        LightStatusBarUtils.setLightStatusBar(activity, false)
+        ToolbarUtil.setColorNoTranslucent(activity!!, themeColor)
+        LightStatusBarUtils.setLightStatusBar(activity!!, false)
 
         preview_rl_title.setBackgroundColor(themeColor)
 
@@ -125,10 +124,10 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     }
 
     private fun setupData() {
-        position = arguments.getInt(PhoenixConstant.KEY_POSITION, 0)
-        pickMediaList = arguments.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_PICK_LIST)
-        allMediaList = arguments.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_ALL_LIST)
-        previewType = arguments.getInt(PhoenixConstant.KEY_PREVIEW_TYPE)
+        position = arguments!!.getInt(PhoenixConstant.KEY_POSITION, 0)
+        pickMediaList = arguments!!.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_PICK_LIST)
+        allMediaList = arguments!!.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_ALL_LIST)
+        previewType = arguments!!.getInt(PhoenixConstant.KEY_PREVIEW_TYPE)
 
         pickTvTitle.text = (position + 1).toString() + "/" + allMediaList.size
 
@@ -343,7 +342,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                 preview_video.visibility = View.VISIBLE
                 preview_image.visibility = View.GONE
 
-                preview_video.register(activity)
+                preview_video.register(activity!!)
                 preview_video.setVideoPath(path)
                 preview_video.seekTo(100)
 
@@ -379,8 +378,8 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     override fun onClick(view: View) {
         val id = view.id
         if (id == R.id.pickTvBack) {
-            activity.finish()
-            activity.overridePendingTransition(0, R.anim.phoenix_activity_out)
+            activity!!.finish()
+            activity!!.overridePendingTransition(0, R.anim.phoenix_activity_out)
         } else if (id == R.id.ll_check) {
             if (allMediaList.isNotEmpty()) {
                 val image = allMediaList[preview_pager.currentItem]
@@ -420,7 +419,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
                 bundle.putString(PhoenixConstant.KEY_FILE_PATH, path)
                 pictureEditFragment.setArguments(bundle)
                 pictureEditFragment.setTargetFragment(this, PhoenixConstant.REQUEST_CODE_PICTURE_EDIT)
-                activity.supportFragmentManager.beginTransaction()
+                activity!!.supportFragmentManager.beginTransaction()
                         .replace(R.id.preview_fragment_container, pictureEditFragment).addToBackStack(null).commitAllowingStateLoss();
             }
         }
@@ -441,8 +440,8 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
     fun updatePickResult(images: List<MediaEntity>) {
         RxBus.default.post(EventEntity(PhoenixConstant.FLAG_PREVIEW_COMPLETE, images))
-        activity.finish()
-        activity.overridePendingTransition(0, R.anim.phoenix_activity_out)
+        activity!!.finish()
+        activity!!.overridePendingTransition(0, R.anim.phoenix_activity_out)
     }
 
     private fun handlePreviewOkClickEvent() {
@@ -479,9 +478,9 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         val intent = Intent()
         intent.putExtra(PhoenixConstant.KEY_ALL_LIST, pickMediaList as Serializable)
         intent.putExtra(PhoenixConstant.KEY_PICK_LIST, pickMediaList as Serializable)
-        activity.setResult(Activity.RESULT_OK, intent)
-        activity.finish()
-        activity.overridePendingTransition(0, R.anim.phoenix_activity_out)
+        activity!!.setResult(Activity.RESULT_OK, intent)
+        activity!!.finish()
+        activity!!.overridePendingTransition(0, R.anim.phoenix_activity_out)
     }
 
     private val currentPath: String

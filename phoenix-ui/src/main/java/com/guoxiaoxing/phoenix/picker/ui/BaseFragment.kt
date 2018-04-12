@@ -60,11 +60,15 @@ open class BaseFragment : Fragment() {
 
     protected lateinit var mediaList: MutableList<MediaEntity>
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        mContext = context!!
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mContext = context
-        option = if (arguments.getParcelable<PhoenixOption>(PhoenixConstant.PHOENIX_OPTION) == null) PhoenixOption()
-        else arguments.getParcelable(PhoenixConstant.PHOENIX_OPTION)
+        option = if (arguments!!.getParcelable<PhoenixOption>(PhoenixConstant.PHOENIX_OPTION) == null) PhoenixOption()
+        else arguments!!.getParcelable(PhoenixConstant.PHOENIX_OPTION)
         setupConfig()
     }
 
@@ -72,7 +76,7 @@ open class BaseFragment : Fragment() {
      * show loading loadingDialog
      */
     protected fun showLoadingDialog() {
-        if (!activity.isFinishing) {
+        if (!activity!!.isFinishing) {
             dismissLoadingDialog()
             loadingDialog.show()
         }
@@ -149,12 +153,12 @@ open class BaseFragment : Fragment() {
      * Close Activity
      */
     protected fun closeActivity() {
-        activity.finish()
-        activity.overridePendingTransition(0, R.anim.phoenix_activity_out)
+        activity!!.finish()
+        activity!!.overridePendingTransition(0, R.anim.phoenix_activity_out)
     }
 
     protected fun tintDrawable(resId: Int, color: Int): Drawable {
-        val drawable = ContextCompat.getDrawable(activity, resId)
+        val drawable = ContextCompat.getDrawable(activity!!, resId)!!
         DrawableCompat.setTint(drawable, color)
         return drawable
     }
@@ -193,7 +197,7 @@ open class BaseFragment : Fragment() {
         val result = ArrayList<MediaEntity>(images.size)
         result.addAll(images)
         intent.putExtra(PhoenixConstant.PHOENIX_RESULT, result)
-        activity.setResult(Activity.RESULT_OK, intent)
+        activity!!.setResult(Activity.RESULT_OK, intent)
         closeActivity()
     }
 }
