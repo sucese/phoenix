@@ -125,7 +125,6 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      * init views
      */
     private fun setupView() {
-
         pickRlTitle.setBackgroundColor(themeColor)
 
         if (themeColor == THEME_DEFAULT) {
@@ -207,7 +206,6 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     private fun readLocalMedia() {
         mediaLoader.loadAllMedia(object : MediaLoader.LocalMediaLoadListener {
             override fun loadComplete(folders: MutableList<MediaFolder>) {
-                DebugUtil.i("loadComplete:" + folders.size)
                 if (folders.size > 0) {
                     allFolderList = folders
                     val folder = folders[0]
@@ -223,7 +221,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                 }
                 if (pickAdapter != null) {
                     if (allMediaList == null) {
-                        allMediaList = ArrayList<MediaEntity>()
+                        allMediaList = ArrayList()
                     }
                     pickAdapter.setAllMediaList(allMediaList)
                     pick_tv_empty.visibility = if (allMediaList.size > 0) View.INVISIBLE else View.VISIBLE
@@ -237,7 +235,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     override fun onClick(v: View) {
         val id = v.id
         if (id == R.id.pickTvBack || id == R.id.pickTvCancel) {
-            if (folderWindow.isShowing()) {
+            if (folderWindow.isShowing) {
                 folderWindow.dismiss()
             } else {
                 closeActivity()
@@ -388,7 +386,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                 pickTvNumber.startAnimation(animation)
             }
             pickTvNumber.visibility = View.VISIBLE
-            pickTvNumber.text = "(" + selectImages.size.toString() + ")"
+            pickTvNumber.text = String.format("(%d)", selectImages.size)
             pickTvOk.text = getString(R.string.picture_completed)
             isAnimation = false
         } else {

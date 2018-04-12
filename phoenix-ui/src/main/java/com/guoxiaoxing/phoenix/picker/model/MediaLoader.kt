@@ -35,17 +35,17 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
 
                         val durationCondition = if (videoFilterTime > 0) " AND " + DURATION + "<" + videoFilterTime.toString() else ""
                         val sizeCondition = if (mediaFilterSize > 0) " AND " + SIZE + "<" + mediaFilterSize.toString() else ""
-                        val cursorLoader = when (id) {
+                        return when (id) {
                             PhoenixConstant.TYPE_ALL ->
                                 CursorLoader(
-                                    activity,
-                                    ALL_QUERY_URI,
-                                    ALL_PROJECTION,
-                                    ALL_SELECTION
-                                            + durationCondition
-                                            + sizeCondition,
-                                    null,
-                                    MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
+                                        activity,
+                                        ALL_QUERY_URI,
+                                        ALL_PROJECTION,
+                                        ALL_SELECTION
+                                                + durationCondition
+                                                + sizeCondition,
+                                        null,
+                                        MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
                             PhoenixConstant.TYPE_IMAGE -> CursorLoader(
                                     activity,
                                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -82,7 +82,6 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                                         MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
 
                         }
-                        return cursorLoader
                     }
 
                     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor) {

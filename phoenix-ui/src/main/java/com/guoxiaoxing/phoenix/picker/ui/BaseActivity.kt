@@ -124,7 +124,7 @@ open class BaseActivity : FragmentActivity() {
 
         if (!enableCompress) {
             onResult(mediaList)
-            return;
+            return
         }
 
         //压缩图片

@@ -84,7 +84,7 @@ class ImagesObservable private constructor() : SubjectListener {
     }
 
     fun clearSelectedLocalMedia() {
-        selectedImages?.clear()
+        selectedImages.clear()
     }
 
     override fun add(observerListener: ObserverListener) {

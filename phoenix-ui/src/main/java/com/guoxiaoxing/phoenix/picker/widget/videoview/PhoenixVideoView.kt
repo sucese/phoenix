@@ -155,7 +155,7 @@ class PhoenixVideoView : RelativeLayout {
 
         videoView.setStateListener(object : InternalVideoView.StateListener {
 
-            override fun changeVolumn(detlaY: Float) {
+            override fun changeVolume(detlaY: Float) {
                 val maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
                 val currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
                 val index = (detlaY / screenHeight * maxVolume.toFloat() * 3f).toInt()

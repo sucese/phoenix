@@ -97,7 +97,8 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
             public void onClick() {
                 final ICameraFragment cameraFragment = getCameraFragment();
                 cameraFragment.switchCaptureAction(MediaAction.ACTION_PHOTO);
-                cameraFragment.takePicture(DIRECTORY_NAME, "IMG_" + System.currentTimeMillis(), new OnCameraResultAdapter() {
+                cameraFragment.takePicture(DIRECTORY_NAME, "IMG_" + System.currentTimeMillis(),
+                        new OnCameraResultAdapter() {
                             @Override
                             public void onPhotoTaken(byte[] bytes, String filePath) {
 
