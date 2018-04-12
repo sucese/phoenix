@@ -15,7 +15,6 @@ import android.os.FileObserver;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -544,30 +543,6 @@ public class CameraFragment<CameraId> extends BaseFragment implements ICameraFra
     protected void setRecordState(@Record.RecordState int recordState) {
         this.mRecordState = recordState;
     }
-
-
-    //@Override
-    //public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    //    if (resultCode == Activity.RESULT_OK) {
-    //        if (requestCode == REQUEST_PREVIEW_CODE) {
-    //            final FragmentActivity activity = getActivity();
-    //            if (activity != null) {
-    //                if (CameraPreviewActivity.isResultConfirm(data)) {
-    //                    Intent resultIntent = new Intent();
-    //                    resultIntent.putExtra(CameraConfig.Arguments.FILE_PATH,
-    //                            CameraPreviewActivity.getMediaFilePatch(data));
-    //                    activity.setResult(Activity.RESULT_OK, resultIntent);
-    //                    activity.finish();
-    //                } else if (CameraPreviewActivity.isResultCancel(data)) {
-    //                    activity.setResult(Activity.RESULT_CANCELED);
-    //                    activity.finish();
-    //                } else if (CameraPreviewActivity.isResultRetake(data)) {
-    //                    //ignore, just proceed the camera
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
 
     protected void setFlashMode(@Flash.FlashMode int mode) {
         this.mFlashMode = mode;

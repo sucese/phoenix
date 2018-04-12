@@ -261,7 +261,7 @@ open class BaseActivity : FragmentActivity() {
 
         if (getIntent().hasExtra(Starter.BUNDLE_KEY_FUTURE_ACTION)) {
             intent.action = getIntent().getStringExtra(Starter.BUNDLE_KEY_FUTURE_ACTION)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         } else {
             setResult(RESULT_OK, intent)
