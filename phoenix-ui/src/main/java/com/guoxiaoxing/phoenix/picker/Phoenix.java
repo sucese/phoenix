@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import com.guoxiaoxing.phoenix.R;
+import com.guoxiaoxing.phoenix.picker.rx.bus.ImagesObservable;
 import com.guoxiaoxing.phoenix.picker.ui.camera.CameraActivity;
 import com.guoxiaoxing.phoenix.core.PhoenixConfig;
 import com.guoxiaoxing.phoenix.core.PhoenixOption;
@@ -103,11 +104,11 @@ public final class Phoenix implements Starter {
                 }
                 //just browse the media files that imported by the bundle.
                 case PhoenixOption.TYPE_BROWSER_PICTURE: {
+                    ImagesObservable.Companion.getInstance().savePreviewMediaList(option.getPickedMediaList());
                     Intent intent = new Intent(fragment.getActivity(), PreviewActivity.class);
                     intent.putExtra(PhoenixConstant.PHOENIX_OPTION, option);
                     intent.putExtra(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_PREVIEW);
                     intent.putParcelableArrayListExtra(PhoenixConstant.KEY_PICK_LIST, (ArrayList<? extends Parcelable>) option.getPickedMediaList());
-                    intent.putParcelableArrayListExtra(PhoenixConstant.KEY_ALL_LIST, (ArrayList<? extends Parcelable>) option.getPickedMediaList());
 
                     if (!TextUtils.isEmpty(futureAction)) {
                         intent.putExtra(BUNDLE_KEY_FUTURE_ACTION, futureAction);
@@ -152,11 +153,11 @@ public final class Phoenix implements Starter {
                     break;
                 }
                 case PhoenixOption.TYPE_BROWSER_PICTURE: {
+                    ImagesObservable.Companion.getInstance().savePreviewMediaList(option.getPickedMediaList());
                     Intent intent = new Intent(activity, PreviewActivity.class);
                     intent.putExtra(PhoenixConstant.PHOENIX_OPTION, option);
                     intent.putExtra(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_PREVIEW);
                     intent.putParcelableArrayListExtra(PhoenixConstant.KEY_PICK_LIST, (ArrayList<? extends Parcelable>) option.getPickedMediaList());
-                    intent.putParcelableArrayListExtra(PhoenixConstant.KEY_ALL_LIST, (ArrayList<? extends Parcelable>) option.getPickedMediaList());
 
                     if (!TextUtils.isEmpty(futureAction)) {
                         intent.putExtra(BUNDLE_KEY_FUTURE_ACTION, futureAction);

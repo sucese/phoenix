@@ -2,7 +2,6 @@ package com.guoxiaoxing.phoenix.picker.rx.bus
 
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import com.guoxiaoxing.phoenix.picker.model.MediaFolder
-import com.guoxiaoxing.phoenix.picker.util.DebugUtil
 import java.util.*
 
 class ImagesObservable private constructor() : SubjectListener {
@@ -11,12 +10,12 @@ class ImagesObservable private constructor() : SubjectListener {
     private val observers = ArrayList<ObserverListener>()
 
     private var folders: MutableList<MediaFolder>
-    private var mediaEntities: MutableList<MediaEntity>
+    private var previewMediaEntities: MutableList<MediaEntity>
     private var selectedImages: MutableList<MediaEntity>
 
     init {
         folders = ArrayList<MediaFolder>()
-        mediaEntities = ArrayList<MediaEntity>()
+        previewMediaEntities = ArrayList<MediaEntity>()
         selectedImages = ArrayList<MediaEntity>()
     }
 
@@ -38,19 +37,19 @@ class ImagesObservable private constructor() : SubjectListener {
 
      * @param list
      */
-    fun saveLocalMedia(list: MutableList<MediaEntity>) {
-        mediaEntities = list
+    fun savePreviewMediaList(list: MutableList<MediaEntity>) {
+        previewMediaEntities = list
     }
 
 
     /**
      * 读取图片
      */
-    fun readLocalMedias(): List<MediaEntity> {
-        if (mediaEntities == null) {
-            mediaEntities = ArrayList<MediaEntity>()
+    fun readPreviewMediaEntities(): List<MediaEntity> {
+        if (previewMediaEntities == null) {
+            previewMediaEntities = ArrayList<MediaEntity>()
         }
-        return mediaEntities
+        return previewMediaEntities
     }
 
     /**
@@ -77,10 +76,8 @@ class ImagesObservable private constructor() : SubjectListener {
             folders!!.clear()
     }
 
-    fun clearLocalMedia() {
-        if (mediaEntities != null)
-            mediaEntities!!.clear()
-        DebugUtil.i("ImagesObservable:", "clearLocalMedia success!")
+    fun clearCachedData() {
+        previewMediaEntities.clear()
     }
 
     fun clearSelectedLocalMedia() {

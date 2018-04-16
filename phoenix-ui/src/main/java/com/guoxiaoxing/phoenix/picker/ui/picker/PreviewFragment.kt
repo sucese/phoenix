@@ -22,6 +22,7 @@ import com.guoxiaoxing.phoenix.core.model.MimeType
 import com.guoxiaoxing.phoenix.picker.Phoenix
 import com.guoxiaoxing.phoenix.picker.listener.OnPictureEditListener
 import com.guoxiaoxing.phoenix.picker.model.EventEntity
+import com.guoxiaoxing.phoenix.picker.rx.bus.ImagesObservable
 import com.guoxiaoxing.phoenix.picker.rx.bus.RxBus
 import com.guoxiaoxing.phoenix.picker.rx.bus.Subscribe
 import com.guoxiaoxing.phoenix.picker.rx.bus.ThreadMode
@@ -126,10 +127,10 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
     private fun setupData() {
         position = arguments!!.getInt(PhoenixConstant.KEY_POSITION, 0)
         pickMediaList = arguments!!.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_PICK_LIST)
-        allMediaList = arguments!!.getParcelableArrayList<MediaEntity>(PhoenixConstant.KEY_ALL_LIST)
+        allMediaList = ImagesObservable.instance.readPreviewMediaEntities() as MutableList<MediaEntity>
         previewType = arguments!!.getInt(PhoenixConstant.KEY_PREVIEW_TYPE)
 
-        pickTvTitle.text = (position + 1).toString() + "/" + allMediaList.size
+        pickTvTitle.text = String.format("%d/%d", position + 1, allMediaList.size)
 
         onPickNumberChange(false)
         onImageChecked(position)
@@ -170,7 +171,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
             override fun onPageSelected(i: Int) {
                 position = i
-                pickTvTitle.text = (position + 1).toString() + "/" + allMediaList.size
+                pickTvTitle.text = String.format("%d/%d", position + 1, allMediaList.size)
                 val mediaEntity = allMediaList[position]
                 index = mediaEntity.getPosition()
                 if (!previewEggs) {
@@ -476,7 +477,6 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
 
     private fun cameraViewPreviewFinish() {
         val intent = Intent()
-        intent.putExtra(PhoenixConstant.KEY_ALL_LIST, pickMediaList as Serializable)
         intent.putExtra(PhoenixConstant.KEY_PICK_LIST, pickMediaList as Serializable)
         activity!!.setResult(Activity.RESULT_OK, intent)
         activity!!.finish()

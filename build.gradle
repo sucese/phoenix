@@ -40,7 +40,7 @@ ext {
     constraintLayoutVersion = '1.0.2'
     multiDexVersion = '1.0.3'
 
-    rxJavaVersion = "2.0.5"
+    rxJavaVersion = "2.1.6"
     rxAndroidVersion = "2.0.1"
     gsonVersion = '2.8.2'
     glideVersion = '4.6.1'

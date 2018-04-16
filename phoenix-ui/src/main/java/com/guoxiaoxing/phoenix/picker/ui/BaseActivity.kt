@@ -34,7 +34,6 @@ import io.reactivex.schedulers.Schedulers
 import java.io.File
 
 open class BaseActivity : FragmentActivity() {
-
     protected lateinit var mContext: Context
     protected lateinit var option: PhoenixOption
 
@@ -72,15 +71,6 @@ open class BaseActivity : FragmentActivity() {
         super.onSaveInstanceState(outState)
         outState!!.putString(PhoenixConstant.BUNDLE_CAMERA_PATH, savePath)
         outState!!.putString(PhoenixConstant.BUNDLE_ORIGINAL_PATH, originalPath)
-    }
-
-    protected fun startActivity(clz: Class<*>, bundle: Bundle) {
-        if (!DoubleUtils.isFastDoubleClick) {
-            val intent = Intent()
-            intent.setClass(this, clz)
-            intent.putExtras(bundle)
-            startActivity(intent)
-        }
     }
 
     protected fun startActivity(clz: Class<*>, bundle: Bundle, requestCode: Int) {
