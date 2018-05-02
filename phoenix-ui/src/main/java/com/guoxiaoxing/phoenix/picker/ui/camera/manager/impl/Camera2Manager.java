@@ -339,31 +339,21 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
 
     @Override
     public void stopVideoRecord(final OnCameraResultListener callback) {
-        if (mIsVideoRecording)
-            mBackgroundHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    closePreviewSession();
-
-                    if (mMediaRecorder != null) {
-                        try {
-                            mMediaRecorder.stop();
-                        } catch (Exception ignore) {
-                        }
-                    }
-                    mIsVideoRecording = false;
-                    releaseVideoRecorder();
-
-                    if (mCameraVideoListener != null) {
-                        mUiiHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mCameraVideoListener.onVideoRecordStopped(mOutputPath, callback);
-                            }
-                        });
-                    }
+        if (mIsVideoRecording) {
+            closePreviewSession();
+            if (mMediaRecorder != null) {
+                try {
+                    mMediaRecorder.stop();
+                } catch (Exception ignore) {
                 }
-            });
+            }
+            mIsVideoRecording = false;
+            releaseVideoRecorder();
+
+            if (mCameraVideoListener != null) {
+                mCameraVideoListener.onVideoRecordStopped(mOutputPath, callback);
+            }
+        }
     }
 
     private void startPreview(SurfaceTexture texture) {

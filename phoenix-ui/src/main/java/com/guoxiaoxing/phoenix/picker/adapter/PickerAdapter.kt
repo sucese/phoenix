@@ -105,7 +105,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             }
         } else {
             val contentHolder = holder as ContentViewHolder
-            val image = allMediaList!![if (enableCamera) position - 1 else position]
+            val image = allMediaList[if (enableCamera) position - 1 else position]
             image.position = contentHolder.adapterPosition
             val path = image.finalPath
             val pictureType = image.mimeType
@@ -119,10 +119,10 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
             contentHolder.itemView.tv_isGif.visibility = if (gif) View.VISIBLE else View.GONE
             if (mimeType == MimeType.ofAudio()) {
                 contentHolder.itemView.tvDuration.visibility = View.VISIBLE
-                val drawable = ContextCompat.getDrawable(context, R.drawable.phoenix_audio)
+                val drawable = ContextCompat.getDrawable(context, R.drawable.phoenix_audio)!!
                 StringUtils.modifyTextViewDrawable(contentHolder.itemView.tvDuration, drawable, 0)
             } else {
-                val drawable = ContextCompat.getDrawable(context, R.drawable.phoenix_video_icon)
+                val drawable = ContextCompat.getDrawable(context, R.drawable.phoenix_video_icon)!!
                 StringUtils.modifyTextViewDrawable(contentHolder.itemView.tvDuration, drawable, 0)
                 contentHolder.itemView.tvDuration.visibility = if (picture == PhoenixConstant.TYPE_VIDEO)
                     View.VISIBLE
@@ -159,7 +159,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
 
 
     override fun getItemCount(): Int {
-        return if (enableCamera) allMediaList!!.size + 1 else allMediaList!!.size
+        return if (enableCamera) allMediaList.size + 1 else allMediaList.size
     }
 
     inner class HeaderViewHolder(headerView: View) : RecyclerView.ViewHolder(headerView)
@@ -167,7 +167,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     inner class ContentViewHolder(contentView: View) : RecyclerView.ViewHolder(contentView)
 
     fun isSelected(image: MediaEntity): Boolean {
-        for (mediaEntity in pickMediaList!!) {
+        for (mediaEntity in pickMediaList) {
             if (TextUtils.isEmpty(mediaEntity.localPath) || TextUtils.isEmpty(image.localPath)) {
                 return false
             }
@@ -183,7 +183,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
      */
     private fun notifyCheckChanged(contentViewHolder: ContentViewHolder, imageBean: MediaEntity) {
         contentViewHolder.itemView.tv_check.text = ""
-        for (mediaEntity in pickMediaList!!) {
+        for (mediaEntity in pickMediaList) {
             if (mediaEntity.localPath == imageBean.localPath) {
                 imageBean.number = mediaEntity.number
                 mediaEntity.setPosition(imageBean.getPosition())
@@ -256,7 +256,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
         }
     }
 
-    fun selectImage(contentViewHolder: ContentViewHolder, isChecked: Boolean, isAnim: Boolean) {
+    private fun selectImage(contentViewHolder: ContentViewHolder, isChecked: Boolean, isAnim: Boolean) {
         contentViewHolder.itemView.tv_check.isSelected = isChecked
         if (isChecked) {
             if (isAnim) {

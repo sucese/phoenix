@@ -14,7 +14,7 @@ class InternalVideoView @JvmOverloads constructor(mContext: Context, attrs: Attr
     private var mStateListener: StateListener? = null
 
     interface StateListener {
-        fun changeVolumn(detlaY: Float)
+        fun changeVolume(detlaY: Float)
         fun changeBrightness(detlaX: Float)
         fun hideHint()
     }
@@ -46,7 +46,7 @@ class InternalVideoView @JvmOverloads constructor(mContext: Context, attrs: Attr
 
                 if (Math.abs(detlaX) < thresold && Math.abs(detlaY) > thresold) {
                     //左侧上下滑动调节音量
-                    mStateListener!!.changeVolumn(detlaY)
+                    mStateListener!!.changeVolume(detlaY)
                     //TODO 右侧上下滑动调节亮度
                     //                    mStateListener.changeBrightness(detlaX);
                 }

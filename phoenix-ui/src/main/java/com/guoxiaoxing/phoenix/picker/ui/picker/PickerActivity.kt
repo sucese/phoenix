@@ -30,6 +30,7 @@ import com.guoxiaoxing.phoenix.picker.rx.bus.Subscribe
 import com.guoxiaoxing.phoenix.picker.rx.bus.ThreadMode
 import com.guoxiaoxing.phoenix.picker.rx.permission.RxPermissions
 import com.guoxiaoxing.phoenix.picker.ui.BaseActivity
+import com.guoxiaoxing.phoenix.picker.ui.Navigator
 import com.guoxiaoxing.phoenix.picker.util.*
 import com.guoxiaoxing.phoenix.picker.widget.FolderPopWindow
 import com.guoxiaoxing.phoenix.picker.widget.GridSpacingItemDecoration
@@ -37,7 +38,6 @@ import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_picker.*
 import kotlinx.android.synthetic.main.include_title_bar.*
-import java.io.Serializable
 import java.util.*
 
 /**
@@ -101,8 +101,8 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                 .subscribe(object : Observer<Boolean> {
                     override fun onSubscribe(d: Disposable) {}
 
-                    override fun onNext(aBoolean: Boolean?) {
-                        if (aBoolean!!) {
+                    override fun onNext(aBoolean: Boolean) {
+                        if (aBoolean) {
                             setContentView(R.layout.activity_picker)
                             setupView()
                             setupData()
@@ -125,7 +125,6 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
      * init views
      */
     private fun setupView() {
-
         pickRlTitle.setBackgroundColor(themeColor)
 
         if (themeColor == THEME_DEFAULT) {
@@ -176,9 +175,9 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                 .subscribe(object : Observer<Boolean> {
                     override fun onSubscribe(d: Disposable) {}
 
-                    override fun onNext(aBoolean: Boolean?) {
+                    override fun onNext(aBoolean: Boolean) {
                         showLoadingDialog()
-                        if (aBoolean!!) {
+                        if (aBoolean) {
                             readLocalMedia()
                         } else {
                             showToast(getString(R.string.picture_jurisdiction))
@@ -207,7 +206,6 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     private fun readLocalMedia() {
         mediaLoader.loadAllMedia(object : MediaLoader.LocalMediaLoadListener {
             override fun loadComplete(folders: MutableList<MediaFolder>) {
-                DebugUtil.i("loadComplete:" + folders.size)
                 if (folders.size > 0) {
                     allFolderList = folders
                     val folder = folders[0]
@@ -223,7 +221,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                 }
                 if (pickAdapter != null) {
                     if (allMediaList == null) {
-                        allMediaList = ArrayList<MediaEntity>()
+                        allMediaList = ArrayList()
                     }
                     pickAdapter.setAllMediaList(allMediaList)
                     pick_tv_empty.visibility = if (allMediaList.size > 0) View.INVISIBLE else View.VISIBLE
@@ -237,7 +235,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     override fun onClick(v: View) {
         val id = v.id
         if (id == R.id.pickTvBack || id == R.id.pickTvCancel) {
-            if (folderWindow.isShowing()) {
+            if (folderWindow.isShowing) {
                 folderWindow.dismiss()
             } else {
                 closeActivity()
@@ -256,16 +254,8 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         }
 
         if (id == R.id.pickTvPreview) {
-            val selectedImages = pickAdapter.getPickMediaList()
-
-            val bundle = Bundle()
-            bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
-            bundle.putSerializable(PhoenixConstant.KEY_ALL_LIST, selectedImages as Serializable)
-            bundle.putSerializable(PhoenixConstant.KEY_PICK_LIST, selectedImages as Serializable)
-            bundle.putBoolean(PhoenixConstant.EXTRA_BOTTOM_PREVIEW, true)
-            bundle.putInt(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_PICK)
-            startActivity(PreviewActivity::class.java, bundle)
-            overridePendingTransition(R.anim.phoenix_activity_in, 0)
+            val pickedImages = pickAdapter.getPickMediaList()
+            Navigator.showPreviewView(this, option, pickedImages, pickedImages, 0)
         }
 
         if (id == R.id.pickLlOk) {
@@ -295,6 +285,10 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
 
         if (Activity.RESULT_OK != resultCode) return
 
+//        val result = data!!.getSerializableExtra(PhoenixConstant.PHOENIX_RESULT) as MutableList<MediaEntity>
+//        DebugUtil.i("PickerActivity:OnResult: ", result.size.toString())
+//        DebugUtil.i("PickerActivity:OnResult: ", option.maxPickNumber.toString())
+
         when (requestCode) {
             PhoenixConstant.REQUEST_CODE_CAPTURE -> {
                 onResult(data!!.getSerializableExtra(PhoenixConstant.PHOENIX_RESULT) as MutableList<MediaEntity>)
@@ -317,8 +311,8 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
 
             }
 
-            override fun onNext(aBoolean: Boolean?) {
-                if (aBoolean!!) {
+            override fun onNext(aBoolean: Boolean) {
+                if (aBoolean) {
                     startCamera()
                 } else {
                     showToast(getString(R.string.picture_camera))
@@ -343,32 +337,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
     }
 
     override fun onPictureClick(mediaEntity: MediaEntity, position: Int) {
-        val images = pickAdapter.getAllMediaList()
-        startPreview(images, position)
-    }
-
-    /**
-     * preview image and video
-
-     * @param previewImages previewImages
-     * *
-     * @param position      position
-     */
-    private fun startPreview(previewImages: MutableList<MediaEntity>, position: Int) {
-        val mediaEntity = previewImages[position]
-        val pictureType = mediaEntity.mimeType
-        val bundle = Bundle()
-        val mediaType = MimeType.getFileType(pictureType)
-        DebugUtil.i(TAG, "mediaType:" + mediaType)
-        val selectedImages = pickAdapter.getPickMediaList()
-        ImagesObservable.instance.saveLocalMedia(previewImages)
-        bundle.putParcelable(PhoenixConstant.PHOENIX_OPTION, option)
-        bundle.putSerializable(PhoenixConstant.KEY_ALL_LIST, previewImages as Serializable)
-        bundle.putSerializable(PhoenixConstant.KEY_PICK_LIST, selectedImages as Serializable)
-        bundle.putInt(PhoenixConstant.KEY_POSITION, position)
-        bundle.putInt(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_PICK)
-        startActivity(PreviewActivity::class.java, bundle)
-        overridePendingTransition(R.anim.phoenix_activity_in, 0)
+        Navigator.showPreviewView(this, option, pickAdapter.getAllMediaList(), pickAdapter.getPickMediaList(), position)
     }
 
     /**
@@ -388,7 +357,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
                 pickTvNumber.startAnimation(animation)
             }
             pickTvNumber.visibility = View.VISIBLE
-            pickTvNumber.text = "(" + selectImages.size.toString() + ")"
+            pickTvNumber.text = String.format("(%d)", selectImages.size)
             pickTvOk.text = getString(R.string.picture_completed)
             isAnimation = false
         } else {
@@ -411,7 +380,7 @@ class PickerActivity : BaseActivity(), View.OnClickListener, PickerAlbumAdapter.
         if (RxBus.default.isRegistered(this)) {
             RxBus.default.unregister(this)
         }
-        ImagesObservable.instance.clearLocalMedia()
+        ImagesObservable.instance.clearCachedData()
         animation?.cancel()
     }
 

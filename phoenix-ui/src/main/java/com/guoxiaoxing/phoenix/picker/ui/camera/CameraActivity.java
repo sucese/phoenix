@@ -19,6 +19,7 @@ import com.guoxiaoxing.phoenix.R;
 import com.guoxiaoxing.phoenix.core.common.PhoenixConstant;
 import com.guoxiaoxing.phoenix.core.model.MediaEntity;
 import com.guoxiaoxing.phoenix.core.model.MimeType;
+import com.guoxiaoxing.phoenix.picker.rx.bus.ImagesObservable;
 import com.guoxiaoxing.phoenix.picker.ui.BaseActivity;
 import com.guoxiaoxing.phoenix.picker.ui.camera.config.CameraConfig;
 import com.guoxiaoxing.phoenix.picker.ui.camera.config.model.MediaAction;
@@ -97,7 +98,8 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
             public void onClick() {
                 final ICameraFragment cameraFragment = getCameraFragment();
                 cameraFragment.switchCaptureAction(MediaAction.ACTION_PHOTO);
-                cameraFragment.takePicture(DIRECTORY_NAME, "IMG_" + System.currentTimeMillis(), new OnCameraResultAdapter() {
+                cameraFragment.takePicture(DIRECTORY_NAME, "IMG_" + System.currentTimeMillis(),
+                        new OnCameraResultAdapter() {
                             @Override
                             public void onPhotoTaken(byte[] bytes, String filePath) {
 
@@ -120,8 +122,8 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
                                         .build();
                                 mediaList.add(mediaEntity);
 
+                                ImagesObservable.Companion.getInstance().savePreviewMediaList(mediaList);
                                 Intent intent = new Intent(CameraActivity.this, PreviewActivity.class);
-                                intent.putParcelableArrayListExtra(PhoenixConstant.KEY_ALL_LIST, mediaList);
                                 intent.putParcelableArrayListExtra(PhoenixConstant.KEY_PICK_LIST, mediaList);
                                 intent.putExtra(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_CAMERA);
                                 startActivityForResult(intent, PhoenixConstant.REQUEST_CODE_PREVIEW);
@@ -159,13 +161,14 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
                         MediaEntity mediaEntity = MediaEntity.newBuilder()
                                 .localPath(filePath)
                                 .fileType(MimeType.ofVideo())
+                                .mimeType(MimeType.createVideoType(filePath))
                                 .build();
                         mediaList.add(mediaEntity);
+                        ImagesObservable.Companion.getInstance().savePreviewMediaList(mediaList);
                         Intent intent = new Intent(CameraActivity.this, PreviewActivity.class);
-                        intent.putParcelableArrayListExtra(PhoenixConstant.KEY_ALL_LIST, mediaList);
                         intent.putParcelableArrayListExtra(PhoenixConstant.KEY_PICK_LIST, mediaList);
                         intent.putExtra(PhoenixConstant.KEY_PREVIEW_TYPE, PhoenixConstant.TYPE_PREIVEW_FROM_CAMERA);
-                        startActivity(intent);
+                        startActivityForResult(intent, PhoenixConstant.REQUEST_CODE_PREVIEW);
                     }
                 });
                 cameraFragment.switchCaptureAction(MediaAction.ACTION_PHOTO);

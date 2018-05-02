@@ -15,7 +15,6 @@ import android.os.FileObserver;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -335,10 +334,6 @@ public class CameraFragment<CameraId> extends BaseFragment implements ICameraFra
 
     @Override
     public void startRecordingVideo(@Nullable String directoryPath, @Nullable String fileName) {
-        if (Build.VERSION.SDK_INT > MIN_VERSION_ICECREAM) {
-            new MediaActionSound().play(MediaActionSound.START_VIDEO_RECORDING);
-        }
-
         setRecordState(Record.RECORD_IN_PROGRESS_STATE);
         this.mCameraLifecycle.startVideoRecord(directoryPath, fileName);
 
@@ -349,10 +344,6 @@ public class CameraFragment<CameraId> extends BaseFragment implements ICameraFra
 
     @Override
     public void stopRecordingVideo(OnCameraResultListener callback) {
-        if (Build.VERSION.SDK_INT > MIN_VERSION_ICECREAM) {
-            new MediaActionSound().play(MediaActionSound.STOP_VIDEO_RECORDING);
-        }
-
         setRecordState(Record.READY_FOR_RECORD_STATE);
         this.mCameraLifecycle.stopVideoRecord(callback);
 
@@ -552,30 +543,6 @@ public class CameraFragment<CameraId> extends BaseFragment implements ICameraFra
     protected void setRecordState(@Record.RecordState int recordState) {
         this.mRecordState = recordState;
     }
-
-
-    //@Override
-    //public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    //    if (resultCode == Activity.RESULT_OK) {
-    //        if (requestCode == REQUEST_PREVIEW_CODE) {
-    //            final FragmentActivity activity = getActivity();
-    //            if (activity != null) {
-    //                if (CameraPreviewActivity.isResultConfirm(data)) {
-    //                    Intent resultIntent = new Intent();
-    //                    resultIntent.putExtra(CameraConfig.Arguments.FILE_PATH,
-    //                            CameraPreviewActivity.getMediaFilePatch(data));
-    //                    activity.setResult(Activity.RESULT_OK, resultIntent);
-    //                    activity.finish();
-    //                } else if (CameraPreviewActivity.isResultCancel(data)) {
-    //                    activity.setResult(Activity.RESULT_CANCELED);
-    //                    activity.finish();
-    //                } else if (CameraPreviewActivity.isResultRetake(data)) {
-    //                    //ignore, just proceed the camera
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
 
     protected void setFlashMode(@Flash.FlashMode int mode) {
         this.mFlashMode = mode;

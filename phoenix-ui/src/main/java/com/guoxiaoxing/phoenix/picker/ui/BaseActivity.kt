@@ -34,7 +34,6 @@ import io.reactivex.schedulers.Schedulers
 import java.io.File
 
 open class BaseActivity : FragmentActivity() {
-
     protected lateinit var mContext: Context
     protected lateinit var option: PhoenixOption
 
@@ -68,18 +67,10 @@ open class BaseActivity : FragmentActivity() {
         setupConfig()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(PhoenixConstant.BUNDLE_CAMERA_PATH, savePath)
-        outState.putString(PhoenixConstant.BUNDLE_ORIGINAL_PATH, originalPath)
-    }
-
-    protected fun startActivity(clz: Class<*>, bundle: Bundle) {
-        if (!DoubleUtils.isFastDoubleClick) {
-            val intent = Intent()
-            intent.setClass(this, clz)
-            intent.putExtras(bundle)
-            startActivity(intent)
-        }
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState!!.putString(PhoenixConstant.BUNDLE_CAMERA_PATH, savePath)
+        outState!!.putString(PhoenixConstant.BUNDLE_ORIGINAL_PATH, originalPath)
     }
 
     protected fun startActivity(clz: Class<*>, bundle: Bundle, requestCode: Int) {
@@ -123,7 +114,7 @@ open class BaseActivity : FragmentActivity() {
 
         if (!enableCompress) {
             onResult(mediaList)
-            return;
+            return
         }
 
         //压缩图片
@@ -260,7 +251,7 @@ open class BaseActivity : FragmentActivity() {
 
         if (getIntent().hasExtra(Starter.BUNDLE_KEY_FUTURE_ACTION)) {
             intent.action = getIntent().getStringExtra(Starter.BUNDLE_KEY_FUTURE_ACTION)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         } else {
             setResult(RESULT_OK, intent)
@@ -395,7 +386,7 @@ open class BaseActivity : FragmentActivity() {
     }
 
     protected fun tintDrawable(resId: Int, color: Int): Drawable {
-        val drawable = ContextCompat.getDrawable(this, resId)
+        val drawable = ContextCompat.getDrawable(this, resId)!!
         DrawableCompat.setTint(drawable, color)
         return drawable
     }

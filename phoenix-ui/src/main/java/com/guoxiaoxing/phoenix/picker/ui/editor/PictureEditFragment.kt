@@ -91,15 +91,15 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (Build.VERSION.SDK_INT >= 21) {
-            this.activity.window.statusBarColor = MatrixUtils.getResourceColor(activity, R.color.black);
+            this.activity!!.window.statusBarColor = MatrixUtils.getResourceColor(activity!!, R.color.black);
         }
         //transparent necessary
-        activity.window.setBackgroundDrawableResource(R.color.transparent)
+        activity!!.window.setBackgroundDrawableResource(R.color.transparent)
         //flag necessary
         if (Build.VERSION.SDK_INT >= 19) {
-            activity.window.setFlags(
+            activity!!.window.setFlags(
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
@@ -113,16 +113,15 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
         setupData()
     }
 
     private fun setupView() {
-
         mEditDelegate = EditDelegate(photoView, layerEditorParent)
-        this.mActionBarAnimUtils = ActionBarAnimUtils(layerActionView, editorBar, rlFunc, activity)
+        this.mActionBarAnimUtils = ActionBarAnimUtils(layerActionView, editorBar, rlFunc, activity!!)
         mCropHelper = CropHelper(layerCropView, CropDetailView(layoutCropDetails), this)
 
         val operationList = listOf(Operation.PaintOperation, Operation.StickOperation, Operation.TextOperation,
@@ -179,11 +178,11 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
      */
     private fun setupData() {
 
-        mOriginPath = arguments.getString(PhoenixConstant.KEY_FILE_PATH)
-        mOriginOrientation = arguments.getInt(PhoenixConstant.KEY_ORIENTATION)
-        val byteData = arguments.getByteArray(PhoenixConstant.KEY_FILE_BYTE)
+        mOriginPath = arguments!!.getString(PhoenixConstant.KEY_FILE_PATH)
+        mOriginOrientation = arguments!!.getInt(PhoenixConstant.KEY_ORIENTATION)
+        val byteData = arguments!!.getByteArray(PhoenixConstant.KEY_FILE_BYTE)
         if (byteData != null) {
-            mOriginBitmap = PictureUtils.roatePicture(mOriginOrientation, byteData, activity)
+            mOriginBitmap = PictureUtils.roatePicture(mOriginOrientation, byteData, activity!!)
         }
 
         mSavePath = savePath + System.currentTimeMillis() + ".png"
@@ -220,7 +219,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
     }
 
     override fun getActivityContext(): Context {
-        return activity
+        return activity!!
     }
 
     override fun getEditorSizeInfo(): Pair<Int, Int> {
@@ -259,7 +258,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
      */
     private fun cancel() {
         supportRecycle()
-        activity.supportFragmentManager.popBackStack()
+        activity!!.supportFragmentManager.popBackStack()
     }
 
     /**
@@ -269,8 +268,8 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
         supportRecycle()
         val intent = Intent()
         intent.putExtra(PhoenixConstant.KEY_FILE_PATH, mSavePath)
-        targetFragment.onActivityResult(PhoenixConstant.REQUEST_CODE_PICTURE_EDIT, PhoenixConstant.REQUEST_CODE_PICTURE_EDIT, intent)
-        activity.supportFragmentManager.popBackStackImmediate()
+        targetFragment!!.onActivityResult(PhoenixConstant.REQUEST_CODE_PICTURE_EDIT, PhoenixConstant.REQUEST_CODE_PICTURE_EDIT, intent)
+        activity!!.supportFragmentManager.popBackStackImmediate()
     }
 
     private fun supportRecycle() {
@@ -304,7 +303,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
      */
     override fun operatePaint(selected: Boolean) {
         if (selected) {
-            val paintlDetail = PaintlDetailsView(activity)
+            val paintlDetail = PaintlDetailsView(activity!!)
             paintlDetail.onColorChangeListener = object : ColorSeekBar.OnColorChangeListener {
                 override fun onColorChangeListener(colorBarPosition: Int, alphaBarPosition: Int, color: Int) {
                     callback2Listeners(mOperationDetailListeners) {
@@ -350,7 +349,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
                     }
                 }
             }
-            val blurDetail = BlurDetailView(activity, listener)
+            val blurDetail = BlurDetailView(activity!!, listener)
             blurDetail.onRevokeListener = object : OnRevokeListener {
                 override fun revoke(operation: Operation) {
                     callback2Listeners(mOnRevokeListeners) {
@@ -429,9 +428,9 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
 
     private fun go2InputView(prepareModel: InputTextModel?) {
         this.mActionBarAnimUtils.showOrHideFuncAndBarView(false)
-        val intent = TextInputActivity.intent(activity, prepareModel)
+        val intent = TextInputActivity.intent(activity!!, prepareModel)
         startActivityForResult(intent, mTextInputResultCode)
-        activity.overridePendingTransition(R.anim.animation_bottom_to_top, 0)
+        activity!!.overridePendingTransition(R.anim.animation_bottom_to_top, 0)
     }
 
     private fun resultFromInputView(resultCode: Int, data: Intent?) {
@@ -453,7 +452,7 @@ class PictureEditFragment : BaseFragment(), LayerViewProvider, com.guoxiaoxing.p
     private fun go2StickerPanel() {
         this.mActionBarAnimUtils.showOrHideFuncAndBarView(false)
         mStickDetailsView ?: let {
-            mStickDetailsView = StickDetailsView(activity)
+            mStickDetailsView = StickDetailsView(activity!!)
             mStickDetailsView!!.onStickerClickListener = object : StickDetailsView.OnStickerClickResult {
                 override fun onResult(stickModel: InputStickModel) {
                     getView<StickView>(Operation.StickOperation)?.onStickerPastingChanged(stickModel)
