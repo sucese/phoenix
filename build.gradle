@@ -1,11 +1,11 @@
 buildscript {
-    ext.kotlin_version = '1.2.31'
+    ext.kotlin_version = '1.2.30'
     repositories {
         jcenter()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.novoda:bintray-release:0.8.1'
     }
@@ -31,9 +31,9 @@ ext {
     phoenixCoreVersion = '1.0.12'
 
     //android
-    compileSdkVersion = 26
+    compileSdkVersion = 27
     minSdkVersion = 16
-    targetSdkVersion = 26
+    targetSdkVersion = 27
     versionCode = 1
     versionName = "1.0"
     supportLibraryVersion = "27.1.1"
