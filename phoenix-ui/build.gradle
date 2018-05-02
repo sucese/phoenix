@@ -34,8 +34,8 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-//    api "com.github.guoxiaoxing:phoenix-core:$rootProject.ext.phoenixCoreVersion"
-    api project(':phoenix-core')
+    api "com.github.guoxiaoxing:phoenix-core:$rootProject.ext.phoenixCoreVersion"
+//    api project(':phoenix-core')
 }
 
 publish {
