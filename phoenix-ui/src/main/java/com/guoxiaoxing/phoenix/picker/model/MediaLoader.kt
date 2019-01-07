@@ -107,6 +107,7 @@ class MediaLoader(private val activity: FragmentActivity, type: Int, private val
                                     val mimeType = data.getString(data.getColumnIndexOrThrow(ALL_PROJECTION[4]))
                                     var fileType = 0
                                     var duration = 0L
+                                    if (mimeType == null) continue;
                                     if (mimeType.startsWith(PhoenixConstant.AUDIO)) {
                                         fileType = MimeType.ofAudio()
                                     } else if (mimeType.startsWith(PhoenixConstant.IMAGE)) {
