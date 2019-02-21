@@ -270,6 +270,11 @@ try {
 
 欢迎加入改进本项目。
 
+## Thanks
+
+- [CameraFragment](https://github.com/florent37/CameraFragment)
+- [android-transcoder](https://github.com/ypresto/android-transcoder)
+
 ## License
 
 ```
